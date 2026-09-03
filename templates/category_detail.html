@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ category.name }} — MarketKura{% endblock %}
+
+{% block content %}
+  <div class="panel">
+    <h1>{{ category.name }}</h1>
+    <p class="muted">{{ category.description|default:'Community discussion for this category.' }}</p>
+  </div>
+
+  {% for post in posts %}
+    <article class="post-card">
+      <h2><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h2>
+      <div class="meta">{{ post.user.username }} · {{ post.created_at|date:'M d, Y' }}</div>
+      <p>{{ post.body|truncatewords:40 }}</p>
+    </article>
+  {% empty %}
+    <div class="panel"><p class="muted">No posts in this category yet.</p></div>
+  {% endfor %}
+{% endblock %}

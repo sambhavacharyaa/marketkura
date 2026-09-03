@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}MarketKura{% endblock %}</title>
+    <style>
+      body {
+        margin: 0;
+        font-family: Arial, sans-serif;
+        background: #f5f7fb;
+        color: #17212f;
+      }
+      a { color: #0f6fff; text-decoration: none; }
+      .container { max-width: 1100px; margin: 0 auto; padding: 24px; }
+      .topbar {
+        background: #0d1726;
+        color: white;
+        padding: 16px 0;
+      }
+      .nav { display: flex; justify-content: space-between; align-items: center; }
+      .brand { font-size: 1.5rem; font-weight: bold; }
+      .layout { display: grid; grid-template-columns: 240px 1fr; gap: 24px; }
+      .panel {
+        background: white;
+        border-radius: 12px;
+        padding: 18px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      }
+      .post-card {
+        background: white;
+        border-radius: 12px;
+        padding: 18px;
+        margin-bottom: 16px;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.06);
+      }
+      .badge {
+        display: inline-block;
+        background: #e7f1ff;
+        color: #0d4fcf;
+        font-size: 12px;
+        padding: 4px 8px;
+        border-radius: 999px;
+        margin-right: 8px;
+      }
+      .meta { color: #5d6b7a; font-size: 0.9rem; }
+      .muted { color: #6b7280; }
+      .btn {
+        display: inline-block;
+        background: #0f6fff;
+        color: white;
+        padding: 10px 16px;
+        border-radius: 8px;
+        font-weight: bold;
+      }
+      h1, h2, h3 { margin-top: 0; }
+      ul { padding-left: 20px; }
+    </style>
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="container nav">
+        <div class="brand">MarketKura</div>
+        <nav>
+          <a href="/" style="color:white; margin-right:12px;">Home</a>
+          <a href="/" style="color:white;">Forum</a>
+        </nav>
+      </div>
+    </header>
+
+    <main class="container">
+      {% block content %}{% endblock %}
+    </main>
+  </body>
+</html>

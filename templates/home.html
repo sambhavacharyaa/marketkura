@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+
+{% block title %}MarketKura — Home{% endblock %}
+
+{% block content %}
+  <div class="layout">
+    <aside class="panel">
+      <h3>Categories</h3>
+      <ul>
+        {% for category in categories %}
+          <li><a href="{% url 'category_detail' category.slug %}">{{ category.name }}</a></li>
+        {% empty %}
+          <li class="muted">No categories yet.</li>
+        {% endfor %}
+      </ul>
+    </aside>
+
+    <section>
+      <div class="panel" style="margin-bottom: 18px;">
+        <h1>Investor community forum</h1>
+        <p class="muted">Discuss NEPSE, global markets, personal finance, startups, and broader investor ideas in one place.</p>
+        <a class="btn" href="#">Create a post</a>
+      </div>
+
+      {% for post in posts %}
+        <article class="post-card">
+          <div>
+            <span class="badge">{{ post.category.name }}</span>
+            <span class="badge">{{ post.get_type_display }}</span>
+          </div>
+          <h2><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h2>
+          <div class="meta">Posted by {{ post.user.username }} · {{ post.created_at|date:'M d, Y' }}</div>
+          <p>{{ post.body|truncatewords:30 }}</p>
+        </article>
+      {% empty %}
+        <div class="panel">
+          <p class="muted">No posts yet. Seed the community to get traction.</p>
+        </div>
+      {% endfor %}
+    </section>
+  </div>
+{% endblock %}
