@@ -1,0 +1,3 @@
+{% extends 'base.html' %}
+{% block title %}Create post — MarketKura{% endblock %}
+{% block content %}<section class="panel form-panel"><h1>Create a post</h1><form method="post">{% csrf_token %}{{ form.as_p }}<button class="btn" type="submit">Publish post</button></form></section>{% endblock %}

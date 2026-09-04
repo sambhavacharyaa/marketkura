@@ -1,0 +1,3 @@
+{% extends 'base.html' %}
+{% block title %}Log in — MarketKura{% endblock %}
+{% block content %}<section class="panel form-panel"><h1>Log in</h1><form method="post">{% csrf_token %}{{ form.as_p }}<input type="hidden" name="next" value="{{ next }}"><button class="btn" type="submit">Log in</button></form><p><a href="{% url 'signup' %}">Create an account</a></p></section>{% endblock %}
