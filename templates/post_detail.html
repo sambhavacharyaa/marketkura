@@ -7,7 +7,20 @@
     <span class="badge">{{ post.category.name }}</span>
     <span class="badge">{{ post.get_type_display }}</span>
     <h1>{{ post.title }}</h1>
-    <div class="meta">Posted by {{ post.user.username }} · {{ post.created_at|date:'M d, Y' }}</div>
+    <div class="meta">Posted by <a href="{% url 'profile' post.user.username %}">{{ post.user.username }}</a> · {{ post.created_at|date:'M d, Y' }} · {{ post.upvotes }} votes</div>
     <p>{{ post.body }}</p>
+    <form method="post" action="{% url 'toggle_post_vote' post.pk %}">{% csrf_token %}<input type="hidden" name="next" value="{{ request.path }}"><button class="btn" type="submit">{% if user_voted %}Remove vote{% else %}Upvote{% endif %}</button></form>
   </article>
+  <section class="panel" style="margin-top:18px;">
+    <h2>Discussion</h2>
+    {% for comment in comments %}
+      <div class="comment"><div class="meta"><a href="{% url 'profile' comment.user.username %}">{{ comment.user.username }}</a> · {{ comment.created_at|date:'M d, Y H:i' }}</div><p>{{ comment.body }}</p>
+        {% for reply in comment.replies.all %}<div class="comment reply"><div class="meta">{{ reply.user.username }} · {{ reply.created_at|date:'M d, Y H:i' }}</div><p>{{ reply.body }}</p></div>{% endfor %}
+      </div>
+    {% empty %}<p class="muted">No comments yet. Start the conversation.</p>{% endfor %}
+    {% if user.is_authenticated %}
+      <form method="post" action="{% url 'add_comment' post.pk %}">{% csrf_token %}{{ comment_form.as_p }}<button class="btn" type="submit">Add comment</button></form>
+      <form method="post" action="{% url 'report_post' post.pk %}" style="margin-top:18px;">{% csrf_token %}{{ report_form.as_p }}<button class="danger" type="submit">Report this post</button></form>
+    {% else %}<p><a href="{% url 'login' %}?next={{ request.path }}">Log in</a> to comment or report.</p>{% endif %}
+  </section>
 {% endblock %}

@@ -1,0 +1,3 @@
+{% extends 'base.html' %}
+{% block title %}{{ profile_user.username }} — MarketKura{% endblock %}
+{% block content %}<section class="panel"><h1>{{ profile_user.username }}</h1><p class="muted">{{ profile_user.bio|default:'No bio yet.' }}</p><p>{{ profile_user.karma_score }} karma · Joined {{ profile_user.date_joined|date:'M Y' }}</p></section><h2>{{ profile_user.username }}'s posts</h2>{% for post in posts %}<article class="post-card"><h3><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h3><div class="meta">{{ post.category.name }} · {{ post.created_at|date:'M d, Y' }}</div></article>{% empty %}<p class="muted">No posts yet.</p>{% endfor %}{% endblock %}

@@ -18,7 +18,7 @@
         color: white;
         padding: 16px 0;
       }
-      .nav { display: flex; justify-content: space-between; align-items: center; }
+      .nav { display: flex; justify-content: space-between; align-items: center; gap: 16px; }
       .brand { font-size: 1.5rem; font-weight: bold; }
       .layout { display: grid; grid-template-columns: 240px 1fr; gap: 24px; }
       .panel {
@@ -45,6 +45,17 @@
       }
       .meta { color: #5d6b7a; font-size: 0.9rem; }
       .muted { color: #6b7280; }
+      .nav a { color: white; margin-left: 14px; }
+      .form-panel { max-width: 720px; margin: 0 auto; }
+      label { display: block; font-weight: bold; margin: 14px 0 6px; }
+      input, select, textarea { box-sizing: border-box; width: 100%; padding: 10px; border: 1px solid #d8dee8; border-radius: 6px; font: inherit; }
+      .comment { border-top: 1px solid #e5e7eb; padding: 16px 0; }
+      .reply { margin-left: 28px; }
+      .inline { display: inline; }
+      .danger { color: #b42318; background: transparent; border: 0; cursor: pointer; }
+      .search { display: flex; gap: 8px; margin-bottom: 18px; }
+      .search input { flex: 1; }
+      @media (max-width: 700px) { .layout { grid-template-columns: 1fr; } .container { padding: 16px; } .nav { align-items: flex-start; flex-direction: column; } .nav a { margin: 0 12px 0 0; } }
       .btn {
         display: inline-block;
         background: #0f6fff;
@@ -62,13 +73,21 @@
       <div class="container nav">
         <div class="brand">MarketKura</div>
         <nav>
-          <a href="/" style="color:white; margin-right:12px;">Home</a>
-          <a href="/" style="color:white;">Forum</a>
+          <a href="{% url 'home' %}">Home</a>
+          {% if user.is_authenticated %}
+            <a href="{% url 'create_post' %}">Create post</a>
+            <a href="{% url 'profile' user.username %}">{{ user.username }}</a>
+            <form class="inline" method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="danger" type="submit">Log out</button></form>
+          {% else %}
+            <a href="{% url 'login' %}">Log in</a>
+            <a href="{% url 'signup' %}">Sign up</a>
+          {% endif %}
         </nav>
       </div>
     </header>
 
     <main class="container">
+      {% for message in messages %}<div class="panel">{{ message }}</div>{% endfor %}
       {% block content %}{% endblock %}
     </main>
   </body>

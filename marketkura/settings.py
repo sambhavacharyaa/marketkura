@@ -76,6 +76,8 @@ DATABASES = {
 }
 
 AUTH_USER_MODEL = 'community.User'
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home'
 
 
 # Password validation

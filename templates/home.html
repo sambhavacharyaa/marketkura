@@ -16,10 +16,11 @@
     </aside>
 
     <section>
+      <form class="search" method="get"><input name="q" value="{{ query }}" placeholder="Search posts, topics, or tickers"><button class="btn" type="submit">Search</button></form>
       <div class="panel" style="margin-bottom: 18px;">
         <h1>Investor community forum</h1>
         <p class="muted">Discuss NEPSE, global markets, personal finance, startups, and broader investor ideas in one place.</p>
-        <a class="btn" href="#">Create a post</a>
+        <a class="btn" href="{% url 'create_post' %}">Create a post</a>
       </div>
 
       {% for post in posts %}
@@ -29,7 +30,7 @@
             <span class="badge">{{ post.get_type_display }}</span>
           </div>
           <h2><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h2>
-          <div class="meta">Posted by {{ post.user.username }} · {{ post.created_at|date:'M d, Y' }}</div>
+          <div class="meta">Posted by <a href="{% url 'profile' post.user.username %}">{{ post.user.username }}</a> · {{ post.created_at|date:'M d, Y' }} · {{ post.comment_count }} comments · {{ post.upvotes }} votes</div>
           <p>{{ post.body|truncatewords:30 }}</p>
         </article>
       {% empty %}
