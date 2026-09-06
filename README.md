@@ -44,7 +44,11 @@ This codebase already includes the core backend models and template views for an
 ```text
 marketkura/
 ├── asgi.py
-├── settings.py
+├── settings/
+│   ├── __init__.py
+│   ├── base.py
+│   ├── dev.py
+│   └── prod.py
 ├── urls.py
 ├── wsgi.py
 ├── __init__.py
@@ -132,30 +136,37 @@ DEBUG=True
 ALLOWED_HOSTS=localhost,127.0.0.1
 ```
 
-The project loads environment variables automatically via `python-dotenv` in `marketkura/settings.py`.
+The project loads environment variables automatically via `python-dotenv` in `marketkura/settings/base.py`.
 
 ### 5) Run migrations
 
 ```bash
-python manage.py migrate
+python manage.py migrate --settings=marketkura.settings.dev
 ```
 
 ### 6) Create a superuser
 
 ```bash
-python manage.py createsuperuser
+python manage.py createsuperuser --settings=marketkura.settings.dev
 ```
 
 ### 7) Start the development server
 
 ```bash
-python manage.py runserver
+python manage.py runserver --settings=marketkura.settings.dev
 ```
 
 Then open:
 
 ```text
 http://127.0.0.1:8000/
+```
+
+For production, set the variables from `.env.example` in the deployment environment, then run:
+
+```bash
+python manage.py migrate --settings=marketkura.settings.prod
+gunicorn marketkura.wsgi:application
 ```
 
 ## Admin panel
@@ -171,7 +182,7 @@ This is useful for managing categories, users, posts, reports, and verification 
 ## Running tests
 
 ```bash
-python manage.py test
+python manage.py test --settings=marketkura.settings.dev
 ```
 
 ## Database notes
