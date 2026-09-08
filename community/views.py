@@ -184,6 +184,14 @@ def remove_watchlist_asset(request, pk, item_pk):
     get_object_or_404(WatchlistItem, pk=item_pk, watchlist__pk=pk, watchlist__user=request.user).delete(); return redirect('watchlist_detail', pk=pk)
 
 
+def companies(request):
+    query = request.GET.get('q', '').strip()
+    assets = Tag.objects.annotate(post_count=Count('asset_posts'))
+    if query:
+        assets = assets.filter(Q(ticker__icontains=query) | Q(name__icontains=query) | Q(company_name__icontains=query))
+    return render(request, 'companies.html', {'assets': paginate(request, assets.order_by('ticker', 'name')), 'query': query})
+
+
 def company_detail(request, ticker):
     asset = get_object_or_404(Tag, Q(ticker__iexact=ticker) | Q(slug__iexact=ticker)); all_posts = post_queryset().filter(asset=asset); base = all_posts; section = request.GET.get('section', 'recent')
     if section == 'theses': base = base.filter(type='thesis')

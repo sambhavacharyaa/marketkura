@@ -17,6 +17,7 @@ urlpatterns = [
     path('post/<int:pk>/report/', views.report_post, name='report_post'),
     path('signup/', views.signup, name='signup'),
     path('u/<str:username>/', views.profile, name='profile'),
+    path('companies/', views.companies, name='companies'),
     path('companies/<str:ticker>/', views.company_detail, name='company_detail'),
     path('companies/<str:ticker>/watchlist/', views.add_company_to_watchlist, name='add_company_to_watchlist'),
     path('watchlists/', views.watchlists, name='watchlists'),

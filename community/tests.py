@@ -157,6 +157,7 @@ class PhaseTwoTests(TestCase):
         self.assertContains(response, 'canonical'); self.assertContains(response, 'og:title')
         response = self.client.get(reverse('company_detail', args=['NABIL']), {'section': 'discussions'})
         self.assertContains(response, 'NABIL discussion'); self.assertNotContains(response, 'NABIL thesis')
+        self.assertContains(self.client.get(reverse('companies')), 'Nabil Bank Limited')
 
     def test_post_filters_and_pagination(self):
         for number in range(13):
