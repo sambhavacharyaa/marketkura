@@ -7,15 +7,18 @@
     <span class="badge">{{ post.category.name }}</span>
     <span class="badge">{{ post.get_type_display }}</span>
     <h1>{{ post.title }}</h1>
-    <div class="meta">Posted by <a href="{% url 'profile' post.user.username %}">{{ post.user.username }}</a> · {{ post.created_at|date:'M d, Y' }} · {{ post.upvotes }} votes</div>
+    <div class="meta">Posted by <a href="{% url 'profile' post.user.username %}">{{ post.user.username }}</a>{% if post.user.is_verified %} <span class="verified">✓ Verified Contributor</span>{% endif %} · {{ post.created_at|date:'M d, Y' }} · Updated {{ post.updated_at|date:'M d, Y' }} · {{ post.upvotes }} votes</div>
+    {% if post.asset %}<p><a href="{% url 'company_detail' post.asset.ticker|default:post.asset.slug %}">{{ post.asset.ticker|default:post.asset.name }}</a></p>{% endif %}
+    {% if post.type == 'thesis' %}<section class="panel notice" style="margin:16px 0"><h2>Self-reported thesis</h2><p><strong>Position:</strong> {{ post.get_position_type_display }} · <strong>Entry:</strong> {{ post.entry_price }}{% if post.target_price %} · <strong>Target:</strong> {{ post.target_price }}{% endif %} · <strong>Horizon:</strong> {{ post.get_time_horizon_display }}</p>{% if post.stop_loss %}<p><strong>Risk level:</strong> {{ post.stop_loss }}</p>{% endif %}{% if post.thesis_risk %}<p><strong>Invalidation / risk:</strong> {{ post.thesis_risk }}</p>{% endif %}{% if post.disclosure %}<p><strong>Disclosure:</strong> {{ post.disclosure }}</p>{% endif %}<p class="muted">This is user-generated information, not personalized financial advice.</p></section>{% endif %}
     <p>{{ post.body }}</p>
     <form method="post" action="{% url 'toggle_post_vote' post.pk %}">{% csrf_token %}<input type="hidden" name="next" value="{{ request.path }}"><button class="btn" type="submit">{% if user_voted %}Remove vote{% else %}Upvote{% endif %}</button></form>
+    {% if user == post.user %}<p class="actions"><a href="{% url 'edit_post' post.pk %}">Edit</a><a class="danger" href="{% url 'delete_post' post.pk %}">Delete</a></p>{% endif %}
   </article>
   <section class="panel" style="margin-top:18px;">
     <h2>Discussion</h2>
     {% for comment in comments %}
-      <div class="comment"><div class="meta"><a href="{% url 'profile' comment.user.username %}">{{ comment.user.username }}</a> · {{ comment.created_at|date:'M d, Y H:i' }}</div><p>{{ comment.body }}</p>
-        {% for reply in comment.replies.all %}<div class="comment reply"><div class="meta">{{ reply.user.username }} · {{ reply.created_at|date:'M d, Y H:i' }}</div><p>{{ reply.body }}</p></div>{% endfor %}
+      <div class="comment"><div class="meta"><a href="{% url 'profile' comment.user.username %}">{{ comment.user.username }}</a>{% if comment.user.is_verified %} <span class="verified">✓ Verified Contributor</span>{% endif %} · {{ comment.created_at|date:'M d, Y H:i' }}</div><p>{{ comment.body }}</p>
+        {% for reply in comment.replies.all %}<div class="comment reply"><div class="meta">{{ reply.user.username }}{% if reply.user.is_verified %} <span class="verified">✓ Verified Contributor</span>{% endif %} · {{ reply.created_at|date:'M d, Y H:i' }}</div><p>{{ reply.body }}</p></div>{% endfor %}
       </div>
     {% empty %}<p class="muted">No comments yet. Start the conversation.</p>{% endfor %}
     {% if user.is_authenticated %}

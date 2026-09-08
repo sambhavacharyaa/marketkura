@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block title %}Posts — MarketKura{% endblock %}
+{% block content %}
+<h1>Posts</h1><form class="panel" method="get"><div class="actions">
+  <label>Type <select name="type"><option value="">All</option><option value="discussion">Discussion</option><option value="thesis">Thesis</option></select></label>
+  <label>Asset <select name="asset"><option value="">All</option>{% for asset in assets %}<option value="{{ asset.ticker|default:asset.slug }}">{{ asset.ticker|default:asset.name }}</option>{% endfor %}</select></label>
+  <label><input type="checkbox" name="verified" value="1"> Verified contributors</label>
+  <label>Position <select name="position"><option value="">All</option><option value="long">Long</option><option value="short">Short</option><option value="watching">Watching</option></select></label>
+  <label>Horizon <select name="horizon"><option value="">All</option><option value="short">Short</option><option value="medium">Medium</option><option value="long">Long</option></select></label>
+  <label>Sort <select name="sort"><option value="latest">Latest</option><option value="discussed">Most discussed</option></select></label><button class="btn">Apply</button>
+</div></form>
+{% include 'post_list.html' with posts=posts %}
+{% endblock %}
