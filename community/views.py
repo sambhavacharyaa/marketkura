@@ -28,7 +28,9 @@ def post_queryset():
 def asset_from_post(post):
     if not post.asset_id and (post.asset_tag or '').strip():
         ticker = post.asset_tag.strip().upper()
-        post.asset, _ = Tag.objects.get_or_create(ticker=ticker, defaults={'name': ticker, 'slug': slugify(ticker)})
+        post.asset = Tag.objects.filter(Q(ticker__iexact=ticker) | Q(slug__iexact=slugify(ticker))).first()
+        if not post.asset:
+            post.asset = Tag.objects.create(ticker=ticker, name=ticker, slug=slugify(ticker))
 
 
 def create_notification(recipient, actor, kind, message, target=None):
@@ -183,10 +185,10 @@ def remove_watchlist_asset(request, pk, item_pk):
 
 
 def company_detail(request, ticker):
-    asset = get_object_or_404(Tag, Q(ticker__iexact=ticker) | Q(slug__iexact=ticker)); base = post_queryset().filter(asset=asset); section = request.GET.get('section', 'recent')
+    asset = get_object_or_404(Tag, Q(ticker__iexact=ticker) | Q(slug__iexact=ticker)); all_posts = post_queryset().filter(asset=asset); base = all_posts; section = request.GET.get('section', 'recent')
     if section == 'theses': base = base.filter(type='thesis')
     if section == 'discussions': base = base.filter(type='discussion')
-    stats = base.aggregate(total=Count('id'), discussions=Count('id', filter=Q(type='discussion')), theses=Count('id', filter=Q(type='thesis')), verified=Count('id', filter=Q(user__is_verified=True)))
+    stats = all_posts.aggregate(total=Count('id'), discussions=Count('id', filter=Q(type='discussion')), theses=Count('id', filter=Q(type='thesis')), verified=Count('id', filter=Q(user__is_verified=True)))
     return render(request, 'company_detail.html', {'asset': asset, 'posts': paginate(request, base), 'stats': stats, 'section': section, 'canonical_url': request.build_absolute_uri(reverse('company_detail', args=[asset.ticker or asset.slug]))})
 
 
