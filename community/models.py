@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
 from django.db import models
+from django.db.models import Q
 from django.urls import reverse
 from django.utils.text import slugify
 
@@ -14,6 +15,22 @@ class User(AbstractUser):
 
     def __str__(self):
         return self.username
+
+    def get_absolute_url(self):
+        return reverse('profile', args=[self.username])
+
+
+class Follow(models.Model):
+    follower = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='following')
+    following = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='followers')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['follower', 'following'], name='unique_user_follow'),
+            models.CheckConstraint(check=~Q(follower=models.F('following')), name='prevent_self_follow'),
+        ]
+        indexes = [models.Index(fields=['following', '-created_at'])]
 
 
 class Category(models.Model):
@@ -157,6 +174,11 @@ class VerificationRequest(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+        constraints = [
+            models.UniqueConstraint(
+                fields=['user'], condition=Q(status='pending'), name='one_pending_verification_per_user'
+            ),
+        ]
 
 
 class Notification(models.Model):

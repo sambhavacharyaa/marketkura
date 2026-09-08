@@ -1,7 +1,7 @@
 from django.test import TestCase
 from django.urls import reverse
 
-from .models import (Category, Comment, Notification, Post, PostVote, Tag, User,
+from .models import (Category, Comment, Follow, Notification, Post, PostVote, Tag, User,
                      VerificationRequest, Watchlist, WatchlistItem)
 
 
@@ -185,3 +185,19 @@ class PhaseTwoTests(TestCase):
         self.assertEqual(self.client.get(reverse('search')).status_code, 200)
         for number in range(13): self.create_post(type='discussion', title=f'Extra {number}', body='Search body', asset=self.asset)
         self.assertContains(self.client.get(reverse('search'), {'q': 'search', 'page': 2}), 'Page 2 of 2')
+
+    def test_follow_creates_notification_and_can_be_removed(self):
+        self.client.force_login(self.user)
+        response = self.client.post(reverse('toggle_follow', args=[self.other.username]))
+        self.assertRedirects(response, reverse('profile', args=[self.other.username]))
+        self.assertTrue(Follow.objects.filter(follower=self.user, following=self.other).exists())
+        self.assertTrue(Notification.objects.filter(recipient=self.other, notification_type='follow').exists())
+        self.assertEqual(self.client.get(reverse('toggle_follow', args=[self.other.username])).status_code, 405)
+        self.client.post(reverse('toggle_follow', args=[self.other.username]))
+        self.assertFalse(Follow.objects.filter(follower=self.user, following=self.other).exists())
+
+    def test_post_mutations_require_post(self):
+        post = self.create_post(type='discussion', title='Protected post', body='Body')
+        self.client.force_login(self.user)
+        self.assertEqual(self.client.get(reverse('toggle_post_vote', args=[post.pk])).status_code, 405)
+        self.assertEqual(self.client.get(reverse('add_comment', args=[post.pk])).status_code, 405)

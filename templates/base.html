@@ -86,7 +86,7 @@
           {% if user.is_authenticated %}
             <a href="{% url 'create_post' %}">Create post</a>
             <a href="{% url 'watchlists' %}">Watchlists</a>
-            <a href="{% url 'notifications' %}">🔔 Notifications{% if unread_notification_count %} ({{ unread_notification_count }}){% endif %}</a>
+            <details class="notification-menu"><summary>Notifications{% if unread_notification_count %} ({{ unread_notification_count }}){% endif %}</summary><div class="panel notification-dropdown"><a href="{% url 'notifications' %}">View all notifications</a>{% for notification in recent_notifications %}<p class="meta{% if not notification.is_read %} notice{% endif %}">{{ notification.message }}</p>{% empty %}<p class="muted">No notifications yet.</p>{% endfor %}</div></details>
             <a href="{% url 'profile' user.username %}">{{ user.username }}</a>
             {% if user.is_staff %}<a href="{% url 'verification_dashboard' %}">Verification review</a>{% endif %}
             <form class="inline" method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="danger" type="submit">Log out</button></form>

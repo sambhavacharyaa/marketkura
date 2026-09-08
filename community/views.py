@@ -10,15 +10,22 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
+from django.views.decorators.http import require_POST
 
 from .forms import CommentForm, PostForm, ReportForm, SignUpForm, VerificationRequestForm, VerificationReviewForm, WatchlistForm
-from .models import Category, Comment, Notification, Post, PostVote, Report, Tag, User, VerificationRequest, Watchlist, WatchlistItem
+from .models import Category, Comment, Follow, Notification, Post, PostVote, Report, Tag, User, VerificationRequest, Watchlist, WatchlistItem
 
 
 def paginate(request, queryset, per_page=12):
     if not queryset.ordered:
         queryset = queryset.order_by('-created_at')
     return Paginator(queryset, per_page).get_page(request.GET.get('page'))
+
+
+def query_without_page(request):
+    query = request.GET.copy()
+    query.pop('page', None)
+    return query.urlencode()
 
 
 def post_queryset():
@@ -60,11 +67,11 @@ def apply_post_filters(request, posts):
 
 
 def home(request):
-    return render(request, 'home.html', {'categories': Category.objects.all(), 'posts': paginate(request, apply_post_filters(request, post_queryset())), 'query': request.GET.get('q', '').strip(), 'assets': Tag.objects.order_by('ticker', 'name')})
+    return render(request, 'home.html', {'categories': Category.objects.all(), 'posts': paginate(request, apply_post_filters(request, post_queryset())), 'query': request.GET.get('q', '').strip(), 'assets': Tag.objects.order_by('ticker', 'name'), 'filter_query': query_without_page(request)})
 
 
 def posts(request):
-    return render(request, 'posts.html', {'posts': paginate(request, apply_post_filters(request, post_queryset())), 'assets': Tag.objects.order_by('ticker', 'name')})
+    return render(request, 'posts.html', {'posts': paginate(request, apply_post_filters(request, post_queryset())), 'assets': Tag.objects.order_by('ticker', 'name'), 'filter_query': query_without_page(request)})
 
 
 def category_detail(request, slug):
@@ -108,6 +115,7 @@ def delete_post(request, pk):
 
 
 @login_required
+@require_POST
 def add_comment(request, pk):
     post = get_object_or_404(Post, pk=pk); form = CommentForm(request.POST)
     if form.is_valid():
@@ -119,6 +127,7 @@ def add_comment(request, pk):
 
 
 @login_required
+@require_POST
 def toggle_post_vote(request, pk):
     post = get_object_or_404(Post, pk=pk); vote, created = PostVote.objects.get_or_create(post=post, user=request.user)
     if not created: vote.delete()
@@ -136,7 +145,21 @@ def signup(request):
 
 def profile(request, username):
     user = get_object_or_404(User, username=username)
-    return render(request, 'profile.html', {'profile_user': user, 'posts': paginate(request, user.posts.select_related('category', 'asset'))})
+    return render(request, 'profile.html', {'profile_user': user, 'posts': paginate(request, user.posts.select_related('category', 'asset')), 'is_following': request.user.is_authenticated and Follow.objects.filter(follower=request.user, following=user).exists()})
+
+
+@login_required
+@require_POST
+def toggle_follow(request, username):
+    target = get_object_or_404(User, username=username)
+    if target == request.user:
+        return redirect('profile', username=target.username)
+    follow, created = Follow.objects.get_or_create(follower=request.user, following=target)
+    if created:
+        create_notification(target, request.user, 'follow', f'{request.user.username} followed you.', target)
+    else:
+        follow.delete()
+    return redirect(request.POST.get('next') or 'profile', username=target.username)
 
 
 @login_required
@@ -160,6 +183,7 @@ def watchlist_detail(request, pk):
 
 
 @login_required
+@require_POST
 def rename_watchlist(request, pk):
     watchlist = get_object_or_404(Watchlist, pk=pk, user=request.user); form = WatchlistForm(request.POST, instance=watchlist)
     if form.is_valid(): form.save()
@@ -167,6 +191,7 @@ def rename_watchlist(request, pk):
 
 
 @login_required
+@require_POST
 def delete_watchlist(request, pk):
     watchlist = get_object_or_404(Watchlist, pk=pk, user=request.user)
     if request.method == 'POST': watchlist.delete(); return redirect('watchlists')
@@ -174,12 +199,14 @@ def delete_watchlist(request, pk):
 
 
 @login_required
+@require_POST
 def add_watchlist_asset(request, pk):
     watchlist = get_object_or_404(Watchlist, pk=pk, user=request.user); asset = get_object_or_404(Tag, pk=request.POST.get('asset'))
     WatchlistItem.objects.get_or_create(watchlist=watchlist, asset=asset); return redirect('watchlist_detail', pk=pk)
 
 
 @login_required
+@require_POST
 def remove_watchlist_asset(request, pk, item_pk):
     get_object_or_404(WatchlistItem, pk=item_pk, watchlist__pk=pk, watchlist__user=request.user).delete(); return redirect('watchlist_detail', pk=pk)
 
@@ -201,6 +228,7 @@ def company_detail(request, ticker):
 
 
 @login_required
+@require_POST
 def add_company_to_watchlist(request, ticker):
     asset = get_object_or_404(Tag, Q(ticker__iexact=ticker) | Q(slug__iexact=ticker)); watchlist = request.user.watchlists.order_by('created_at').first()
     if watchlist: WatchlistItem.objects.get_or_create(watchlist=watchlist, asset=asset); messages.success(request, f'{asset.name} added to {watchlist.name}.'); return redirect('watchlist_detail', pk=watchlist.pk)
@@ -245,10 +273,12 @@ def notifications(request): return render(request, 'notifications.html', {'notif
 
 
 @login_required
+@require_POST
 def mark_notification_read(request, pk): Notification.objects.filter(pk=pk, recipient=request.user).update(is_read=True); return redirect(request.POST.get('next') or 'notifications')
 
 
 @login_required
+@require_POST
 def mark_all_notifications_read(request): request.user.notifications.filter(is_read=False).update(is_read=True); return redirect('notifications')
 
 

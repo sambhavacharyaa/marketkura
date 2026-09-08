@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import (Category, Comment, Notification, Post, PostVote, Report, Tag,
+from .models import (Category, Comment, Follow, Notification, Post, PostVote, Report, Tag,
                      User, VerificationRequest, Watchlist, WatchlistItem)
 
 
@@ -29,3 +29,4 @@ class WatchlistAdmin(admin.ModelAdmin):
 
 admin.site.register(WatchlistItem)
 admin.site.register(Notification)
+admin.site.register(Follow)
