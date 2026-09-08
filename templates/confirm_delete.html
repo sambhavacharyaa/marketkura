@@ -1,0 +1,1 @@
+{% extends 'base.html' %}{% block content %}<section class="panel"><h1>Delete {{ label }}</h1><p>Are you sure you want to delete “{{ object }}”?</p><form method="post">{% csrf_token %}<button class="danger">Delete permanently</button></form></section>{% endblock %}

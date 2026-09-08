@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}MarketKura{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}MarketKura is a community for user-generated market discussions and self-reported theses.{% endblock %}">
+    {% block seo %}{% endblock %}
     <style>
       body {
         margin: 0;
@@ -55,6 +57,11 @@
       .danger { color: #b42318; background: transparent; border: 0; cursor: pointer; }
       .search { display: flex; gap: 8px; margin-bottom: 18px; }
       .search input { flex: 1; }
+      .verified { color: #0d4fcf; font-size: .85em; font-weight: bold; }
+      .actions { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+      .field-errors { color:#b42318; margin:4px 0; }
+      .pagination { display:flex; gap:10px; align-items:center; margin:18px 0; }
+      .notice { border-left:4px solid #0f6fff; }
       @media (max-width: 700px) { .layout { grid-template-columns: 1fr; } .container { padding: 16px; } .nav { align-items: flex-start; flex-direction: column; } .nav a { margin: 0 12px 0 0; } }
       .btn {
         display: inline-block;
@@ -74,9 +81,14 @@
         <div class="brand">MarketKura</div>
         <nav>
           <a href="{% url 'home' %}">Home</a>
+          <a href="{% url 'posts' %}">Posts</a>
+          <a href="{% url 'search' %}">Search</a>
           {% if user.is_authenticated %}
             <a href="{% url 'create_post' %}">Create post</a>
+            <a href="{% url 'watchlists' %}">Watchlists</a>
+            <details class="notification-menu"><summary>Notifications{% if unread_notification_count %} ({{ unread_notification_count }}){% endif %}</summary><div class="panel notification-dropdown"><a href="{% url 'notifications' %}">View all notifications</a>{% for notification in recent_notifications %}<p class="meta{% if not notification.is_read %} notice{% endif %}">{{ notification.message }}</p>{% empty %}<p class="muted">No notifications yet.</p>{% endfor %}</div></details>
             <a href="{% url 'profile' user.username %}">{{ user.username }}</a>
+            {% if user.is_staff %}<a href="{% url 'verification_dashboard' %}">Verification review</a>{% endif %}
             <form class="inline" method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="danger" type="submit">Log out</button></form>
           {% else %}
             <a href="{% url 'login' %}">Log in</a>
