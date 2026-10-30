@@ -663,6 +663,12 @@ a.chip-cat:hover { background: var(--brand-soft); color: var(--brand-dark); text
   /* Leaves room so the bar never covers the last bit of page content (composer buttons, footer
      links) — matches the bar's own height plus its safe-area inset. */
   body { padding-bottom: calc(58px + env(safe-area-inset-bottom)); }
+  /* The header hamburger and the bottom nav's own "Menu" button both open the same drawer — once
+     the bottom nav is on screen (this breakpoint), its Menu tab is the one trigger that should
+     exist; the header's survives only for the 641–1099px tablet range above, where there's no
+     bottom nav to provide one. #sidebar-toggle (the header button's id) is specific enough to
+     win over the plain button.sidebar-toggle rule that turns both on together above 640px. */
+  #sidebar-toggle { display: none; }
   /* The signed-out header crammed a hamburger, logo, "Log in", a "Sign up" button and the language
      switcher into one row with nothing to spare, wrapping into a cramped, uneven mess on true phone
      widths. Sign up stays one tap away via the bottom nav's own Sign up tab, so dropping the
