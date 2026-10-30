@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MarketKuraa\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 15:45+0000\n"
+"POT-Creation-Date: 2026-10-30 20:38+0000\n"
 "PO-Revision-Date: 2026-09-20 00:00+0000\n"
 "Last-Translator: MarketKuraa\n"
 "Language-Team: Nepali\n"
@@ -41,6 +41,39 @@ msgstr "\"पोस्ट\" वा \"टिप्पणी\" मध्ये ठ
 
 msgid "Not found."
 msgstr "फेला परेन।"
+
+msgid "Bold"
+msgstr "बोल्ड"
+
+msgid "Italic"
+msgstr "इटालिक"
+
+msgid "Strikethrough"
+msgstr "स्ट्राइकथ्रु"
+
+msgid "Heading"
+msgstr "शीर्षक"
+
+msgid "Quote"
+msgstr "उद्धरण"
+
+msgid "Code"
+msgstr "कोड"
+
+msgid "Bulleted list"
+msgstr "बुलेट सूची"
+
+msgid "Numbered list"
+msgstr "क्रमांकित सूची"
+
+msgid "Link"
+msgstr "लिंक"
+
+msgid "Write"
+msgstr "लेख्नुहोस्"
+
+msgid "Preview"
+msgstr "पूर्वावलोकन"
 
 msgid "Usernames can only use English letters, numbers, and . _ -"
 msgstr "प्रयोगकर्ता नाममा अंग्रेजी अक्षर, अंक, र . _ - मात्र प्रयोग गर्न सकिन्छ"
@@ -92,6 +125,54 @@ msgid ""
 "Optional. A chart, screenshot or other supporting image — shown at the top "
 "of the post."
 msgstr "वैकल्पिक। चार्ट, स्क्रिनसट वा अन्य सहयोगी तस्बिर — पोस्टको माथि देखाइन्छ।"
+
+msgid "Category"
+msgstr "वर्ग"
+
+msgid "Type"
+msgstr "प्रकार"
+
+msgid "Title"
+msgstr "शीर्षक"
+
+msgid "Body"
+msgstr "विवरण"
+
+msgid "Image"
+msgstr "तस्बिर"
+
+msgid "Asset"
+msgstr "सम्पत्ति"
+
+msgid "Asset tag"
+msgstr "सम्पत्ति ट्याग"
+
+msgid "Position"
+msgstr "पोजिसन"
+
+msgid "Entry"
+msgstr "प्रवेश"
+
+msgid "Target"
+msgstr "लक्ष्य"
+
+msgid "Stop / exit plan"
+msgstr "स्टप / बाहिरिने योजना"
+
+msgid "Horizon"
+msgstr "अवधि"
+
+msgid "Risks"
+msgstr "जोखिमहरू"
+
+msgid "Disclosure"
+msgstr "खुलासा"
+
+msgid "Starts"
+msgstr "सुरु"
+
+msgid "Closes"
+msgstr "बन्द"
 
 msgid "A thesis body is required."
 msgstr "थेसिसको विवरण आवश्यक छ।"
@@ -334,6 +415,20 @@ msgstr "%(user)s ले तपाईंलाई उल्लेख गर्न
 #, python-format
 msgid "%(user)s reacted to your post."
 msgstr "%(user)s ले तपाईंको पोस्टमा प्रतिक्रिया दिनुभयो।"
+
+msgid "in a moment"
+msgstr "केही क्षणमा"
+
+msgid "just now"
+msgstr "भर्खरै"
+
+#, python-format
+msgid "%(delta)s from now"
+msgstr "%(delta)s पछि"
+
+#, python-format
+msgid "%(delta)s ago"
+msgstr "%(delta)s अघि"
 
 msgid ""
 "Your post is live. Posts are user-generated and theses are self-reported."
@@ -778,17 +873,11 @@ msgstr "लाइभ मूल्य · छिट्टै आउँदैछ"
 msgid "Community feed"
 msgstr "सामुदायिक फिड"
 
-msgid "Title"
-msgstr "शीर्षक"
-
 msgid "Share an insight, idea or question…"
 msgstr "कुनै अन्तर्दृष्टि, विचार वा प्रश्न साझा गर्नुहोस्…"
 
 msgid "Add your reasoning. Markdown is supported."
 msgstr "आफ्नो तर्क थप्नुहोस्। मार्कडाउन प्रयोग गर्न सकिन्छ।"
-
-msgid "Category"
-msgstr "वर्ग"
 
 msgid "Ticker (optional)"
 msgstr "टिकर (ऐच्छिक)"
@@ -1566,17 +1655,8 @@ msgstr "अर्को"
 msgid "Locked"
 msgstr "लक गरिएको"
 
-msgid "Entry"
-msgstr "प्रवेश"
-
-msgid "Target"
-msgstr "लक्ष्य"
-
 msgid "Ended"
 msgstr "सकियो"
-
-msgid "Closes"
-msgstr "बन्द"
 
 #, python-format
 msgid "%(n)s reply"
@@ -1590,18 +1670,6 @@ msgstr "%(n)s मिनेट पढ्न"
 
 msgid "More filters"
 msgstr "थप फिल्टरहरू"
-
-msgid "Type"
-msgstr "प्रकार"
-
-msgid "Asset"
-msgstr "सम्पत्ति"
-
-msgid "Position"
-msgstr "पोजिसन"
-
-msgid "Horizon"
-msgstr "अवधि"
 
 msgid "Date"
 msgstr "मिति"
@@ -1641,15 +1709,6 @@ msgstr "पोस्ट गर्ने"
 msgid "Self-reported thesis"
 msgstr "स्वयं-रिपोर्ट गरिएको थेसिस"
 
-msgid "Stop / exit plan"
-msgstr "स्टप / बाहिरिने योजना"
-
-msgid "Risks"
-msgstr "जोखिमहरू"
-
-msgid "Disclosure"
-msgstr "खुलासा"
-
 #, python-format
 msgid ""
 "Published %(d)s (UTC). Timestamped so it can be cited later. Not financial "
@@ -1660,9 +1719,6 @@ msgstr ""
 
 msgid "AMA with"
 msgstr "AMA — होस्ट:"
-
-msgid "Starts"
-msgstr "सुरु"
 
 #, python-format
 msgid "%(n)s unanswered question(s)"
@@ -1996,6 +2052,9 @@ msgstr "अनुभव"
 
 msgid "Credentials"
 msgstr "योग्यता"
+
+msgid "LinkedIn"
+msgstr "लिंक्डइन"
 
 msgid "Website"
 msgstr "वेबसाइट"

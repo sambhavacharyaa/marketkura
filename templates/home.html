@@ -26,7 +26,7 @@
           <textarea id="c-body" name="body" rows="2" required placeholder="{% trans 'Add your reasoning. Markdown is supported.' %}"></textarea>
           <div class="composer-row">
             <label class="sr-only" for="c-cat">{% trans "Category" %}</label>
-            <select id="c-cat" name="category" required><option value="">{% trans "Category" %}</option>{% for category in categories %}<option value="{{ category.pk }}">{{ category.name }}</option>{% endfor %}</select>
+            <select id="c-cat" name="category" required><option value="">{% trans "Category" %}</option>{% for category in categories %}<option value="{{ category.pk }}">{{ category.display_name }}</option>{% endfor %}</select>
             <label class="sr-only" for="c-ticker">{% trans "Ticker (optional)" %}</label>
             <span class="ticker-input"><span aria-hidden="true">$</span><input id="c-ticker" name="asset_tag" maxlength="20" placeholder="{% trans 'TICKER' %}"></span>
             <input class="sr-only" type="file" id="c-image" name="image" accept="image/*">
@@ -64,7 +64,7 @@
       </div>
       <div class="chips-row" role="group" aria-label="{% trans 'Filter by category' %}">
         <a class="chip-filter{% if not active_category %} active{% endif %}" href="?{% query_string category='' page='' %}"{% if not active_category %} aria-current="true"{% endif %} hx-get="?{% query_string category='' page='' %}" hx-target="#feed-results" hx-select="#feed-results" hx-select-oob="#site-sidebar" hx-swap="outerHTML" hx-push-url="true" hx-indicator="#thread-skeleton">{% trans "All" %}</a>
-        {% for category in categories_all %}<a class="chip-filter{% if active_category == category.slug %} active{% endif %}" href="?{% query_string category=category.slug page='' %}"{% if active_category == category.slug %} aria-current="true"{% endif %} hx-get="?{% query_string category=category.slug page='' %}" hx-target="#feed-results" hx-select="#feed-results" hx-select-oob="#site-sidebar" hx-swap="outerHTML" hx-push-url="true" hx-indicator="#thread-skeleton">{{ category.name }}</a>{% endfor %}
+        {% for category in categories_all %}<a class="chip-filter{% if active_category == category.slug %} active{% endif %}" href="?{% query_string category=category.slug page='' %}"{% if active_category == category.slug %} aria-current="true"{% endif %} hx-get="?{% query_string category=category.slug page='' %}" hx-target="#feed-results" hx-select="#feed-results" hx-select-oob="#site-sidebar" hx-swap="outerHTML" hx-push-url="true" hx-indicator="#thread-skeleton">{{ category.display_name }}</a>{% endfor %}
       </div>
       {% include 'partials/post_filters.html' %}
       {% if tab == 'following' and not posts %}<div class="panel"><p class="muted">{% trans "Follow members and categories to build your personal feed." %}</p></div>{% endif %}

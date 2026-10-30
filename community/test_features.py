@@ -978,6 +978,56 @@ class LocalisationTests(BaseCase):
         self.assertContains(response, 'lang="en"')
         self.assertContains(response, 'Log in')
 
+    def test_local_naturaltime_in_english(self):
+        from django.utils import translation
+        from community.templatetags.community_extras import local_naturaltime
+        with translation.override('en'):
+            self.assertEqual(local_naturaltime(timezone.now() - timedelta(seconds=10)), 'just now')
+            self.assertEqual(local_naturaltime(timezone.now() - timedelta(days=52)), '1 month, 3 weeks ago')
+            self.assertEqual(local_naturaltime(timezone.now() - timedelta(hours=3)), '3 hours ago')
+            self.assertEqual(local_naturaltime(timezone.now() - timedelta(hours=1)), '1 hour ago')
+
+    def test_local_naturaltime_in_nepali_has_correct_spacing_and_units(self):
+        from django.utils import translation
+        from community.templatetags.community_extras import local_naturaltime
+        with translation.override('ne'):
+            self.assertEqual(local_naturaltime(timezone.now() - timedelta(seconds=10)), 'भर्खरै')
+            result = local_naturaltime(timezone.now() - timedelta(days=52))
+            self.assertEqual(result, '1 महिना 3 हप्ता अघि')
+            # The original bug: no space between the two units, and English unit words.
+            self.assertNotIn('महिना3', result)
+            self.assertNotIn('month', result)
+            self.assertNotIn('week', result)
+
+    def test_category_display_name_is_translated_in_nepali_and_english_elsewhere(self):
+        from django.utils import translation
+        with translation.override('en'):
+            self.assertEqual(self.category.display_name, 'NEPSE')
+        with translation.override('ne'):
+            self.assertEqual(self.category.display_name, 'नेप्से')
+
+    def test_category_display_name_falls_back_for_an_unmapped_category(self):
+        from django.utils import translation
+        custom = Category.objects.create(name='Commodities', slug='commodities')
+        with translation.override('ne'):
+            self.assertEqual(custom.display_name, 'Commodities')
+
+    def test_feed_card_shows_localised_relative_time_in_nepali(self):
+        self.post()
+        self.client.post(reverse('set_language'), {'language': 'ne', 'next': '/'})
+        response = self.client.get('/')
+        self.assertContains(response, 'भर्खरै')
+
+    def test_markdown_toolbar_labels_are_translated_in_nepali(self):
+        self.login(self.alice)
+        self.client.post(reverse('set_language'), {'language': 'ne', 'next': reverse('create_post')})
+        response = self.client.get(reverse('create_post'))
+        # json_script emits ASCII-safe \uXXXX escapes (ensure_ascii=True), not raw UTF-8 bytes —
+        # JS's JSON.parse decodes these correctly at runtime, so this is the right thing for the
+        # test to look for too, not the literal Devanagari substring.
+        self.assertContains(response, '\\u092c\\u094b\\u0932\\u094d\\u0921')
+        self.assertNotContains(response, '"bold": "Bold"')
+
 
 class SearchTests(BaseCase):
     def titles(self, query, **params):

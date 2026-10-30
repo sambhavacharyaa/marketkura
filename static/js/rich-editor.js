@@ -8,18 +8,27 @@
   var PREVIEW_URL = document.body.dataset.markdownPreviewUrl;
   var uid = 0;
 
+  // Server-rendered translations for the labels below (English fallbacks here are just that -
+  // fallbacks, in case the json_script tag is ever missing) - see base.html's
+  // #md-toolbar-labels and context_processors.site().
+  var LABELS = (function () {
+    var el = document.getElementById('md-toolbar-labels');
+    if (!el) return {};
+    try { return JSON.parse(el.textContent); } catch (e) { return {}; }
+  })();
+
   var BUTTONS = [
-    { cmd: 'bold', icon: 'bold', label: 'Bold', key: 'b' },
-    { cmd: 'italic', icon: 'italic', label: 'Italic', key: 'i' },
-    { cmd: 'strike', icon: 'strike', label: 'Strikethrough' },
+    { cmd: 'bold', icon: 'bold', label: LABELS.bold || 'Bold', key: 'b' },
+    { cmd: 'italic', icon: 'italic', label: LABELS.italic || 'Italic', key: 'i' },
+    { cmd: 'strike', icon: 'strike', label: LABELS.strike || 'Strikethrough' },
     'sep',
-    { cmd: 'heading', icon: 'heading', label: 'Heading' },
-    { cmd: 'quote', icon: 'quote', label: 'Quote' },
-    { cmd: 'code', icon: 'code', label: 'Code' },
+    { cmd: 'heading', icon: 'heading', label: LABELS.heading || 'Heading' },
+    { cmd: 'quote', icon: 'quote', label: LABELS.quote || 'Quote' },
+    { cmd: 'code', icon: 'code', label: LABELS.code || 'Code' },
     'sep',
-    { cmd: 'bullet', icon: 'list-bullet', label: 'Bulleted list' },
-    { cmd: 'numbered', icon: 'list-numbered', label: 'Numbered list' },
-    { cmd: 'link', icon: 'link', label: 'Link', key: 'k' },
+    { cmd: 'bullet', icon: 'list-bullet', label: LABELS.bullet || 'Bulleted list' },
+    { cmd: 'numbered', icon: 'list-numbered', label: LABELS.numbered || 'Numbered list' },
+    { cmd: 'link', icon: 'link', label: LABELS.link || 'Link', key: 'k' },
   ];
   var SHORTCUTS = { b: 'bold', i: 'italic', k: 'link' };
 
@@ -138,10 +147,10 @@
     tabs.className = 'md-tabs';
     tabs.setAttribute('role', 'tablist');
     var writeTab = document.createElement('button');
-    writeTab.type = 'button'; writeTab.className = 'md-tab active'; writeTab.textContent = 'Write';
+    writeTab.type = 'button'; writeTab.className = 'md-tab active'; writeTab.textContent = LABELS.write || 'Write';
     writeTab.setAttribute('role', 'tab'); writeTab.setAttribute('aria-selected', 'true'); writeTab.setAttribute('aria-controls', textarea.id);
     var previewTab = document.createElement('button');
-    previewTab.type = 'button'; previewTab.className = 'md-tab'; previewTab.textContent = 'Preview';
+    previewTab.type = 'button'; previewTab.className = 'md-tab'; previewTab.textContent = LABELS.preview || 'Preview';
     previewTab.setAttribute('role', 'tab'); previewTab.setAttribute('aria-selected', 'false'); previewTab.setAttribute('aria-controls', paneId);
     tabs.appendChild(writeTab);
     tabs.appendChild(previewTab);

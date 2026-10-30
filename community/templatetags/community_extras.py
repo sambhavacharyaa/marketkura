@@ -5,9 +5,12 @@ import nh3
 from django import template
 from django.contrib.staticfiles import finders
 from django.templatetags.static import static
+from django.utils import timezone
 from django.utils.html import strip_tags
 from django.utils.safestring import mark_safe
 from django.utils.text import Truncator
+from django.utils.translation import get_language
+from django.utils.translation import gettext as _
 
 register = template.Library()
 
@@ -73,6 +76,64 @@ CATEGORY_ICONS = {
 @register.filter
 def category_icon(category):
     return CATEGORY_ICONS.get(category.slug, 'hash')
+
+
+# Largest-to-smallest, same two-unit breakdown as Django's own naturaltime (e.g. "1 month, 3
+# weeks ago") - matched here rather than reused because django.contrib.humanize's bundled Nepali
+# translations are incomplete: unit words fall back to English and the wrapping string drops its
+# spacing, producing "1 month,3 weeksपहिले". Nepali unit words don't inflect for plural, so there's
+# no separate singular/plural form to carry here the way English needs one.
+_TIME_CHUNKS = (
+    (60 * 60 * 24 * 365, 'year', 'वर्ष'),
+    (60 * 60 * 24 * 30, 'month', 'महिना'),
+    (60 * 60 * 24 * 7, 'week', 'हप्ता'),
+    (60 * 60 * 24, 'day', 'दिन'),
+    (60 * 60, 'hour', 'घण्टा'),
+    (60, 'minute', 'मिनेट'),
+)
+
+
+def _english_unit(count, unit):
+    return f'{count} {unit}' if count == 1 else f'{count} {unit}s'
+
+
+@register.filter
+def local_naturaltime(value):
+    """Relative time ("1 month, 3 weeks ago" / "१ महिना ३ हप्ता अघि"), correctly spaced and worded
+    in both languages this site supports. See _TIME_CHUNKS above for why this doesn't just use
+    django.contrib.humanize's naturaltime."""
+    if not value:
+        return ''
+    delta = timezone.now() - value
+    seconds = delta.total_seconds()
+    future = seconds < 0
+    seconds = abs(seconds)
+    is_nepali = get_language() == 'ne'
+
+    if seconds < 60:
+        if future:
+            return 'केही बेरमा' if is_nepali else _('in a moment')
+        return 'भर्खरै' if is_nepali else _('just now')
+
+    parts = []
+    remaining = int(seconds)
+    for chunk_seconds, unit_en, unit_ne in _TIME_CHUNKS:
+        if remaining < chunk_seconds:
+            continue
+        count = remaining // chunk_seconds
+        parts.append((count, unit_en, unit_ne))
+        remaining -= count * chunk_seconds
+        if len(parts) == 2:
+            break
+    if not parts:
+        parts = [(max(1, int(seconds // 60)), 'minute', 'मिनेट')]
+
+    if is_nepali:
+        delta_str = ' '.join(f'{count} {unit_ne}' for count, _unit_en, unit_ne in parts)
+        return f'{delta_str} पछि' if future else f'{delta_str} अघि'
+
+    delta_str = ', '.join(_english_unit(count, unit_en) for count, unit_en, _unit_ne in parts)
+    return (_('%(delta)s from now') if future else _('%(delta)s ago')) % {'delta': delta_str}
 
 
 @register.simple_tag

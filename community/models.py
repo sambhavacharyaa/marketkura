@@ -8,6 +8,7 @@ from django.urls import reverse
 from django.utils import timezone
 from django.utils.text import slugify
 from django.utils.translation import gettext_lazy as _
+from django.utils.translation import get_language
 
 
 EDITED_GRACE = timedelta(seconds=10)
@@ -50,6 +51,20 @@ class Follow(models.Model):
         indexes = [models.Index(fields=['following', '-created_at'])]
 
 
+# The six blueprint categories are seeded (0006_seed_categories) with English names, not a
+# translatable model field — this map supplies the Nepali display name by slug instead. A
+# category created later through the admin without an entry here just falls back to its stored
+# (English) name, same graceful-fallback approach as CATEGORY_ICONS in community_extras.py.
+CATEGORY_NAMES_NE = {
+    'nepse': 'नेप्से',
+    'global-markets': 'विश्वव्यापी बजार',
+    'startups-founders': 'स्टार्टअप र संस्थापकहरू',
+    'personal-finance': 'व्यक्तिगत फाइनान्स',
+    'trading-strategy': 'ट्रेडिङ रणनीति',
+    'market-news': 'बजार समाचार',
+}
+
+
 class Category(models.Model):
     name = models.CharField(max_length=100)
     slug = models.SlugField(unique=True)
@@ -63,6 +78,12 @@ class Category(models.Model):
         verbose_name_plural = 'categories'
 
     def __str__(self):
+        return self.display_name
+
+    @property
+    def display_name(self):
+        if get_language() == 'ne':
+            return CATEGORY_NAMES_NE.get(self.slug, self.name)
         return self.name
 
     def get_absolute_url(self):

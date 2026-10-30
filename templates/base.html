@@ -20,6 +20,7 @@
     {% block seo %}{% endblock %}
   </head>
   <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' data-markdown-preview-url="{% url 'markdown_preview' %}">
+    {{ md_toolbar_labels|json_script:"md-toolbar-labels" }}
     {% include 'partials/icons.html' %}
     <a class="skip-link" href="#main">{% trans "Skip to main content" %}</a>
     {% if not user.is_authenticated %}
@@ -112,7 +113,7 @@
         </nav>
         <div class="sidebar-section">
           <h2 class="sidebar-heading">{% include 'partials/icon.html' with name='hash' %}{% trans "Categories" %}</h2>
-          <div class="sidebar-grid">{% for category in sidebar_categories %}<div class="sidebar-grid-item"><a href="{{ category.get_absolute_url }}"{% if current == 'category_detail' and request.resolver_match.kwargs.slug == category.slug %} aria-current="page"{% endif %} hx-get="{{ category.get_absolute_url }}" hx-target="#app-shell" hx-select="#app-shell" hx-swap="outerHTML show:window:top" hx-push-url="true" hx-indicator="#thread-skeleton"><span class="sidebar-grid-icon">{% include 'partials/icon.html' with name=category|category_icon %}</span><span class="sidebar-grid-label">{{ category.name }}</span></a>{% if category.id in sidebar_followed_categories %}<span class="sidebar-grid-badge" title="{% trans 'Following' %}">★</span>{% elif category.is_restricted %}<span class="sidebar-grid-badge muted">{% include 'partials/icon.html' with name='lock' %}<span class="sr-only">{% trans "High-trust section" %}</span></span>{% endif %}</div>{% empty %}<p class="muted">{% trans "No categories yet." %}</p>{% endfor %}</div>
+          <div class="sidebar-grid">{% for category in sidebar_categories %}<div class="sidebar-grid-item"><a href="{{ category.get_absolute_url }}"{% if current == 'category_detail' and request.resolver_match.kwargs.slug == category.slug %} aria-current="page"{% endif %} hx-get="{{ category.get_absolute_url }}" hx-target="#app-shell" hx-select="#app-shell" hx-swap="outerHTML show:window:top" hx-push-url="true" hx-indicator="#thread-skeleton"><span class="sidebar-grid-icon">{% include 'partials/icon.html' with name=category|category_icon %}</span><span class="sidebar-grid-label">{{ category.display_name }}</span></a>{% if category.id in sidebar_followed_categories %}<span class="sidebar-grid-badge" title="{% trans 'Following' %}">★</span>{% elif category.is_restricted %}<span class="sidebar-grid-badge muted">{% include 'partials/icon.html' with name='lock' %}<span class="sr-only">{% trans "High-trust section" %}</span></span>{% endif %}</div>{% empty %}<p class="muted">{% trans "No categories yet." %}</p>{% endfor %}</div>
         </div>
         {% if not user.is_authenticated %}
         <a class="sidebar-cta" href="{% url 'signup' %}">

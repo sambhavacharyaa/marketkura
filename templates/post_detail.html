@@ -1,5 +1,5 @@
 {% extends 'base.html' %}{% load i18n community_extras %}
-{% block title %}{{ post.title }} — {{ post.category.name }} | {{ SITE_NAME }}{% endblock %}
+{% block title %}{{ post.title }} — {{ post.category.display_name }} | {{ SITE_NAME }}{% endblock %}
 {% block meta_description %}{{ post.body|excerpt:30 }}{% endblock %}
 {% block og_title %}{{ post.title }}{% endblock %}
 {% block canonical %}{{ canonical_url }}{% endblock %}
@@ -8,7 +8,7 @@
 {% if post.is_removed %}<div class="panel warn">{% trans "This post was removed. Only moderators can see it." %}</div>{% endif %}
 {% if post.user.is_shadow_banned and user.is_staff %}<div class="panel warn">{% trans "The author is shadow-banned. Only they and staff can see this post." %}</div>{% endif %}
 <article class="panel">
-  <div class="chips"><a class="badge" href="{{ post.category.get_absolute_url }}">{{ post.category.name }}</a><span class="badge type-{{ post.type }}">{{ post.get_type_display }}</span>{% if post.is_locked %}<span class="badge locked">🔒 {% trans "Locked" %}</span>{% endif %}{% for tag in tags %}<a class="badge" href="{{ tag.get_absolute_url }}">#{{ tag.name }}</a>{% endfor %}</div>
+  <div class="chips"><a class="badge" href="{{ post.category.get_absolute_url }}">{{ post.category.display_name }}</a><span class="badge type-{{ post.type }}">{{ post.get_type_display }}</span>{% if post.is_locked %}<span class="badge locked">🔒 {% trans "Locked" %}</span>{% endif %}{% for tag in tags %}<a class="badge" href="{{ tag.get_absolute_url }}">#{{ tag.name }}</a>{% endfor %}</div>
   <h1>{{ post.title }}</h1>
   <div class="meta">{% trans "Posted by" %} {% include 'partials/user_link.html' with u=post.user %} · {{ post.created_at|date:'M d, Y H:i' }}{% if post.was_edited %} · {% blocktrans with d=post.updated_at|date:'M d, Y' %}Updated {{ d }}{% endblocktrans %}{% endif %}</div>
   {% if post.asset %}<p><a class="badge" href="{{ post.asset.get_absolute_url }}">{{ post.asset.ticker|default:post.asset.name }}{% if post.asset.company_name %} · {{ post.asset.company_name }}{% endif %}</a></p>{% endif %}

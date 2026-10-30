@@ -1,10 +1,10 @@
-{% load i18n humanize community_extras %}<article class="feed-card" style="--i:{{ forloop.counter0|default:0 }}">
+{% load i18n community_extras %}<article class="feed-card" style="--i:{{ forloop.counter0|default:0 }}">
   {% include 'partials/card_vote.html' %}
   <div class="feed-body">
     <div class="feed-meta">
       {% include 'partials/user_link.html' with u=post.user %}
-      <span class="dot" aria-hidden="true">·</span><time datetime="{{ post.created_at|date:'c' }}">{{ post.created_at|naturaltime }}</time>
-      <span class="dot" aria-hidden="true">·</span><a class="chip chip-cat" href="{{ post.category.get_absolute_url }}">{{ post.category.name }}</a>
+      <span class="dot" aria-hidden="true">·</span><time datetime="{{ post.created_at|date:'c' }}">{{ post.created_at|local_naturaltime }}</time>
+      <span class="dot" aria-hidden="true">·</span><a class="chip chip-cat" href="{{ post.category.get_absolute_url }}">{{ post.category.display_name }}</a>
       {% if post.type != 'discussion' %}<span class="chip chip-{{ post.type }}">{{ post.get_type_display }}</span>{% endif %}
       {% if post.is_locked %}<span class="chip chip-locked">{% include 'partials/icon.html' with name='lock' %}{% trans "Locked" %}</span>{% endif %}
     </div>

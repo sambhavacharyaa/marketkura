@@ -172,9 +172,9 @@ def check_can_post(user, category, post_type=Post.TYPE_DISCUSSION):
     if user.is_staff:
         return
     if category.requires_verified and not user.is_verified:
-        raise PostingBlocked(_('Only verified members can start threads in %(name)s.') % {'name': category.name})
+        raise PostingBlocked(_('Only verified members can start threads in %(name)s.') % {'name': category.display_name})
     if category.min_karma and not user.is_verified and user.karma_score < category.min_karma:
-        raise PostingBlocked(_('You need %(karma)s reputation to start threads in %(name)s.') % {'karma': category.min_karma, 'name': category.name})
+        raise PostingBlocked(_('You need %(karma)s reputation to start threads in %(name)s.') % {'karma': category.min_karma, 'name': category.display_name})
     if post_type == Post.TYPE_AMA and not user.is_verified:
         raise PostingBlocked(_('Only verified members can host an AMA.'))
     if user.is_new_account:

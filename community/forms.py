@@ -124,6 +124,13 @@ class PostForm(forms.ModelForm):
             'body': _('Markdown is supported. Posts are opinion and discussion, not investment advice.'),
             'image': _('Optional. A chart, screenshot or other supporting image — shown at the top of the post.'),
         }
+        labels = {
+            'category': _('Category'), 'type': _('Type'), 'title': _('Title'), 'body': _('Body'),
+            'image': _('Image'), 'asset': _('Asset'), 'asset_tag': _('Asset tag'),
+            'position_type': _('Position'), 'entry_price': _('Entry'), 'target_price': _('Target'),
+            'stop_loss': _('Stop / exit plan'), 'time_horizon': _('Horizon'), 'thesis_risk': _('Risks'),
+            'disclosure': _('Disclosure'), 'ama_starts_at': _('Starts'), 'ama_ends_at': _('Closes'),
+        }
 
     def __init__(self, *args, user=None, **kwargs):
         super().__init__(*args, **kwargs)
