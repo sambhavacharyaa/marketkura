@@ -1,0 +1,40 @@
+{% extends 'base.html' %}{% load i18n %}
+{% block title %}{% trans "Terms of Service" %} — {{ SITE_NAME }}{% endblock %}
+{% block meta_description %}{% trans "The terms that govern your use of MarketKuraa." %}{% endblock %}
+{% block content %}<section class="panel prose"><h1>{% trans "Terms of Service" %}</h1>
+<p class="muted">{% trans "Last updated: October 2026" %}</p>
+<p>{% trans "These terms govern your use of MarketKuraa. By creating an account or using the site, you agree to them. MarketKuraa is operated from Nepal." %}</p>
+
+<h2>{% trans "Eligibility" %}</h2>
+<p>{% trans "You must be at least 16 years old to create an account. By registering, you confirm that the information you provide is accurate and that you meet this requirement." %}</p>
+
+<h2>{% trans "Your account" %}</h2>
+<p>{% trans "You are responsible for keeping your password secure and for all activity under your account. Usernames may not impersonate another person or organisation, and a short list of reserved names (admin, MarketKuraa and similar) cannot be registered." %}</p>
+
+<h2>{% trans "Acceptable use" %}</h2>
+<p>{% url 'guidelines' as guidelines_url %}{% blocktrans %}Use of the platform is also governed by our <a href="{{ guidelines_url }}">Community Guidelines</a>. In short: no coordinated hype or pump-and-dump activity, no guaranteed-return claims, no spam, scams or impersonation, no harassment, and never request or share broker or account credentials.{% endblocktrans %}</p>
+
+<h2>{% trans "Your content" %}</h2>
+<p>{% trans "You keep ownership of the posts, comments, theses and other content you submit. By posting, you grant MarketKuraa a non-exclusive, worldwide licence to host, display and distribute that content on the platform so other members can see and discuss it. You are solely responsible for what you post." %}</p>
+
+<h2>{% trans "Not financial advice" %}</h2>
+<p>{% url 'disclaimer' as disclaimer_url %}{% blocktrans %}MarketKuraa is a discussion platform, not a broker, investment adviser or securities exchange. Content on the site is member opinion and self-reported information, not financial, legal or tax advice. See our <a href="{{ disclaimer_url }}">Disclaimer</a> for details.{% endblocktrans %}</p>
+
+<h2>{% trans "Moderation and termination" %}</h2>
+<p>{% trans "We may remove content, lock discussions, or suspend or terminate accounts that violate these terms or our Community Guidelines, with or without notice, to keep the platform safe and functioning." %}</p>
+
+<h2>{% trans "Disclaimer of warranties" %}</h2>
+<p>{% trans "The platform is provided as is, without warranties of any kind, express or implied. We do not guarantee the accuracy, completeness or reliability of any content posted by members." %}</p>
+
+<h2>{% trans "Limitation of liability" %}</h2>
+<p>{% trans "To the fullest extent permitted by law, MarketKuraa and its operators are not liable for any indirect, incidental or consequential damages arising from your use of the platform, including investment decisions made based on content you read here." %}</p>
+
+<h2>{% trans "Governing law" %}</h2>
+<p>{% trans "These terms are governed by the laws of Nepal, without regard to conflict-of-law principles." %}</p>
+
+<h2>{% trans "Changes to these terms" %}</h2>
+<p>{% trans "We may update these terms from time to time. We will post the updated version on this page with a new, later revision date above. Continued use of the site after a change means you accept the updated terms." %}</p>
+
+<h2>{% trans "Contact us" %}</h2>
+<p>{% url 'contact' as contact_url %}{% blocktrans %}Questions about these terms? <a href="{{ contact_url }}">Contact us</a>.{% endblocktrans %}</p>
+</section>{% endblock %}

@@ -2,6 +2,8 @@ import re
 
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.urls import reverse_lazy
+from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
 from .models import Category, Comment, ContactMessage, NewsPost, Post, Report, StartupProfile, Tag, User, VerificationRequest, Watchlist
@@ -35,10 +37,21 @@ def email_in_use(email, exclude_pk=None):
 
 class SignUpForm(UserCreationForm):
     email = forms.EmailField(required=True, label=_('Email'))
+    agree_to_terms = forms.BooleanField(required=True, label='')
 
     class Meta:
         model = User
         fields = ('username', 'email', 'password1', 'password2')
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Built here, not at class-definition time: reverse() needs the URLconf loaded, which
+        # isn't guaranteed yet when this module is first imported (e.g. at app startup).
+        self.fields['agree_to_terms'].label = format_html(
+            '{} <a href="{}" target="_blank" rel="noopener">{}</a> {} <a href="{}" target="_blank" rel="noopener">{}</a>',
+            _('I agree to the'), reverse_lazy('terms'), _('Terms of Service'), _('and'), reverse_lazy('privacy'), _('Privacy Policy'),
+        )
+        self.fields['agree_to_terms'].error_messages['required'] = _('You must agree to the Terms of Service and Privacy Policy to create an account.')
 
     def clean_email(self):
         email = self.cleaned_data['email']

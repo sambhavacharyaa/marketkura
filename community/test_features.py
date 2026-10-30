@@ -104,15 +104,20 @@ class AuthTests(BaseCase):
             self.assertFalse(User.objects.filter(username__iexact=name).exists())
 
     def test_signup_accepts_ordinary_ascii_usernames(self):
-        response = self.client.post(reverse('signup'), {'username': 'trader_99', 'email': 'trader99@example.com', 'password1': 'a-strong-pass-123', 'password2': 'a-strong-pass-123'})
+        response = self.client.post(reverse('signup'), {'username': 'trader_99', 'email': 'trader99@example.com', 'password1': 'a-strong-pass-123', 'password2': 'a-strong-pass-123', 'agree_to_terms': 'on'})
         self.assertEqual(response.status_code, 302)
         self.assertTrue(User.objects.filter(username='trader_99').exists())
+
+    def test_signup_requires_agreeing_to_terms(self):
+        response = self.client.post(reverse('signup'), {'username': 'noagree', 'email': 'noagree@example.com', 'password1': 'a-strong-pass-123', 'password2': 'a-strong-pass-123'})
+        self.assertContains(response, 'You must agree')
+        self.assertFalse(User.objects.filter(username='noagree').exists())
 
     def test_signup_is_rate_limited_per_address(self):
         with override_settings(SIGNUP_MAX_PER_HOUR=2):
             for n in range(3):
                 self.client.logout()
-                response = self.client.post(reverse('signup'), {'username': f'user{n}', 'email': f'user{n}@example.com', 'password1': 'a-strong-pass-123', 'password2': 'a-strong-pass-123'})
+                response = self.client.post(reverse('signup'), {'username': f'user{n}', 'email': f'user{n}@example.com', 'password1': 'a-strong-pass-123', 'password2': 'a-strong-pass-123', 'agree_to_terms': 'on'})
             self.assertEqual(response.status_code, 429)
 
     def test_password_reset_sends_email_and_pages_render(self):
@@ -335,6 +340,19 @@ class UrlTests(BaseCase):
     def test_disclaimer_is_shown_site_wide(self):
         self.assertContains(self.client.get('/'), 'not investment advice')
         self.assertContains(self.client.get(self.post().get_absolute_url()), 'not investment advice')
+
+    def test_privacy_and_terms_pages_render_and_are_linked_and_indexed(self):
+        self.assertEqual(self.client.get(reverse('privacy')).status_code, 200)
+        self.assertEqual(self.client.get(reverse('terms')).status_code, 200)
+        home = self.client.get('/').content.decode()
+        self.assertIn(f'href="{reverse("privacy")}"', home)
+        self.assertIn(f'href="{reverse("terms")}"', home)
+        login_page = self.client.get(reverse('login')).content.decode()
+        self.assertIn(f'href="{reverse("privacy")}"', login_page)
+        self.assertIn(f'href="{reverse("terms")}"', login_page)
+        sitemap = self.client.get(reverse('sitemap')).content.decode()
+        self.assertIn(reverse('privacy'), sitemap)
+        self.assertIn(reverse('terms'), sitemap)
 
 
 class CommentTests(BaseCase):

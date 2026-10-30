@@ -35,12 +35,17 @@ class ApiTests(TestCase):
 
     # --- auth
     def test_signup_returns_token_and_validates(self):
-        response = self.api.post('/api/auth/signup', {'username': 'newbie', 'email': 'new@example.com', 'password': 'a-strong-pass-123'}, format='json')
+        response = self.api.post('/api/auth/signup', {'username': 'newbie', 'email': 'new@example.com', 'password': 'a-strong-pass-123', 'agree_to_terms': True}, format='json')
         self.assertEqual(response.status_code, 201)
         self.assertTrue(response.json()['token'])
-        bad = self.api.post('/api/auth/signup', {'username': 'x', 'email': 'ALICE@example.com', 'password': '1'}, format='json')
+        bad = self.api.post('/api/auth/signup', {'username': 'x', 'email': 'ALICE@example.com', 'password': '1', 'agree_to_terms': True}, format='json')
         self.assertEqual(bad.status_code, 400)
         self.assertIn('email', bad.json()['errors'])
+
+    def test_signup_requires_agreeing_to_terms(self):
+        response = self.api.post('/api/auth/signup', {'username': 'noagree', 'email': 'noagree@example.com', 'password': 'a-strong-pass-123'}, format='json')
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('agree_to_terms', response.json()['errors'])
 
     def test_login_with_username_or_email_and_token_authenticates(self):
         for identifier in ('alice', 'alice@example.com'):

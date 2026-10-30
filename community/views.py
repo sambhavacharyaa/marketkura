@@ -798,6 +798,14 @@ def disclaimer(request):
     return render(request, 'pages/disclaimer.html')
 
 
+def privacy(request):
+    return render(request, 'pages/privacy.html')
+
+
+def terms(request):
+    return render(request, 'pages/terms.html')
+
+
 def about(request):
     return render(request, 'pages/about.html')
 

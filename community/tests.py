@@ -36,6 +36,7 @@ class CommunityViewsTests(TestCase):
             'email': 'new@example.com',
             'password1': 'a-strong-password-123',
             'password2': 'a-strong-password-123',
+            'agree_to_terms': 'on',
         })
         self.assertRedirects(response, reverse('home'))
         self.assertTrue(response.wsgi_request.user.is_authenticated)

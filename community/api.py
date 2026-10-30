@@ -85,7 +85,8 @@ class SignupView(APIView):
     def post(self, request):
         password = request.data.get('password', '')
         form = SignUpForm({'username': request.data.get('username', ''), 'email': request.data.get('email', ''),
-                           'password1': password, 'password2': password})
+                           'password1': password, 'password2': password,
+                           'agree_to_terms': request.data.get('agree_to_terms', False)})
         if not form.is_valid():
             return Response({'errors': form_errors(form)}, status=status.HTTP_400_BAD_REQUEST)
         if services.signup_limited(request):

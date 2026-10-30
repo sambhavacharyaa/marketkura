@@ -1,0 +1,42 @@
+{% extends 'base.html' %}{% load i18n %}
+{% block title %}{% trans "Privacy Policy" %} — {{ SITE_NAME }}{% endblock %}
+{% block meta_description %}{% trans "How MarketKuraa collects, uses and protects your information." %}{% endblock %}
+{% block content %}<section class="panel prose"><h1>{% trans "Privacy Policy" %}</h1>
+<p class="muted">{% trans "Last updated: October 2026" %}</p>
+<p>{% trans "This policy explains what information MarketKuraa collects when you use the site, why we collect it, and the choices you have. MarketKuraa is operated from Nepal and used by members around the world." %}</p>
+
+<h2>{% trans "Information we collect" %}</h2>
+<p>{% trans "Account information: when you sign up, we collect your username, email address and password (stored as a one-way hash, never in plain text). If you sign in with Google, we receive your name and email address from Google instead." %}</p>
+<p>{% trans "Content you post: discussion posts, theses, comments, startup profiles, votes, watchlists and any profile bio or photo you add. This content is visible to other members as described in our Community Guidelines." %}</p>
+<p>{% trans "Usage and device data: IP address, browser type and basic access logs. We use this to keep the service secure, prevent spam and abuse (for example, rate-limiting sign-ups and login attempts), and to understand aggregate usage of the site." %}</p>
+<p>{% trans "Cookies: we use a small number of cookies for essential functions — keeping you signed in, remembering your language preference, and protecting forms against cross-site request forgery. We do not use third-party advertising cookies." %}</p>
+
+<h2>{% trans "How we use your information" %}</h2>
+<ul>
+<li>{% trans "To operate and maintain the platform, including showing you content and letting you post, vote and comment." %}</li>
+<li>{% trans "To keep the community safe: reviewing reports, enforcing our Community Guidelines, and preventing spam, impersonation and coordinated manipulation." %}</li>
+<li>{% trans "To communicate with you about your account, such as password resets or responses to a message you send us." %}</li>
+<li>{% trans "To improve the product and understand how the site is used." %}</li>
+</ul>
+
+<h2>{% trans "Who we share information with" %}</h2>
+<p>{% trans "We do not sell your personal information. We share it only with service providers who help us run the site (such as hosting and email delivery), under obligations to protect it, or when required by law." %}</p>
+
+<h2>{% trans "Data retention" %}</h2>
+<p>{% trans "We keep account and content data for as long as your account is active. If you want your account deleted or your personal data removed, contact us and we will act on your request, subject to what we need to retain for legal, security or moderation-record purposes." %}</p>
+
+<h2>{% trans "Your choices" %}</h2>
+<p>{% trans "You can update your email and profile details at any time from Settings. You can ask us to access, correct or delete your personal data by contacting us." %}</p>
+
+<h2>{% trans "Security" %}</h2>
+<p>{% trans "We use reasonable technical and organisational measures to protect your information, including password hashing and rate limiting on sensitive actions. No method of storage or transmission is completely secure, and we cannot guarantee absolute security." %}</p>
+
+<h2>{% trans "Children" %}</h2>
+<p>{% trans "MarketKuraa is not directed at children. You must meet the minimum age described in our Terms of Service to create an account." %}</p>
+
+<h2>{% trans "Changes to this policy" %}</h2>
+<p>{% trans "We may update this policy from time to time. We will post the updated version on this page with a new, later revision date above." %}</p>
+
+<h2>{% trans "Contact us" %}</h2>
+<p>{% url 'contact' as contact_url %}{% blocktrans %}Questions about this policy? <a href="{{ contact_url }}">Contact us</a>.{% endblocktrans %}</p>
+</section>{% endblock %}

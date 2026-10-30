@@ -82,6 +82,8 @@ urlpatterns = [
 
     path('guidelines/', views.guidelines, name='guidelines'),
     path('disclaimer/', views.disclaimer, name='disclaimer'),
+    path('privacy/', views.privacy, name='privacy'),
+    path('terms/', views.terms, name='terms'),
     path('about/', views.about, name='about'),
     path('contact/', views.contact, name='contact'),
     path('robots.txt', views.robots_txt, name='robots'),
