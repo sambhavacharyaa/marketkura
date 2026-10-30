@@ -1,4 +1,4 @@
-"""Settings shared by all MarketKura environments."""
+"""Settings shared by all MarketKuraa environments."""
 
 import os
 from pathlib import Path

@@ -1,4 +1,4 @@
-"""Production settings for MarketKura."""
+"""Production settings for MarketKuraa."""
 
 import os
 

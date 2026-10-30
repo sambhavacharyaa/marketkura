@@ -1,4 +1,4 @@
-"""Local development settings for MarketKura."""
+"""Local development settings for MarketKuraa."""
 
 import os
 
