@@ -1,3 +1,5 @@
+import re
+
 from django import forms
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.utils.translation import gettext_lazy as _
@@ -8,6 +10,23 @@ from .services import parse_tag_names
 AVATAR_MAX_BYTES = 2 * 1024 * 1024
 POST_IMAGE_MAX_BYTES = 5 * 1024 * 1024
 DATETIME_LOCAL = '%Y-%m-%dT%H:%M'
+
+# ASCII-only on purpose: Django's default UsernameField accepts any Unicode letter, which lets
+# Cyrillic/Greek/etc. lookalikes (e.g. "аdmin" with a Cyrillic а, U+0430) register alongside a
+# visually-identical Latin username — a classic impersonation vector. Restricting to the
+# characters below closes that off without touching already-created accounts.
+USERNAME_CHARSET_RE = re.compile(r'^[A-Za-z0-9._-]+$')
+RESERVED_USERNAMES = {
+    'admin', 'administrator', 'mod', 'moderator', 'support', 'staff',
+    'marketkura', 'marketkuraa', 'official', 'root', 'system', 'null',
+}
+
+
+def validate_username(value):
+    if not USERNAME_CHARSET_RE.match(value):
+        raise forms.ValidationError(_('Usernames can only use English letters, numbers, and . _ -'))
+    if value.lower() in RESERVED_USERNAMES:
+        raise forms.ValidationError(_('This username is reserved.'))
 
 
 def email_in_use(email, exclude_pk=None):
@@ -26,6 +45,11 @@ class SignUpForm(UserCreationForm):
         if email_in_use(email):
             raise forms.ValidationError(_('An account with this email already exists.'))
         return email
+
+    def clean_username(self):
+        username = self.cleaned_data['username']
+        validate_username(username)
+        return username
 
 
 class EmailAuthenticationForm(AuthenticationForm):

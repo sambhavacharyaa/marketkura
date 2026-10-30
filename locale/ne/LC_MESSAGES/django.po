@@ -42,6 +42,12 @@ msgstr "\"पोस्ट\" वा \"टिप्पणी\" मध्ये ठ
 msgid "Not found."
 msgstr "फेला परेन।"
 
+msgid "Usernames can only use English letters, numbers, and . _ -"
+msgstr "प्रयोगकर्ता नाममा अंग्रेजी अक्षर, अंक, र . _ - मात्र प्रयोग गर्न सकिन्छ"
+
+msgid "This username is reserved."
+msgstr "यो प्रयोगकर्ता नाम सुरक्षित राखिएको छ।"
+
 msgid "Email"
 msgstr "इमेल"
 

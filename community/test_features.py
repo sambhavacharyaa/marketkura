@@ -88,6 +88,26 @@ class AuthTests(BaseCase):
         self.assertContains(response, 'already exists')
         self.assertFalse(User.objects.filter(username='newbie').exists())
 
+    def test_signup_rejects_non_ascii_lookalike_usernames(self):
+        # "аdmin" starts with a Cyrillic а (U+0430), not the Latin "a" — visually identical
+        # to "admin" but a distinct string, so Django's default Unicode username field would
+        # happily register it alongside the real thing. That's the impersonation vector this
+        # closes.
+        response = self.client.post(reverse('signup'), {'username': 'аdmin', 'email': 'lookalike@example.com', 'password1': 'a-strong-pass-123', 'password2': 'a-strong-pass-123'})
+        self.assertContains(response, 'English letters')
+        self.assertFalse(User.objects.filter(username='аdmin').exists())
+
+    def test_signup_rejects_reserved_names_case_insensitively(self):
+        for name in ['admin', 'Admin', 'MARKETKURAA', 'root', 'Support']:
+            response = self.client.post(reverse('signup'), {'username': name, 'email': f'{name}@example.com', 'password1': 'a-strong-pass-123', 'password2': 'a-strong-pass-123'})
+            self.assertContains(response, 'reserved', msg_prefix=f'expected {name!r} to be rejected')
+            self.assertFalse(User.objects.filter(username__iexact=name).exists())
+
+    def test_signup_accepts_ordinary_ascii_usernames(self):
+        response = self.client.post(reverse('signup'), {'username': 'trader_99', 'email': 'trader99@example.com', 'password1': 'a-strong-pass-123', 'password2': 'a-strong-pass-123'})
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(User.objects.filter(username='trader_99').exists())
+
     def test_signup_is_rate_limited_per_address(self):
         with override_settings(SIGNUP_MAX_PER_HOUR=2):
             for n in range(3):
