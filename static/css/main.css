@@ -620,6 +620,13 @@ a.chip-cat:hover { background: var(--brand-soft); color: var(--brand-dark); text
   .md-toolbar { flex-direction: column; align-items: stretch; }
   .md-tabs { justify-content: flex-end; }
   .menu-panel { position: fixed; left: 12px; right: 12px; top: 64px; width: auto; max-width: none; }
+  /* The language menu is small and sits at the far right of the header — stretching it into the
+     same edge-to-edge sheet as notifications/user-menu above detached it from its own trigger
+     entirely: fixed positioning with left:12px (from the rule above) and the lang-menu's own
+     right:0 both set is an over-constrained box, and the browser resolved that by pinning it to
+     the LEFT edge, nowhere near the pill on the right that opened it. Every property the rule
+     above sets gets re-set here so nothing carries over by accident. */
+  .lang-menu .menu-panel { position: absolute; left: auto; right: 0; top: 46px; width: 180px; max-width: calc(100vw - 24px); }
   .composer-row .btn:last-child { margin-left: 0; flex: 1 1 100%; }
   input, select, textarea { font-size: 16px; }
 }
