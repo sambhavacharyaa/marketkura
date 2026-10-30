@@ -601,7 +601,12 @@ a.chip-cat:hover { background: var(--brand-soft); color: var(--brand-dark); text
      natural width at every size from a phone up to a small tablet. */
   .hdr { flex-wrap: wrap; gap: 8px 10px; }
   .hdr-search { order: 3; flex: 1 1 100%; max-width: none; margin: 0; } .hdr-search kbd { display: none; }
-  .primary-nav { order: 4; flex: 1 1 100%; overflow-x: auto; scrollbar-width: none; }
+  /* The nav row (Home/Posts/Companies/Startups/News) used to wrap onto its own full-width line
+     here, making the sticky header three rows deep (~170px) before any page content starts. The
+     off-canvas drawer (opened by the hamburger button, visible at this width) lists the exact
+     same links, so this row was pure duplication, not lost functionality - dropping it gets the
+     header back to one row plus the search row below it. */
+  .primary-nav { display: none; }
   .hdr-actions { margin-left: auto; }
   .btn-new span { display: none; } .btn-new { width: 40px; padding: 0; border-radius: 50%; }
 }
@@ -688,11 +693,11 @@ a.chip-cat:hover { background: var(--brand-soft); color: var(--brand-dark); text
      avatar and the language switcher all squeezed together — and New Post/Notifications are now
      exact duplicates of the bottom nav's "+" and Alerts tabs, not just tight for space. */
   .hdr-dup-actions { display: none; }
-  /* The header's own search box and Home/Posts/Companies/Startups/News row used to sit directly
-     above the bottom nav's Home/Search tabs and Menu button, repeating the same destinations
-     twice on the same screen and costing two whole rows of height in the process. The bottom nav
-     and the "Menu" drawer (which now includes Posts — see the sidebar nav) cover all of it. */
-  .hdr-search, .primary-nav { display: none; }
+  /* The header's own search box sits directly above the bottom nav's own Search tab, repeating
+     the same destination twice on the same screen and costing a whole row of height. (The nav
+     row below it — Home/Posts/Companies/Startups/News — is already gone from 1099px down; the
+     Menu drawer covers those, same as it does here.) */
+  .hdr-search { display: none; }
 }
 
 /* ---- Auth pages (log in / sign up / password reset): a dedicated minimal shell, not the full
