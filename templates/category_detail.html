@@ -1,20 +1,16 @@
-{% extends 'base.html' %}
-
-{% block title %}{{ category.name }} — MarketKura{% endblock %}
-
+{% extends 'base.html' %}{% load i18n %}
+{% block title %}{{ category.name }} — {% trans "Discussion" %} | {{ SITE_NAME }}{% endblock %}
+{% block meta_description %}{{ category.description|default:category.name }}{% endblock %}
+{% block og_title %}{{ category.name }} — {{ SITE_NAME }}{% endblock %}
 {% block content %}
-  <div class="panel">
-    <h1>{{ category.name }}</h1>
-    <p class="muted">{{ category.description|default:'Community discussion for this category.' }}</p>
+<div class="panel">
+  <h1>{{ category.name }}</h1>
+  <p class="muted">{{ category.description|default:_('Community discussion for this category.') }}</p>
+  {% if category.is_restricted %}<p class="meta">🔒 {% if category.requires_verified %}{% trans "Only verified members can start threads here." %}{% else %}{% blocktrans with n=category.min_karma %}Starting threads here needs {{ n }} reputation (verified members always qualify).{% endblocktrans %}{% endif %}</p>{% endif %}
+  <div class="actions">
+    {% if user.is_authenticated %}<a class="btn" href="{% url 'create_post' %}?category={{ category.pk }}">{% trans "Create a post" %}</a>
+    <form class="inline" method="post" action="{% url 'toggle_category_follow' category.slug %}">{% csrf_token %}<button class="btn secondary" type="submit">{% if following %}{% trans "Unfollow category" %}{% else %}{% trans "Follow category" %}{% endif %}</button></form>{% endif %}
   </div>
-
-  {% for post in posts %}
-    <article class="post-card">
-      <h2><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h2>
-      <div class="meta">{{ post.user.username }} · {{ post.created_at|date:'M d, Y' }}</div>
-      <p>{{ post.body|truncatewords:40 }}</p>
-    </article>
-  {% empty %}
-    <div class="panel"><p class="muted">No posts in this category yet.</p></div>
-  {% endfor %}
+</div>
+{% include 'post_list.html' %}
 {% endblock %}

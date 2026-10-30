@@ -1,0 +1,20 @@
+{% load i18n community_extras %}<div class="comment depth-{{ comment.depth }}{% if comment.is_removed %} removed{% endif %}{% if is_ama and comment.user_id == post.user_id and comment.parent_comment_id %} host-answer{% endif %}" id="comment-{{ comment.pk }}">
+  <div class="meta">{% include 'partials/user_link.html' with u=comment.user %}{% if comment.user_id == post.user_id %}<span class="host">{% if is_ama %}{% trans "Host" %}{% else %}{% trans "Author" %}{% endif %}</span>{% endif %} · {{ comment.created_at|date:'M d, Y H:i' }}{% if comment.was_edited and not comment.is_removed %} · {% trans "edited" %}{% endif %}</div>
+  {% if comment.is_removed %}
+    <div class="prose"><p>{% trans "[This comment was removed]" %}</p></div>
+  {% else %}
+    <div class="prose">{{ comment.body|markdown_safe }}</div>
+    <div class="comment-actions">
+      {% if user.is_authenticated and user != comment.user %}{% include 'partials/comment_vote.html' %}{% else %}<span class="muted">{% include 'partials/icon.html' with name='up' cls='vote-glyph' %} {{ comment.upvotes }}</span>{% endif %}
+      {% if user.is_authenticated and can_reply %}<label class="action-link" for="reply-toggle-{{ comment.pk }}">{% include 'partials/icon.html' with name='message' %} {% trans "Reply" %}</label>{% endif %}
+      {% if user == comment.user %}<a class="action-link" href="{% url 'edit_comment' comment.pk %}">{% include 'partials/icon.html' with name='edit' %} {% trans "Edit" %}</a><a class="action-link is-danger" href="{% url 'delete_comment' comment.pk %}">{% include 'partials/icon.html' with name='trash' %} {% trans "Delete" %}</a>
+      {% elif user.is_authenticated %}<a class="action-link" href="{% url 'report_comment' comment.pk %}">{% include 'partials/icon.html' with name='flag' %} {% trans "Report" %}</a>{% endif %}
+      {% if user.is_staff %}<form class="inline" method="post" action="{% url 'moderation_action' %}">{% csrf_token %}<input type="hidden" name="target_type" value="comment"><input type="hidden" name="target_id" value="{{ comment.pk }}"><input type="hidden" name="next" value="{{ post.get_absolute_url }}#comment-{{ comment.pk }}"><button class="action-link is-danger" name="action" value="remove">{% include 'partials/icon.html' with name='trash' %} {% trans "Remove" %}</button></form>{% endif %}
+    </div>
+    {% if user.is_authenticated and can_reply %}
+    <input type="checkbox" id="reply-toggle-{{ comment.pk }}" class="reply-toggle">
+    <form class="reply-form" method="post" action="{% url 'add_comment' post.pk %}">{% csrf_token %}<input type="hidden" name="parent_comment" value="{{ comment.pk }}"><textarea name="body" rows="3" required aria-label="{% trans 'Your reply' %}"></textarea><button class="btn small" type="submit">{% trans "Post reply" %}</button></form>
+    {% endif %}
+  {% endif %}
+  {% if comment.children %}<div class="children">{% for child in comment.children %}{% include 'partials/comment.html' with comment=child %}{% endfor %}</div>{% endif %}
+</div>

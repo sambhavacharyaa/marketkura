@@ -1,0 +1,4 @@
+{% extends 'base.html' %}{% load i18n %}
+{% block title %}{% if editing %}{% trans "Edit startup" %}{% else %}{% trans "List your startup" %}{% endif %} — {{ SITE_NAME }}{% endblock %}
+{% block content %}<section class="panel form-panel"><h1>{% if editing %}{% trans "Edit startup profile" %}{% else %}{% trans "List your startup" %}{% endif %}</h1><p class="muted">{% trans "A moderator reviews each profile before it appears in the directory." %}</p>
+<form method="post">{% csrf_token %}{% include 'partials/form_fields.html' %}<button class="btn" type="submit">{% trans "Save" %}</button></form></section>{% endblock %}

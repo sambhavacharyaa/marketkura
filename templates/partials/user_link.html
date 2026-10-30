@@ -1,0 +1,1 @@
+{% load i18n %}<a href="{{ u.get_absolute_url }}">{{ u.username }}</a>{% if u.is_verified %}<span class="verified" title="{% trans 'Identity and credentials confirmed by MarketKuraa. Not an endorsement of their views.' %}">✓ {{ u.verified_label }}</span>{% endif %}

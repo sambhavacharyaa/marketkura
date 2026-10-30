@@ -1,1 +1,5 @@
-{% extends 'base.html' %}{% block content %}<h1>Verification status</h1>{% for application in applications %}<article class="panel"><h2>{{ application.get_status_display }}</h2><p>Submitted {{ application.created_at|date:'M d, Y' }}</p>{% if application.rejection_reason %}<p>Review note: {{ application.rejection_reason }}</p>{% endif %}</article>{% empty %}<div class="panel">No applications yet. <a href="{% url 'verification_apply' %}">Apply now</a>.</div>{% endfor %}{% endblock %}
+{% extends 'base.html' %}{% load i18n %}
+{% block title %}{% trans "Verification status" %} — {{ SITE_NAME }}{% endblock %}
+{% block content %}<h1>{% trans "Verification status" %}</h1>
+{% for application in applications %}<article class="panel"><h2>{{ application.get_status_display }} — {{ application.get_requested_type_display }}</h2><p class="meta">{% trans "Submitted" %} {{ application.created_at|date:'M d, Y' }}</p>{% if application.rejection_reason %}<p>{% trans "Review note" %}: {{ application.rejection_reason }}</p>{% endif %}</article>
+{% empty %}<div class="panel">{% trans "No applications yet." %} <a href="{% url 'verification_apply' %}">{% trans "Apply now" %}</a></div>{% endfor %}{% endblock %}

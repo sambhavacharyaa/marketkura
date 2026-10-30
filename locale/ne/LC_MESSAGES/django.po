@@ -1,0 +1,1736 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: MarketKuraa\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-10-30 15:14+0000\n"
+"PO-Revision-Date: 2026-09-20 00:00+0000\n"
+"Last-Translator: MarketKuraa\n"
+"Language-Team: Nepali\n"
+"Language: ne\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Too many sign-ups from this network."
+msgstr "यो नेटवर्कबाट धेरै साइन-अप भए।"
+
+msgid "Too many failed attempts. Please wait and try again."
+msgstr "धेरै असफल प्रयास भए। कृपया केही समय पर्खेर फेरि प्रयास गर्नुहोस्।"
+
+msgid "Invalid credentials."
+msgstr "अमान्य विवरण।"
+
+msgid "You cannot upvote your own post."
+msgstr "तपाईं आफ्नै पोस्टमा अपभोट गर्न सक्नुहुन्न।"
+
+msgid "You are already verified."
+msgstr "तपाईं पहिले नै प्रमाणित हुनुहुन्छ।"
+
+msgid "You already have an application awaiting review."
+msgstr "तपाईंको एउटा निवेदन पहिले नै समीक्षाको पर्खाइमा छ।"
+
+msgid "Provide exactly one of \"post\" or \"comment\"."
+msgstr "\"पोस्ट\" वा \"टिप्पणी\" मध्ये ठ्याक्कै एउटा दिनुहोस्।"
+
+msgid "Not found."
+msgstr "फेला परेन।"
+
+msgid "Email"
+msgstr "इमेल"
+
+msgid "An account with this email already exists."
+msgstr "यो इमेल भएको खाता पहिले नै छ।"
+
+msgid "Username or email"
+msgstr "प्रयोगकर्ता नाम वा इमेल"
+
+msgid "Tags"
+msgstr "ट्यागहरू"
+
+msgid "Comma-separated, up to 5. Example: ipo, banking"
+msgstr "अल्पविरामले छुट्याउनुहोस्, बढीमा ५ वटा। उदाहरण: ipo, banking"
+
+msgid ""
+"Markdown is supported. Posts are opinion and discussion, not investment "
+"advice."
+msgstr "मार्कडाउन प्रयोग गर्न सकिन्छ। पोस्टहरू राय र छलफल हुन्, लगानी सल्लाह होइनन्।"
+
+msgid ""
+"Optional. A chart, screenshot or other supporting image — shown at the top "
+"of the post."
+msgstr "वैकल्पिक। चार्ट, स्क्रिनसट वा अन्य सहयोगी तस्बिर — पोस्टको माथि देखाइन्छ।"
+
+msgid "A thesis body is required."
+msgstr "थेसिसको विवरण आवश्यक छ।"
+
+msgid "Choose a position type."
+msgstr "पोजिसनको प्रकार छान्नुहोस्।"
+
+msgid "Enter a positive entry price."
+msgstr "धनात्मक प्रवेश मूल्य लेख्नुहोस्।"
+
+msgid "Choose a time horizon."
+msgstr "समय अवधि छान्नुहोस्।"
+
+msgid "Set when the AMA closes."
+msgstr "AMA कहिले बन्द हुन्छ भनेर तोक्नुहोस्।"
+
+msgid "The AMA must end after it starts."
+msgstr "AMA सुरु भएपछि मात्र सकिनुपर्छ।"
+
+msgid "Entry price must be positive."
+msgstr "प्रवेश मूल्य धनात्मक हुनुपर्छ।"
+
+msgid "Target price must be positive."
+msgstr "लक्ष्य मूल्य धनात्मक हुनुपर्छ।"
+
+msgid "Please upload an image under 5 MB."
+msgstr "कृपया ५ MB भन्दा सानो तस्बिर अपलोड गर्नुहोस्।"
+
+msgid "Your comment"
+msgstr "तपाईंको टिप्पणी"
+
+msgid "Name"
+msgstr "नाम"
+
+msgid "Subject"
+msgstr "विषय"
+
+msgid "Message"
+msgstr "सन्देश"
+
+msgid "Reason"
+msgstr "कारण"
+
+msgid "Details"
+msgstr "विवरण"
+
+msgid "Please describe the problem."
+msgstr "कृपया समस्या वर्णन गर्नुहोस्।"
+
+msgid "Please upload an image under 2 MB."
+msgstr "कृपया २ MB भन्दा सानो तस्बिर अपलोड गर्नुहोस्।"
+
+msgid "Credentials and licences"
+msgstr "योग्यता र इजाजतपत्र"
+
+msgid ""
+"For example: advisors, co-founder, customers. Profiles are not offers of "
+"securities."
+msgstr "उदाहरण: सल्लाहकार, सह-संस्थापक, ग्राहक। प्रोफाइलहरू धितोपत्रको प्रस्ताव होइनन्।"
+
+msgid ""
+"Shown as the background of the news tile — a wide, high-contrast photo reads "
+"best once a title is overlaid on it."
+msgstr ""
+"न्युज टाइलको पृष्ठभूमिमा देखाइन्छ — शीर्षक माथि राखिंदा चौडा, उच्च-कन्ट्रास्ट तस्बिर "
+"सबैभन्दा राम्रो देखिन्छ।"
+
+msgid ""
+"Optional. Shown in listings and search results; falls back to the start of "
+"the article."
+msgstr "वैकल्पिक। सूची र खोज परिणाममा देखाइन्छ; नभए लेखको सुरुको अंश देखाइन्छ।"
+
+msgid "Discussion"
+msgstr "छलफल"
+
+msgid "Thesis"
+msgstr "थेसिस"
+
+msgid "AMA"
+msgstr "AMA"
+
+msgid "Long"
+msgstr "लङ"
+
+msgid "Short"
+msgstr "सर्ट"
+
+msgid "Watching"
+msgstr "निगरानीमा"
+
+msgid "Short term"
+msgstr "छोटो अवधि"
+
+msgid "Medium term"
+msgstr "मध्यम अवधि"
+
+msgid "Long term"
+msgstr "लामो अवधि"
+
+msgid "Contributor"
+msgstr "योगदानकर्ता"
+
+msgid "Analyst"
+msgstr "विश्लेषक"
+
+msgid "Finance professional"
+msgstr "वित्त पेशाकर्मी"
+
+msgid "Fund manager"
+msgstr "फन्ड म्यानेजर"
+
+msgid "Pending"
+msgstr "विचाराधीन"
+
+msgid "Action taken"
+msgstr "कारबाही गरियो"
+
+msgid "Dismissed"
+msgstr "खारेज गरियो"
+
+msgid "Spam or scam"
+msgstr "स्प्याम वा ठगी"
+
+msgid "Coordinated hype / pump-and-dump"
+msgstr "योजनाबद्ध हाइप / पम्प-एन्ड-डम्प"
+
+msgid "Harassment or abuse"
+msgstr "हैरानी वा दुर्व्यवहार"
+
+msgid "Misleading or false claims"
+msgstr "भ्रामक वा झुटा दाबी"
+
+msgid "Something else"
+msgstr "अरू केही"
+
+msgid "Idea"
+msgstr "विचार"
+
+msgid "Pre-seed"
+msgstr "प्री-सिड"
+
+msgid "Seed"
+msgstr "सिड"
+
+msgid "Growth"
+msgstr "वृद्धि"
+
+msgid "Profitable"
+msgstr "नाफामा"
+
+msgid "Unknown moderation target."
+msgstr "अज्ञात मोडरेसन लक्ष्य।"
+
+msgid "Reports dismissed."
+msgstr "रिपोर्टहरू खारेज गरियो।"
+
+msgid "A moderator removed your post for breaking the community guidelines."
+msgstr "समुदायका नियम उल्लङ्घन गरेकोले मोडरेटरले तपाईंको पोस्ट हटायो।"
+
+msgid "A moderator removed your comment for breaking the community guidelines."
+msgstr "समुदायका नियम उल्लङ्घन गरेकोले मोडरेटरले तपाईंको टिप्पणी हटायो।"
+
+msgid "Content removed."
+msgstr "सामग्री हटाइयो।"
+
+msgid "Content restored."
+msgstr "सामग्री पुनर्स्थापना गरियो।"
+
+msgid "Thread locked."
+msgstr "थ्रेड लक गरियो।"
+
+msgid "Thread unlocked."
+msgstr "थ्रेड अनलक गरियो।"
+
+msgid "Staff accounts cannot be shadow-banned."
+msgstr "स्टाफ खातालाई शेडो-ब्यान गर्न मिल्दैन।"
+
+msgid "Shadow-ban applied. The member is not notified."
+msgstr "शेडो-ब्यान लगाइयो। सदस्यलाई जानकारी दिइएको छैन।"
+
+msgid "Shadow-ban lifted."
+msgstr "शेडो-ब्यान हटाइयो।"
+
+msgid "Unknown moderation action."
+msgstr "अज्ञात मोडरेसन कारबाही।"
+
+#, python-format
+msgid "Your startup profile \"%(name)s\" is now listed."
+msgstr "तपाईंको स्टार्टअप प्रोफाइल \"%(name)s\" अब सूचीमा छ।"
+
+msgid "Startup profile approved."
+msgstr "स्टार्टअप प्रोफाइल स्वीकृत गरियो।"
+
+#, python-format
+msgid "Only verified members can start threads in %(name)s."
+msgstr "%(name)s मा प्रमाणित सदस्यहरूले मात्र थ्रेड सुरु गर्न सक्छन्।"
+
+#, python-format
+msgid "You need %(karma)s reputation to start threads in %(name)s."
+msgstr "%(name)s मा थ्रेड सुरु गर्न तपाईंलाई %(karma)s प्रतिष्ठा चाहिन्छ।"
+
+msgid "Only verified members can host an AMA."
+msgstr "प्रमाणित सदस्यहरूले मात्र AMA सञ्चालन गर्न सक्छन्।"
+
+#, python-format
+msgid ""
+"New accounts can publish %(limit)s posts a day for their first %(days)s "
+"days. Please try again tomorrow."
+msgstr ""
+"नयाँ खाताहरूले पहिलो %(days)s दिन दिनमा %(limit)s वटा पोस्ट मात्र प्रकाशित गर्न "
+"सक्छन्। कृपया भोलि फेरि प्रयास गर्नुहोस्।"
+
+msgid "This thread is locked."
+msgstr "यो थ्रेड लक गरिएको छ।"
+
+msgid "This AMA has ended and is no longer accepting questions."
+msgstr "यो AMA सकिएको छ र अब प्रश्न स्वीकार गरिँदैन।"
+
+msgid "New accounts have a daily comment limit. Please try again tomorrow."
+msgstr "नयाँ खाताहरूको दैनिक टिप्पणी सीमा छ। कृपया भोलि फेरि प्रयास गर्नुहोस्।"
+
+#, python-format
+msgid "%(user)s replied to your comment."
+msgstr "%(user)s ले तपाईंको टिप्पणीमा जवाफ दिनुभयो।"
+
+#, python-format
+msgid "%(user)s commented on your post."
+msgstr "%(user)s ले तपाईंको पोस्टमा टिप्पणी गर्नुभयो।"
+
+msgid "You cannot report your own content."
+msgstr "तपाईं आफ्नै सामग्रीको रिपोर्ट गर्न सक्नुहुन्न।"
+
+msgid "You have already reported this."
+msgstr "तपाईंले यसको रिपोर्ट पहिले नै गरिसक्नुभएको छ।"
+
+#, python-format
+msgid "%(user)s mentioned you."
+msgstr "%(user)s ले तपाईंलाई उल्लेख गर्नुभयो।"
+
+#, python-format
+msgid "%(user)s reacted to your post."
+msgstr "%(user)s ले तपाईंको पोस्टमा प्रतिक्रिया दिनुभयो।"
+
+msgid ""
+"Your post is live. Posts are user-generated and theses are self-reported."
+msgstr ""
+"तपाईंको पोस्ट प्रकाशित भयो। पोस्टहरू प्रयोगकर्ताले बनाएका हुन् र थेसिसहरू स्वयं-रिपोर्ट "
+"गरिएका हुन्।"
+
+msgid "You can only edit your own posts."
+msgstr "तपाईं आफ्नै पोस्ट मात्र सम्पादन गर्न सक्नुहुन्छ।"
+
+msgid "You can only delete your own posts."
+msgstr "तपाईं आफ्नै पोस्ट मात्र मेटाउन सक्नुहुन्छ।"
+
+msgid "post"
+msgstr "पोस्ट"
+
+msgid "Please write something before posting."
+msgstr "पोस्ट गर्नुअघि केही लेख्नुहोस्।"
+
+msgid "You can only edit your own comments."
+msgstr "तपाईं आफ्नै टिप्पणी मात्र सम्पादन गर्न सक्नुहुन्छ।"
+
+msgid "You can only delete your own comments."
+msgstr "तपाईं आफ्नै टिप्पणी मात्र मेटाउन सक्नुहुन्छ।"
+
+msgid "comment"
+msgstr "टिप्पणी"
+
+msgid "You cannot upvote your own comment."
+msgstr "तपाईं आफ्नै टिप्पणीमा अपभोट गर्न सक्नुहुन्न।"
+
+msgid "Thanks. The moderation team will review this report."
+msgstr "धन्यवाद। मोडरेसन टोलीले यो रिपोर्ट समीक्षा गर्नेछ।"
+
+msgid "Too many failed attempts. Please wait a few minutes and try again."
+msgstr "धेरै असफल प्रयास भए। कृपया केही मिनेट पर्खेर फेरि प्रयास गर्नुहोस्।"
+
+msgid "Too many reset requests. Please try again later."
+msgstr "धेरै रिसेट अनुरोध भए। कृपया पछि फेरि प्रयास गर्नुहोस्।"
+
+msgid "Too many sign-ups from this network. Please try again later."
+msgstr "यो नेटवर्कबाट धेरै साइन-अप भए। कृपया पछि फेरि प्रयास गर्नुहोस्।"
+
+msgid "Your settings were saved."
+msgstr "तपाईंको सेटिङ सुरक्षित गरियो।"
+
+#, python-format
+msgid "%(user)s followed you."
+msgstr "%(user)s ले तपाईंलाई फलो गर्नुभयो।"
+
+msgid "You already have a watchlist with this name."
+msgstr "यो नामको वाचलिस्ट तपाईंसँग पहिले नै छ।"
+
+#, python-format
+msgid "%(asset)s added to %(list)s."
+msgstr "%(asset)s %(list)s मा थपियो।"
+
+msgid "Create a watchlist first."
+msgstr "पहिले वाचलिस्ट बनाउनुहोस्।"
+
+msgid "This application has already been reviewed."
+msgstr "यो निवेदन पहिले नै समीक्षा गरिसकिएको छ।"
+
+#, python-format
+msgid "Your verification application was approved. You are now a %(label)s."
+msgstr "तपाईंको प्रमाणीकरण निवेदन स्वीकृत भयो। तपाईं अब %(label)s हुनुहुन्छ।"
+
+msgid "Your verification application was not approved."
+msgstr "तपाईंको प्रमाणीकरण निवेदन स्वीकृत भएन।"
+
+msgid "Choose a valid review action."
+msgstr "मान्य समीक्षा कारबाही छान्नुहोस्।"
+
+#, python-format
+msgid ""
+"Startup profiles unlock at %(karma)s reputation, or with a verified badge. "
+"Keep contributing to the community!"
+msgstr ""
+"स्टार्टअप प्रोफाइल %(karma)s प्रतिष्ठामा वा प्रमाणित ब्याजसँग खुल्छ। समुदायमा योगदान "
+"गरिरहनुहोस्!"
+
+msgid "You can list up to 3 startups."
+msgstr "तपाईं बढीमा ३ वटा स्टार्टअप सूचीबद्ध गर्न सक्नुहुन्छ।"
+
+msgid ""
+"Your startup profile was submitted and will appear once a moderator approves "
+"it."
+msgstr "तपाईंको स्टार्टअप प्रोफाइल पेस भयो र मोडरेटरले स्वीकृत गरेपछि देखिनेछ।"
+
+msgid "Saved. Changes are visible publicly once a moderator approves them."
+msgstr "सुरक्षित गरियो। मोडरेटरले स्वीकृत गरेपछि परिवर्तनहरू सार्वजनिक रूपमा देखिनेछन्।"
+
+msgid "News article published."
+msgstr "न्युज लेख प्रकाशित भयो।"
+
+msgid "News article updated."
+msgstr "न्युज लेख अद्यावधिक भयो।"
+
+msgid "News article deleted."
+msgstr "न्युज लेख मेटाइयो।"
+
+msgid "news article"
+msgstr "न्युज लेख"
+
+msgid "Too many messages from this network. Please try again later."
+msgstr "यो नेटवर्कबाट धेरै सन्देशहरू आए। कृपया पछि फेरि प्रयास गर्नुहोस्।"
+
+msgid "Thanks — we've received your message and will get back to you soon."
+msgstr "धन्यवाद — हामीले तपाईंको सन्देश पायौं र चाँडै जवाफ दिनेछौं।"
+
+msgid "English"
+msgstr "English"
+
+msgid "नेपाली"
+msgstr "नेपाली"
+
+msgid "Page not found"
+msgstr "पृष्ठ फेला परेन"
+
+msgid "The page you're looking for doesn't exist, or may have moved."
+msgstr "तपाईंले खोज्नुभएको पृष्ठ अवस्थित छैन, वा सारिएको हुन सक्छ।"
+
+msgid "Back to home"
+msgstr "गृहपृष्ठमा फर्कनुहोस्"
+
+msgid "Search the site"
+msgstr "साइटमा खोज्नुहोस्"
+
+msgid "Something went wrong"
+msgstr "केही गडबड भयो"
+
+msgid ""
+"We hit an unexpected error on our end. It has been logged, and we're on it — "
+"please try again in a moment."
+msgstr ""
+"हाम्रोतर्फ अप्रत्याशित त्रुटि भयो। यो लग गरिएको छ र हामी यसमा काम गर्दैछौं — केही "
+"समयपछि फेरि प्रयास गर्नुहोस्।"
+
+msgid ""
+"MarketKuraa is a public investor community: market discussions from around "
+"the world, self-reported theses and company pages."
+msgstr ""
+"MarketKuraa एक सार्वजनिक लगानीकर्ता समुदाय हो: विश्वभरका बजारबारे छलफल, स्वयं-"
+"रिपोर्ट गरिएका थेसिस र कम्पनी पृष्ठहरू।"
+
+msgid "Skip to main content"
+msgstr "मुख्य सामग्रीमा जानुहोस्"
+
+msgid "MarketKuraa is where investors talk markets in real time."
+msgstr "MarketKuraa मा लगानीकर्ताहरू वास्तविक समयमा बजारका कुरा गर्छन्।"
+
+msgid "Join the discussion"
+msgstr "छलफलमा सहभागी हुनुहोस्"
+
+msgid "Dismiss"
+msgstr "खारेज गर्नुहोस्"
+
+msgid "Open navigation"
+msgstr "नेभिगेसन खोल्नुहोस्"
+
+msgid "Main"
+msgstr "मुख्य"
+
+msgid "Home"
+msgstr "गृहपृष्ठ"
+
+msgid "Posts"
+msgstr "पोस्टहरू"
+
+msgid "Companies"
+msgstr "कम्पनीहरू"
+
+msgid "Startups"
+msgstr "स्टार्टअपहरू"
+
+msgid "News"
+msgstr "न्युज"
+
+msgid "Search tickers, posts, people…"
+msgstr "टिकर, पोस्ट, मानिस खोज्नुहोस्…"
+
+msgid "Search"
+msgstr "खोज्नुहोस्"
+
+msgid "New Post"
+msgstr "नयाँ पोस्ट"
+
+#, python-format
+msgid "Notifications, %(n)s unread"
+msgstr "सूचनाहरू, %(n)s नपढिएका"
+
+msgid "Notifications"
+msgstr "सूचनाहरू"
+
+msgid "View all notifications"
+msgstr "सबै सूचनाहरू हेर्नुहोस्"
+
+msgid "No notifications yet."
+msgstr "अहिलेसम्म कुनै सूचना छैन।"
+
+msgid "Settings"
+msgstr "सेटिङ"
+
+msgid "Watchlists"
+msgstr "वाचलिस्टहरू"
+
+msgid "Moderation"
+msgstr "मोडरेसन"
+
+msgid "Verification review"
+msgstr "प्रमाणीकरण समीक्षा"
+
+msgid "Log out"
+msgstr "लग आउट"
+
+msgid "Log in"
+msgstr "लग इन"
+
+msgid "Sign up"
+msgstr "साइन अप"
+
+msgid "Language"
+msgstr "भाषा"
+
+msgid "Site navigation"
+msgstr "साइट नेभिगेसन"
+
+msgid "Investor community for markets worldwide"
+msgstr "विश्वभरका बजारका लागि लगानीकर्ता समुदाय"
+
+msgid "Close navigation"
+msgstr "नेभिगेसन बन्द गर्नुहोस्"
+
+msgid "Feeds"
+msgstr "फिडहरू"
+
+msgid "Feed"
+msgstr "फिड"
+
+msgid "Trending"
+msgstr "चर्चामा"
+
+msgid "Following"
+msgstr "फलो गरिएको"
+
+msgid "Theses"
+msgstr "थेसिसहरू"
+
+msgid "AMAs"
+msgstr "AMA हरू"
+
+msgid "Categories"
+msgstr "वर्गहरू"
+
+msgid "High-trust section"
+msgstr "उच्च-विश्वास खण्ड"
+
+msgid "No categories yet."
+msgstr "अहिलेसम्म कुनै वर्ग छैन।"
+
+msgid "Join MarketKuraa"
+msgstr "MarketKuraa मा सामेल हुनुहोस्"
+
+msgid "Create a free account to post, vote and build reputation."
+msgstr "पोस्ट गर्न, भोट हाल्न र प्रतिष्ठा बनाउन निःशुल्क खाता बनाउनुहोस्।"
+
+msgid "Get verified"
+msgstr "प्रमाणित हुनुहोस्"
+
+msgid "Confirm your credentials and earn a verified badge."
+msgstr "आफ्नो योग्यता पुष्टि गर्नुहोस् र प्रमाणित ब्याज कमाउनुहोस्।"
+
+msgid "Help & Support"
+msgstr "सहयोग"
+
+msgid ""
+"MarketKuraa is a community discussion platform. Content is user-generated "
+"opinion and self-reported information, not investment advice, a "
+"recommendation or a solicitation to buy or sell any security. Do your own "
+"research and consult a licensed adviser. A verified badge means identity and "
+"credentials were confirmed by MarketKuraa, not that the member's views are "
+"endorsed."
+msgstr ""
+"MarketKuraa एक सामुदायिक छलफल मञ्च हो। सामग्री प्रयोगकर्ताले लेखेका राय र स्वयं-रिपोर्ट "
+"गरिएका जानकारी हुन्; ती लगानी सल्लाह, सिफारिस वा कुनै धितोपत्र खरिद/बिक्रीको प्रस्ताव "
+"होइनन्। आफैँ अध्ययन गर्नुहोस् र इजाजतप्राप्त सल्लाहकारसँग परामर्श गर्नुहोस्। प्रमाणित ब्याजको "
+"अर्थ MarketKuraa ले पहिचान र योग्यता पुष्टि गरेको हो, सदस्यका विचारहरूलाई समर्थन गरेको "
+"होइन।"
+
+msgid "Community guidelines"
+msgstr "समुदायका नियम"
+
+msgid "Disclaimer"
+msgstr "अस्वीकरण"
+
+msgid "About"
+msgstr "हाम्रोबारे"
+
+msgid "Contact"
+msgstr "सम्पर्क"
+
+msgid "Sitemap"
+msgstr "साइटम्याप"
+
+msgid "Alerts"
+msgstr "सूचना"
+
+msgid "Menu"
+msgstr "मेनू"
+
+msgid "Community discussion for this category."
+msgstr "यस वर्गका लागि सामुदायिक छलफल।"
+
+msgid "Only verified members can start threads here."
+msgstr "यहाँ प्रमाणित सदस्यहरूले मात्र थ्रेड सुरु गर्न सक्छन्।"
+
+#, python-format
+msgid ""
+"Starting threads here needs %(n)s reputation (verified members always "
+"qualify)."
+msgstr "यहाँ थ्रेड सुरु गर्न %(n)s प्रतिष्ठा चाहिन्छ (प्रमाणित सदस्यहरू सधैँ योग्य हुन्छन्)।"
+
+msgid "Create a post"
+msgstr "पोस्ट बनाउनुहोस्"
+
+msgid "Unfollow category"
+msgstr "वर्ग अनफलो गर्नुहोस्"
+
+msgid "Follow category"
+msgstr "वर्ग फलो गर्नुहोस्"
+
+msgid "Edit comment"
+msgstr "टिप्पणी सम्पादन गर्नुहोस्"
+
+msgid "Save changes"
+msgstr "परिवर्तन सुरक्षित गर्नुहोस्"
+
+msgid "Cancel"
+msgstr "रद्द गर्नुहोस्"
+
+msgid "Discussions and theses"
+msgstr "छलफल र थेसिसहरू"
+
+msgid ""
+"Browse companies and tickers discussed by the MarketKuraa community, with "
+"all related posts and theses on one page."
+msgstr ""
+"MarketKuraa समुदायमा छलफल भएका कम्पनी र टिकरहरू हेर्नुहोस्, सम्बन्धित सबै पोस्ट र "
+"थेसिससहित एकै पृष्ठमा।"
+
+msgid "Search company or ticker"
+msgstr "कम्पनी वा टिकर खोज्नुहोस्"
+
+#, python-format
+msgid "%(n)s post"
+msgid_plural "%(n)s posts"
+msgstr[0] "%(n)s पोस्ट"
+msgstr[1] "%(n)s पोस्टहरू"
+
+msgid "No companies yet. Mention a ticker in a post to create its page."
+msgstr "अहिलेसम्म कुनै कम्पनी छैन। पोस्टमा टिकर उल्लेख गरेर यसको पृष्ठ बनाउनुहोस्।"
+
+msgid "Discussions, Theses & Community Insights"
+msgstr "छलफल, थेसिस र सामुदायिक अन्तर्दृष्टि"
+
+#, python-format
+msgid ""
+"Explore community discussions, investment theses and insights about %(name)s "
+"on MarketKuraa."
+msgstr ""
+"MarketKuraa मा %(name)s बारेका सामुदायिक छलफल, लगानी थेसिस र अन्तर्दृष्टि हेर्नुहोस्।"
+
+msgid ""
+"Community-generated page. It collects every discussion and self-reported "
+"thesis about this company."
+msgstr ""
+"समुदायले बनाएको पृष्ठ। यसले यस कम्पनीबारेका सबै छलफल र स्वयं-रिपोर्ट गरिएका थेसिस संकलन "
+"गर्छ।"
+
+msgid "posts"
+msgstr "पोस्टहरू"
+
+msgid "discussions"
+msgstr "छलफलहरू"
+
+msgid "theses"
+msgstr "थेसिसहरू"
+
+msgid "by verified members"
+msgstr "प्रमाणित सदस्यबाट"
+
+msgid "In your watchlist"
+msgstr "तपाईंको वाचलिस्टमा"
+
+msgid "Add to watchlist"
+msgstr "वाचलिस्टमा थप्नुहोस्"
+
+msgid "Write about this"
+msgstr "यसबारे लेख्नुहोस्"
+
+msgid "Community opinion only. No live prices, ratings or recommendations."
+msgstr "सामुदायिक राय मात्र। कुनै लाइभ मूल्य, रेटिङ वा सिफारिस छैन।"
+
+msgid "Recent"
+msgstr "हालैका"
+
+msgid "Discussions"
+msgstr "छलफलहरू"
+
+msgid "Confirm delete"
+msgstr "मेटाउन पुष्टि गर्नुहोस्"
+
+#, python-format
+msgid "Delete %(label)s"
+msgstr "%(label)s मेटाउनुहोस्"
+
+#, python-format
+msgid "Are you sure you want to delete “%(object)s”?"
+msgstr "के तपाईं “%(object)s” मेटाउन निश्चित हुनुहुन्छ?"
+
+msgid "Delete permanently"
+msgstr "स्थायी रूपमा मेटाउनुहोस्"
+
+msgid "Most discussed companies"
+msgstr "सबैभन्दा बढी छलफल भएका कम्पनीहरू"
+
+msgid "Most discussed"
+msgstr "सबैभन्दा बढी छलफल भएको"
+
+msgid "No company discussions yet. Mention a ticker in a post to start one."
+msgstr "अहिलेसम्म कुनै कम्पनीबारे छलफल छैन। पोस्टमा टिकर उल्लेख गरेर सुरु गर्नुहोस्।"
+
+msgid "Live prices will be added later."
+msgstr "लाइभ मूल्य पछि थपिनेछ।"
+
+msgid "Live prices · coming soon"
+msgstr "लाइभ मूल्य · छिट्टै आउँदैछ"
+
+msgid "Community feed"
+msgstr "सामुदायिक फिड"
+
+msgid "Title"
+msgstr "शीर्षक"
+
+msgid "Share an insight, idea or question…"
+msgstr "कुनै अन्तर्दृष्टि, विचार वा प्रश्न साझा गर्नुहोस्…"
+
+msgid "Add your reasoning. Markdown is supported."
+msgstr "आफ्नो तर्क थप्नुहोस्। मार्कडाउन प्रयोग गर्न सकिन्छ।"
+
+msgid "Category"
+msgstr "वर्ग"
+
+msgid "Ticker (optional)"
+msgstr "टिकर (ऐच्छिक)"
+
+msgid "TICKER"
+msgstr "टिकर"
+
+msgid "Add image"
+msgstr "तस्बिर थप्नुहोस्"
+
+msgid "Write a thesis"
+msgstr "थेसिस लेख्नुहोस्"
+
+msgid "Publish"
+msgstr "प्रकाशित गर्नुहोस्"
+
+msgid "Posts are opinion, not investment advice."
+msgstr "पोस्टहरू राय हुन्, लगानी सल्लाह होइनन्।"
+
+msgid "Where investors talk shop"
+msgstr "जहाँ लगानीकर्ताहरू आफ्ना कुरा गर्छन्"
+
+msgid ""
+"Read everything openly. Join to post, vote, follow companies and build a "
+"reputation."
+msgstr ""
+"सबै कुरा खुलेर पढ्नुहोस्। पोस्ट गर्न, भोट दिन, कम्पनी फलो गर्न र प्रतिष्ठा बनाउन सामेल "
+"हुनुहोस्।"
+
+msgid "members"
+msgstr "सदस्यहरू"
+
+msgid "companies tracked"
+msgstr "ट्र्याक गरिएका कम्पनीहरू"
+
+msgid "Sort feed"
+msgstr "फिड क्रमबद्ध गर्नुहोस्"
+
+msgid "Latest"
+msgstr "नयाँ"
+
+msgid "Search this feed"
+msgstr "यो फिडमा खोज्नुहोस्"
+
+msgid "Filter by category"
+msgstr "वर्गअनुसार छान्नुहोस्"
+
+msgid "All"
+msgstr "सबै"
+
+msgid "Follow members and categories to build your personal feed."
+msgstr "आफ्नै फिड बनाउन सदस्य र वर्गहरू फलो गर्नुहोस्।"
+
+msgid "Community highlights"
+msgstr "सामुदायिक झलक"
+
+msgid "Market hours"
+msgstr "बजारको समय"
+
+msgid "Open"
+msgstr "खुला"
+
+msgid "Closed"
+msgstr "बन्द"
+
+msgid ""
+"Regular weekday sessions in each exchange's local time. Holidays are not "
+"reflected."
+msgstr ""
+"हरेक स्टक एक्सचेन्जको स्थानीय समयअनुसारको नियमित हप्ताका दिनको कारोबार समय। बिदाहरू "
+"देखाइएको छैन।"
+
+msgid "Live now"
+msgstr "अहिले लाइभ"
+
+msgid "Upcoming"
+msgstr "आगामी"
+
+msgid "No AMAs scheduled."
+msgstr "कुनै AMA तोकिएको छैन।"
+
+msgid "Host one"
+msgstr "एउटा सञ्चालन गर्नुहोस्"
+
+msgid "Top contributors"
+msgstr "शीर्ष योगदानकर्ताहरू"
+
+msgid "Reputation"
+msgstr "प्रतिष्ठा"
+
+msgid "Reputation is earned through upvotes. Be the first on the board."
+msgstr "प्रतिष्ठा अपभोटबाट कमाइन्छ। सूचीमा पहिलो बन्नुहोस्।"
+
+msgid "Ranked by reputation from community upvotes, not by returns."
+msgstr "सामुदायिक अपभोटबाट प्राप्त प्रतिष्ठाका आधारमा क्रम, प्रतिफलका आधारमा होइन।"
+
+msgid "Thesis split"
+msgstr "थेसिस विभाजन"
+
+#, python-format
+msgid "%(n)s thesis"
+msgid_plural "%(n)s theses"
+msgstr[0] "%(n)s थेसिस"
+msgstr[1] "%(n)s थेसिसहरू"
+
+#, python-format
+msgid "%(l)s%% long, %(s)s%% short"
+msgstr "%(l)s%% लङ, %(s)s%% सर्ट"
+
+#, python-format
+msgid "%(l)s%% long · %(s)s%% short"
+msgstr "%(l)s%% लङ · %(s)s%% सर्ट"
+
+#, python-format
+msgid "Shows the long/short split once a company has %(n)s or more theses."
+msgstr "कम्पनीको %(n)s वा बढी थेसिस भएपछि लङ/सर्ट विभाजन देखिन्छ।"
+
+msgid ""
+"Split of self-reported theses. Community opinion, not a signal or "
+"recommendation."
+msgstr ""
+"स्वयं-रिपोर्ट गरिएका थेसिसको विभाजन। सामुदायिक राय हो, सङ्केत वा सिफारिस होइन।"
+
+msgid "Market news"
+msgstr "बजार समाचार"
+
+msgid "Coming soon"
+msgstr "छिट्टै आउँदैछ"
+
+msgid ""
+"Headlines with sentiment for the companies discussed here will appear in "
+"this space."
+msgstr "यहाँ छलफल भएका कम्पनीहरूका शीर्षक समाचार र भावना यस ठाउँमा देखिनेछन्।"
+
+msgid "Moderation dashboard"
+msgstr "मोडरेसन ड्यासबोर्ड"
+
+#, python-format
+msgid "%(n)s verification application(s) pending"
+msgstr "%(n)s प्रमाणीकरण निवेदन विचाराधीन"
+
+msgid "Admin"
+msgstr "एडमिन"
+
+msgid "Report queue"
+msgstr "रिपोर्ट पङ्क्ति"
+
+msgid "Most-reported items first."
+msgstr "सबैभन्दा बढी रिपोर्ट भएका पहिले।"
+
+msgid "report(s)"
+msgstr "रिपोर्ट"
+
+msgid "Comment on"
+msgstr "टिप्पणी:"
+
+msgid "By"
+msgstr "द्वारा"
+
+msgid "shadow-banned"
+msgstr "शेडो-ब्यान गरिएको"
+
+msgid "removed"
+msgstr "हटाइएको"
+
+msgid "locked"
+msgstr "लक गरिएको"
+
+msgid "Restore"
+msgstr "पुनर्स्थापना गर्नुहोस्"
+
+msgid "Remove"
+msgstr "हटाउनुहोस्"
+
+msgid "Unlock"
+msgstr "अनलक गर्नुहोस्"
+
+msgid "Lock thread"
+msgstr "थ्रेड लक गर्नुहोस्"
+
+msgid "Shadow-ban author"
+msgstr "लेखकलाई शेडो-ब्यान गर्नुहोस्"
+
+msgid "No open reports."
+msgstr "कुनै खुला रिपोर्ट छैन।"
+
+msgid "Pump-and-dump watch"
+msgstr "पम्प-एन्ड-डम्प निगरानी"
+
+msgid ""
+"Assets with a sudden burst of posts from several authors. Check for "
+"coordinated hype, especially in illiquid stocks."
+msgstr ""
+"धेरै लेखकबाट अचानक धेरै पोस्ट आएका सम्पत्तिहरू। विशेषगरी कम कारोबार हुने सेयरमा योजनाबद्ध "
+"हाइप छ कि जाँच गर्नुहोस्।"
+
+#, python-format
+msgid "%(p)s posts by %(a)s authors recently"
+msgstr "हालै %(a)s लेखकबाट %(p)s पोस्ट"
+
+msgid "Nothing unusual right now."
+msgstr "अहिले कुनै असामान्य कुरा छैन।"
+
+msgid "Startup profiles awaiting approval"
+msgstr "स्वीकृतिको पर्खाइमा रहेका स्टार्टअप प्रोफाइलहरू"
+
+msgid "Approve"
+msgstr "स्वीकृत गर्नुहोस्"
+
+msgid "None pending."
+msgstr "कुनै विचाराधीन छैन।"
+
+msgid "Shadow-banned members"
+msgstr "शेडो-ब्यान गरिएका सदस्यहरू"
+
+msgid "None."
+msgstr "कुनै छैन।"
+
+msgid "Lift a ban from any of their posts, or in the admin."
+msgstr "उनीहरूको कुनै पोस्टबाट वा एडमिनबाट ब्यान हटाउन सकिन्छ।"
+
+msgid "Recently resolved"
+msgstr "हालै समाधान गरिएका"
+
+msgid "by"
+msgstr "द्वारा"
+
+msgid "Nothing yet."
+msgstr "अहिलेसम्म केही छैन।"
+
+#, python-format
+msgid "Published %(d)s"
+msgstr "%(d)s मा प्रकाशित"
+
+#, python-format
+msgid "Updated %(d)s"
+msgstr "%(d)s मा अद्यावधिक गरियो"
+
+msgid "Edit"
+msgstr "सम्पादन"
+
+msgid "Delete"
+msgstr "मेटाउनुहोस्"
+
+msgid "Edit news article"
+msgstr "न्युज लेख सम्पादन गर्नुहोस्"
+
+msgid "Post news"
+msgstr "न्युज पोस्ट गर्नुहोस्"
+
+msgid "Choose a new file above to replace the current image."
+msgstr "हालको तस्बिर बदल्न माथि नयाँ फाइल छान्नुहोस्।"
+
+msgid "Market news and MarketKuraa announcements."
+msgstr "बजार न्युज र MarketKuraa का घोषणाहरू।"
+
+msgid "No news yet."
+msgstr "अहिलेसम्म कुनै न्युज छैन।"
+
+msgid "Mark all as read"
+msgstr "सबै पढिसकेको चिन्ह लगाउनुहोस्"
+
+msgid "ago"
+msgstr "अघि"
+
+msgid "Mark as read"
+msgstr "पढिसकेको चिन्ह लगाउनुहोस्"
+
+msgid "You're all caught up."
+msgstr "तपाईंले सबै हेरिसक्नुभयो।"
+
+msgid "About MarketKuraa"
+msgstr "MarketKuraa बारे"
+
+msgid ""
+"MarketKuraa is where investors, traders, founders and analysts talk shop. "
+"It's a global investor community: a NEPSE microcap and a US earnings call "
+"can both live here, discussed side by side."
+msgstr ""
+"MarketKuraa मा लगानीकर्ता, ट्रेडर, संस्थापक र विश्लेषकहरू आफ्ना पेसागत कुरा गर्छन्। यो "
+"एउटा विश्वव्यापी लगानीकर्ता समुदाय हो: नेप्सेको सानो कम्पनी र अमेरिकी आम्दानी कल दुवैबारे "
+"यहीं छलफल हुन सक्छ।"
+
+msgid ""
+"Reading is public. Members build reputation through the quality of their "
+"posts, and verified badges make credentials visible before you weigh an "
+"opinion. Every company discussed gets its own page that collects the "
+"community's discussion in one place."
+msgstr ""
+"पढ्न सार्वजनिक छ। सदस्यहरूले पोस्टको गुणस्तरबाट प्रतिष्ठा बनाउँछन्, र प्रमाणित ब्याजले कुनै "
+"रायलाई तौलनुअघि योग्यता देखाउँछ। छलफल भएका हरेक कम्पनीको आफ्नै पृष्ठ हुन्छ जसमा समुदायको "
+"छलफल एकै ठाउँमा जम्मा हुन्छ।"
+
+msgid "MarketKuraa works in English and Nepali."
+msgstr "MarketKuraa अङ्ग्रेजी र नेपाली दुवैमा चल्छ।"
+
+msgid "Contact us"
+msgstr "सम्पर्क गर्नुहोस्"
+
+msgid "Get in touch with the MarketKuraa team."
+msgstr "MarketKuraa टोलीसँग सम्पर्क गर्नुहोस्।"
+
+msgid ""
+"Questions, feedback or a problem to report? Send us a message and we'll get "
+"back to you."
+msgstr ""
+"प्रश्न, प्रतिक्रिया वा कुनै समस्या छ? हामीलाई सन्देश पठाउनुहोस्, हामी चाँडै जवाफ दिनेछौं।"
+
+msgid "Send message"
+msgstr "सन्देश पठाउनुहोस्"
+
+msgid ""
+"MarketKuraa is a community discussion platform. It is not a broker, an "
+"investment adviser or a securities exchange, and it does not execute trades "
+"or manage money."
+msgstr ""
+"MarketKuraa एक सामुदायिक छलफल मञ्च हो। यो ब्रोकर, लगानी सल्लाहकार वा धितोपत्र "
+"बजार होइन, र यसले कारोबार गर्दैन वा पैसा व्यवस्थापन गर्दैन।"
+
+msgid ""
+"All posts, theses, comments and startup profiles are created by members. "
+"They are personal opinion or self-reported information, may be wrong or out "
+"of date, and are not investment, legal or tax advice or a solicitation to "
+"buy or sell any security. Do your own research and consult a licensed "
+"professional."
+msgstr ""
+"सबै पोस्ट, थेसिस, टिप्पणी र स्टार्टअप प्रोफाइल सदस्यहरूले बनाएका हुन्। ती व्यक्तिगत राय वा "
+"स्वयं-रिपोर्ट गरिएका जानकारी हुन्, गलत वा पुराना हुन सक्छन्, र लगानी, कानुनी वा कर "
+"सल्लाह वा कुनै धितोपत्र खरिद/बिक्रीको प्रस्ताव होइनन्। आफैँ अध्ययन गर्नुहोस् र इजाजतप्राप्त "
+"पेसाकर्मीसँग परामर्श गर्नुहोस्।"
+
+msgid ""
+"A verified badge means MarketKuraa confirmed the member's identity and "
+"stated credentials. It is not an endorsement of the member's views or advice."
+msgstr ""
+"प्रमाणित ब्याजको अर्थ MarketKuraa ले सदस्यको पहिचान र उल्लेखित योग्यता पुष्टि गरेको हो। "
+"यो सदस्यका विचार वा सल्लाहको समर्थन होइन।"
+
+msgid ""
+"Company pages are built from community discussion. They contain no licensed "
+"market data, prices or ratings."
+msgstr ""
+"कम्पनी पृष्ठहरू सामुदायिक छलफलबाट बनेका हुन्। तिनमा इजाजतप्राप्त बजार तथ्याङ्क, मूल्य वा "
+"रेटिङ हुँदैन।"
+
+msgid ""
+"MarketKuraa is a place for honest, respectful discussion about markets. Be "
+"useful, be civil and show your reasoning."
+msgstr ""
+"MarketKuraa बजारबारे इमानदार र सम्मानजनक छलफलको ठाउँ हो। उपयोगी बन्नुहोस्, शिष्ट "
+"रहनुहोस् र आफ्नो तर्क देखाउनुहोस्।"
+
+msgid "What is not allowed"
+msgstr "के अनुमति छैन"
+
+msgid "Coordinated hype and pump-and-dump"
+msgstr "योजनाबद्ध हाइप र पम्प-एन्ड-डम्प"
+
+msgid ""
+"organising, promoting or repeatedly hyping a stock, especially a thinly "
+"traded one, to move its price. Sudden bursts of posts about the same "
+"illiquid stock are monitored and reviewed."
+msgstr ""
+"सेयरको मूल्य चलाउन, विशेषगरी कम कारोबार हुने सेयरलाई, संगठित रूपमा प्रचार वा बारम्बार "
+"हाइप गर्नु। एउटै कम कारोबार हुने सेयरबारे अचानक धेरै पोस्ट आउनुलाई निगरानी र समीक्षा "
+"गरिन्छ।"
+
+msgid "Buy/sell signals and guaranteed returns"
+msgstr "खरिद/बिक्री सङ्केत र ग्यारेन्टी प्रतिफल"
+
+msgid ""
+"post your reasoning as opinion, not instructions. No claims of certain "
+"profits."
+msgstr "आफ्नो तर्क निर्देशन होइन, राय को रूपमा राख्नुहोस्। पक्का नाफाको दाबी नगर्नुहोस्।"
+
+msgid "Undisclosed conflicts"
+msgstr "नखुलाइएको स्वार्थको द्वन्द्व"
+
+msgid ""
+"if you hold the stock you are writing about, say so in the disclosure field."
+msgstr "तपाईंले लेखिरहेको सेयर तपाईंसँग छ भने खुलासा महलमा उल्लेख गर्नुहोस्।"
+
+msgid "Spam, scams and impersonation"
+msgstr "स्प्याम, ठगी र नक्कली परिचय"
+
+msgid "Harassment and personal attacks"
+msgstr "हैरानी र व्यक्तिगत आक्रमण"
+
+msgid "Requests for broker or account credentials"
+msgstr "ब्रोकर वा खाताको लगइन विवरण माग्नु"
+
+msgid "never share or ask for them."
+msgstr "कहिल्यै साझा नगर्नुहोस् वा नमाग्नुहोस्।"
+
+msgid "How moderation works"
+msgstr "मोडरेसन कसरी काम गर्छ"
+
+msgid ""
+"Anyone signed in can report a post or comment. Moderators may remove "
+"content, lock threads and restrict accounts that repeatedly break these "
+"rules. New accounts have posting limits to keep spam out."
+msgstr ""
+"लग इन गरेका जोसुकैले पोस्ट वा टिप्पणीको रिपोर्ट गर्न सक्छन्। मोडरेटरहरूले सामग्री हटाउन, "
+"थ्रेड लक गर्न र यी नियम बारम्बार उल्लङ्घन गर्ने खातालाई सीमित गर्न सक्छन्। स्प्याम रोक्न "
+"नयाँ खाताहरूको पोस्ट सीमा हुन्छ।"
+
+msgid "Theses and verified badges"
+msgstr "थेसिस र प्रमाणित ब्याज"
+
+msgid ""
+"A thesis is a timestamped, self-reported opinion. A verified badge means "
+"identity and credentials were confirmed, not that MarketKuraa endorses that "
+"member's views."
+msgstr ""
+"थेसिस समय-छाप भएको, स्वयं-रिपोर्ट गरिएको राय हो। प्रमाणित ब्याजको अर्थ पहिचान र "
+"योग्यता पुष्टि भएको हो, MarketKuraa ले त्यस सदस्यका विचारलाई समर्थन गरेको होइन।"
+
+msgid "Remove upvote"
+msgstr "अपभोट हटाउनुहोस्"
+
+msgid "Upvote"
+msgstr "अपभोट"
+
+#, python-format
+msgid "%(n)s vote"
+msgid_plural "%(n)s votes"
+msgstr[0] "%(n)s भोट"
+msgstr[1] "%(n)s भोटहरू"
+
+msgid "Log in to upvote"
+msgstr "अपभोट गर्न लग इन गर्नुहोस्"
+
+msgid "Host"
+msgstr "होस्ट"
+
+msgid "Author"
+msgstr "लेखक"
+
+msgid "edited"
+msgstr "सम्पादित"
+
+msgid "[This comment was removed]"
+msgstr "[यो टिप्पणी हटाइयो]"
+
+msgid "Reply"
+msgstr "जवाफ"
+
+msgid "Report"
+msgstr "रिपोर्ट"
+
+msgid "Your reply"
+msgstr "तपाईंको जवाफ"
+
+msgid "Post reply"
+msgstr "जवाफ पोस्ट गर्नुहोस्"
+
+msgid "Nothing to preview yet."
+msgstr "अहिलेसम्म पूर्वावलोकन गर्ने केही छैन।"
+
+msgid "Pagination"
+msgstr "पृष्ठ सङ्ख्या"
+
+msgid "Previous"
+msgstr "अघिल्लो"
+
+#, python-format
+msgid "Page %(n)s of %(total)s"
+msgstr "पृष्ठ %(n)s / %(total)s"
+
+msgid "Next"
+msgstr "अर्को"
+
+msgid "Locked"
+msgstr "लक गरिएको"
+
+msgid "Entry"
+msgstr "प्रवेश"
+
+msgid "Target"
+msgstr "लक्ष्य"
+
+msgid "Ended"
+msgstr "सकियो"
+
+msgid "Closes"
+msgstr "बन्द"
+
+#, python-format
+msgid "%(n)s reply"
+msgid_plural "%(n)s replies"
+msgstr[0] "%(n)s जवाफ"
+msgstr[1] "%(n)s जवाफहरू"
+
+#, python-format
+msgid "%(n)s min read"
+msgstr "%(n)s मिनेट पढ्न"
+
+msgid "More filters"
+msgstr "थप फिल्टरहरू"
+
+msgid "Type"
+msgstr "प्रकार"
+
+msgid "Asset"
+msgstr "सम्पत्ति"
+
+msgid "Position"
+msgstr "पोजिसन"
+
+msgid "Horizon"
+msgstr "अवधि"
+
+msgid "Date"
+msgstr "मिति"
+
+msgid "Any time"
+msgstr "जुनसुकै समय"
+
+msgid "Past week"
+msgstr "गत हप्ता"
+
+msgid "Sort"
+msgstr "क्रमबद्ध"
+
+msgid "Verified members only"
+msgstr "प्रमाणित सदस्य मात्र"
+
+msgid "Apply"
+msgstr "लागू गर्नुहोस्"
+
+msgid "Upvoted"
+msgstr "अपभोट गरियो"
+
+msgid ""
+"Identity and credentials confirmed by MarketKuraa. Not an endorsement of "
+"their views."
+msgstr "MarketKuraa ले पहिचान र योग्यता पुष्टि गरेको। उनीहरूका विचारको समर्थन होइन।"
+
+msgid "This post was removed. Only moderators can see it."
+msgstr "यो पोस्ट हटाइएको छ। मोडरेटरहरूले मात्र हेर्न सक्छन्।"
+
+msgid "The author is shadow-banned. Only they and staff can see this post."
+msgstr "लेखक शेडो-ब्यान गरिएका छन्। उनीहरू र स्टाफले मात्र यो पोस्ट हेर्न सक्छन्।"
+
+msgid "Posted by"
+msgstr "पोस्ट गर्ने"
+
+msgid "Self-reported thesis"
+msgstr "स्वयं-रिपोर्ट गरिएको थेसिस"
+
+msgid "Stop / exit plan"
+msgstr "स्टप / बाहिरिने योजना"
+
+msgid "Risks"
+msgstr "जोखिमहरू"
+
+msgid "Disclosure"
+msgstr "खुलासा"
+
+#, python-format
+msgid ""
+"Published %(d)s (UTC). Timestamped so it can be cited later. Not financial "
+"advice."
+msgstr ""
+"%(d)s (UTC) मा प्रकाशित। पछि उल्लेख गर्न सकिने गरी समय-छाप लगाइएको। वित्तीय सल्लाह "
+"होइन।"
+
+msgid "AMA with"
+msgstr "AMA — होस्ट:"
+
+msgid "Starts"
+msgstr "सुरु"
+
+#, python-format
+msgid "%(n)s unanswered question(s)"
+msgstr "%(n)s अनुत्तरित प्रश्न"
+
+msgid "Moderator"
+msgstr "मोडरेटर"
+
+msgid "Lock"
+msgstr "लक गर्नुहोस्"
+
+msgid "Lift shadow-ban"
+msgstr "शेडो-ब्यान हटाउनुहोस्"
+
+msgid "Questions and answers"
+msgstr "प्रश्न र उत्तरहरू"
+
+msgid "No questions yet. Be the first to ask."
+msgstr "अहिलेसम्म कुनै प्रश्न छैन। पहिलो प्रश्न सोध्नुहोस्।"
+
+msgid "No comments yet. Start the conversation."
+msgstr "अहिलेसम्म कुनै टिप्पणी छैन। कुराकानी सुरु गर्नुहोस्।"
+
+msgid "Markdown is supported."
+msgstr "मार्कडाउन प्रयोग गर्न सकिन्छ।"
+
+msgid "Ask a question"
+msgstr "प्रश्न सोध्नुहोस्"
+
+msgid "Add comment"
+msgstr "टिप्पणी थप्नुहोस्"
+
+msgid "or"
+msgstr "वा"
+
+msgid "sign up"
+msgstr "साइन अप गर्नुहोस्"
+
+msgid "to comment, vote or report."
+msgstr "टिप्पणी, भोट वा रिपोर्ट गर्न।"
+
+msgid "Edit post"
+msgstr "पोस्ट सम्पादन गर्नुहोस्"
+
+msgid "Create post"
+msgstr "पोस्ट बनाउनुहोस्"
+
+msgid ""
+"MarketKuraa posts are user-generated. A thesis is self-reported opinion, not "
+"financial advice. Do not promote or hype thinly traded stocks."
+msgstr ""
+"MarketKuraa का पोस्टहरू प्रयोगकर्ताले बनाएका हुन्। थेसिस स्वयं-रिपोर्ट गरिएको राय हो, "
+"वित्तीय सल्लाह होइन। कम कारोबार हुने सेयरको प्रचार वा हाइप नगर्नुहोस्।"
+
+msgid "Publish post"
+msgstr "पोस्ट प्रकाशित गर्नुहोस्"
+
+msgid "No posts match this view yet."
+msgstr "यस दृश्यमा मिल्ने कुनै पोस्ट अहिलेसम्म छैन।"
+
+msgid "No bio yet."
+msgstr "अहिलेसम्म बायो छैन।"
+
+msgid "reputation"
+msgstr "प्रतिष्ठा"
+
+msgid "followers"
+msgstr "फलोअर"
+
+msgid "following"
+msgstr "फलो गरिरहेका"
+
+#, python-format
+msgid "Joined %(d)s"
+msgstr "%(d)s मा सामेल भए"
+
+msgid "Shadow-banned"
+msgstr "शेडो-ब्यान गरिएको"
+
+msgid "Unfollow"
+msgstr "अनफलो"
+
+msgid "Follow"
+msgstr "फलो"
+
+msgid "Edit profile"
+msgstr "प्रोफाइल सम्पादन"
+
+msgid "Apply for verification"
+msgstr "प्रमाणीकरणका लागि निवेदन दिनुहोस्"
+
+#, python-format
+msgid "Reach %(n)s reputation to unlock startup profiles."
+msgstr "स्टार्टअप प्रोफाइल खोल्न %(n)s प्रतिष्ठा पुर्‍याउनुहोस्।"
+
+msgid "Comments"
+msgstr "टिप्पणीहरू"
+
+msgid "On"
+msgstr "यसमा:"
+
+msgid "No comments yet."
+msgstr "अहिलेसम्म कुनै टिप्पणी छैन।"
+
+msgid "Welcome back — log in to post, vote and follow companies."
+msgstr "फेरि स्वागत छ — पोस्ट गर्न, भोट हाल्न र कम्पनीहरू फलो गर्न लग इन गर्नुहोस्।"
+
+msgid "Continue with Google"
+msgstr "Google बाट जारी राख्नुहोस्"
+
+msgid "Forgot your password?"
+msgstr "पासवर्ड बिर्सनुभयो?"
+
+msgid "Create an account"
+msgstr "खाता बनाउनुहोस्"
+
+msgid "Password changed"
+msgstr "पासवर्ड परिवर्तन भयो"
+
+msgid "Back to settings"
+msgstr "सेटिङमा फर्कनुहोस्"
+
+msgid "Change password"
+msgstr "पासवर्ड परिवर्तन गर्नुहोस्"
+
+msgid "Password updated"
+msgstr "पासवर्ड अद्यावधिक भयो"
+
+msgid "Log in with your new password"
+msgstr "नयाँ पासवर्डले लग इन गर्नुहोस्"
+
+msgid "Choose a new password"
+msgstr "नयाँ पासवर्ड छान्नुहोस्"
+
+msgid "Save password"
+msgstr "पासवर्ड सुरक्षित गर्नुहोस्"
+
+msgid "Link expired"
+msgstr "लिङ्कको म्याद सकियो"
+
+msgid "This reset link is invalid or has already been used."
+msgstr "यो रिसेट लिङ्क अमान्य छ वा पहिले नै प्रयोग भइसकेको छ।"
+
+msgid "Request a new one"
+msgstr "नयाँ अनुरोध गर्नुहोस्"
+
+msgid "Check your email"
+msgstr "आफ्नो इमेल हेर्नुहोस्"
+
+msgid ""
+"If an account exists for that address, we have sent instructions to reset "
+"your password."
+msgstr "त्यो ठेगानाको खाता भए, पासवर्ड रिसेट गर्ने निर्देशन हामीले पठाएका छौँ।"
+
+msgid "Back to log in"
+msgstr "लग इनमा फर्कनुहोस्"
+
+msgid "You asked to reset your MarketKuraa password. Choose a new one here:"
+msgstr ""
+"तपाईंले आफ्नो MarketKuraa पासवर्ड रिसेट गर्न अनुरोध गर्नुभयो। नयाँ पासवर्ड यहाँ छान्नुहोस्:"
+
+msgid "Your username is:"
+msgstr "तपाईंको प्रयोगकर्ता नाम:"
+
+msgid "If you did not request this, you can ignore this email."
+msgstr "तपाईंले यो अनुरोध गर्नुभएको होइन भने, यो इमेल बेवास्ता गर्न सक्नुहुन्छ।"
+
+msgid "Reset password"
+msgstr "पासवर्ड रिसेट"
+
+msgid "Reset your password"
+msgstr "आफ्नो पासवर्ड रिसेट गर्नुहोस्"
+
+msgid "Enter your email and we will send you a link to choose a new password."
+msgstr "आफ्नो इमेल लेख्नुहोस्; हामी नयाँ पासवर्ड छान्ने लिङ्क पठाउनेछौँ।"
+
+msgid "Send reset link"
+msgstr "रिसेट लिङ्क पठाउनुहोस्"
+
+msgid "Report content"
+msgstr "सामग्री रिपोर्ट गर्नुहोस्"
+
+msgid "Report this comment"
+msgstr "यो टिप्पणी रिपोर्ट गर्नुहोस्"
+
+msgid "Report this post"
+msgstr "यो पोस्ट रिपोर्ट गर्नुहोस्"
+
+msgid ""
+"Reports go to the moderation team. Coordinated hype, spam and harassment are "
+"not allowed."
+msgstr "रिपोर्टहरू मोडरेसन टोलीमा जान्छन्। योजनाबद्ध हाइप, स्प्याम र हैरानी अनुमति छैन।"
+
+msgid "Submit report"
+msgstr "रिपोर्ट पेस गर्नुहोस्"
+
+msgid "Search MarketKuraa"
+msgstr "MarketKuraa मा खोज्नुहोस्"
+
+msgid "Companies, tickers, tags, posts, users"
+msgstr "कम्पनी, टिकर, ट्याग, पोस्ट, प्रयोगकर्ता"
+
+msgid "Companies and tags"
+msgstr "कम्पनी र ट्यागहरू"
+
+msgid "No matching companies or tags."
+msgstr "मिल्ने कुनै कम्पनी वा ट्याग छैन।"
+
+msgid "Members"
+msgstr "सदस्यहरू"
+
+msgid "No matching members."
+msgstr "मिल्ने कुनै सदस्य छैन।"
+
+msgid "Account settings"
+msgstr "खाता सेटिङ"
+
+msgid "Save settings"
+msgstr "सेटिङ सुरक्षित गर्नुहोस्"
+
+msgid "Apply for a verified badge"
+msgstr "प्रमाणित ब्याजका लागि निवेदन दिनुहोस्"
+
+msgid "Application status"
+msgstr "निवेदनको स्थिति"
+
+msgid "Create an account to post, vote and follow companies."
+msgstr "पोस्ट गर्न, भोट हाल्न र कम्पनीहरू फलो गर्न खाता बनाउनुहोस्।"
+
+msgid "Create account"
+msgstr "खाता बनाउनुहोस्"
+
+msgid "Already a member?"
+msgstr "पहिले नै सदस्य हुनुहुन्छ?"
+
+msgid "Awaiting moderator approval. Only you and staff can see this page."
+msgstr "मोडरेटरको स्वीकृतिको पर्खाइमा। तपाईं र स्टाफले मात्र यो पृष्ठ हेर्न सक्छन्।"
+
+msgid "Looking for"
+msgstr "खोजिरहेका"
+
+msgid "Founder"
+msgstr "संस्थापक"
+
+msgid ""
+"Self-reported by the founder. Not an offer of securities or investment "
+"advice."
+msgstr "संस्थापकद्वारा स्वयं-रिपोर्ट गरिएको। धितोपत्रको प्रस्ताव वा लगानी सल्लाह होइन।"
+
+msgid "Edit startup"
+msgstr "स्टार्टअप सम्पादन"
+
+msgid "List your startup"
+msgstr "आफ्नो स्टार्टअप सूचीबद्ध गर्नुहोस्"
+
+msgid "Edit startup profile"
+msgstr "स्टार्टअप प्रोफाइल सम्पादन"
+
+msgid "A moderator reviews each profile before it appears in the directory."
+msgstr "निर्देशिकामा देखिनुअघि मोडरेटरले हरेक प्रोफाइल समीक्षा गर्छन्।"
+
+msgid "Save"
+msgstr "सुरक्षित गर्नुहोस्"
+
+msgid "Startups and founders"
+msgstr "स्टार्टअप र संस्थापकहरू"
+
+msgid ""
+"Discover early-stage startups and founders from the MarketKuraa community."
+msgstr "MarketKuraa समुदायका प्रारम्भिक चरणका स्टार्टअप र संस्थापकहरू पत्ता लगाउनुहोस्।"
+
+msgid ""
+"Profiles are self-reported and reviewed by moderators before they are "
+"listed. Nothing here is an offer of securities or investment advice."
+msgstr ""
+"प्रोफाइलहरू स्वयं-रिपोर्ट गरिएका हुन् र सूचीबद्ध हुनुअघि मोडरेटरले समीक्षा गर्छन्। यहाँको कुनै "
+"कुरा धितोपत्रको प्रस्ताव वा लगानी सल्लाह होइन।"
+
+msgid "Stage"
+msgstr "चरण"
+
+msgid "Sector"
+msgstr "क्षेत्र"
+
+msgid "Filter"
+msgstr "फिल्टर"
+
+msgid "No startups listed yet."
+msgstr "अहिलेसम्म कुनै स्टार्टअप सूचीबद्ध छैन।"
+
+msgid ""
+"Analysts, finance professionals and fund managers can apply. Staff review "
+"your credentials (LinkedIn, licence, professional profile). Verification "
+"means identity and credentials were confirmed. It does not mean MarketKuraa "
+"endorses your views or that you are licensed to give advice here."
+msgstr ""
+"विश्लेषक, वित्त पेशाकर्मी र फन्ड म्यानेजरले निवेदन दिन सक्छन्। स्टाफले तपाईंका योग्यता "
+"(LinkedIn, इजाजतपत्र, पेसागत प्रोफाइल) समीक्षा गर्छन्। प्रमाणीकरणको अर्थ पहिचान र "
+"योग्यता पुष्टि भएको हो। यसको अर्थ MarketKuraa ले तपाईंका विचारलाई समर्थन गर्छ वा "
+"तपाईं यहाँ सल्लाह दिन इजाजतप्राप्त हुनुहुन्छ भन्ने होइन।"
+
+msgid "Submit application"
+msgstr "निवेदन पेस गर्नुहोस्"
+
+msgid "Search applicant"
+msgstr "निवेदक खोज्नुहोस्"
+
+msgid "Approved"
+msgstr "स्वीकृत"
+
+msgid "Rejected"
+msgstr "अस्वीकृत"
+
+msgid "Review"
+msgstr "समीक्षा"
+
+msgid "No applications in this view."
+msgstr "यस दृश्यमा कुनै निवेदन छैन।"
+
+msgid "Review application"
+msgstr "निवेदन समीक्षा"
+
+msgid "Requested badge"
+msgstr "अनुरोध गरिएको ब्याज"
+
+msgid "Expertise"
+msgstr "विशेषज्ञता"
+
+msgid "Experience"
+msgstr "अनुभव"
+
+msgid "Credentials"
+msgstr "योग्यता"
+
+msgid "Website"
+msgstr "वेबसाइट"
+
+msgid "Status"
+msgstr "स्थिति"
+
+msgid "reviewed by"
+msgstr "समीक्षक"
+
+msgid "Reject"
+msgstr "अस्वीकार गर्नुहोस्"
+
+msgid "Verification status"
+msgstr "प्रमाणीकरणको स्थिति"
+
+msgid "Submitted"
+msgstr "पेस गरिएको"
+
+msgid "Review note"
+msgstr "समीक्षा टिप्पणी"
+
+msgid "No applications yet."
+msgstr "अहिलेसम्म कुनै निवेदन छैन।"
+
+msgid "Apply now"
+msgstr "अहिले निवेदन दिनुहोस्"
+
+msgid "Rename"
+msgstr "नाम परिवर्तन"
+
+msgid "Delete watchlist"
+msgstr "वाचलिस्ट मेटाउनुहोस्"
+
+msgid "Add a company"
+msgstr "कम्पनी थप्नुहोस्"
+
+msgid "Company"
+msgstr "कम्पनी"
+
+msgid "Add"
+msgstr "थप्नुहोस्"
+
+msgid "This watchlist is empty."
+msgstr "यो वाचलिस्ट खाली छ।"
+
+msgid "Your watchlists"
+msgstr "तपाईंका वाचलिस्टहरू"
+
+msgid "Static lists only — no live prices or portfolio tracking."
+msgstr "स्थिर सूची मात्र — कुनै लाइभ मूल्य वा पोर्टफोलियो ट्र्याकिङ छैन।"
+
+msgid "Create watchlist"
+msgstr "वाचलिस्ट बनाउनुहोस्"
+
+msgid "Saved lists"
+msgstr "सुरक्षित सूचीहरू"
+
+#, python-format
+msgid "%(n)s company"
+msgid_plural "%(n)s companies"
+msgstr[0] "%(n)s कम्पनी"
+msgstr[1] "%(n)s कम्पनीहरू"
+
+msgid "No watchlists yet."
+msgstr "अहिलेसम्म कुनै वाचलिस्ट छैन।"
+
+#~ msgid "Go"
+#~ msgstr "जानुहोस्"

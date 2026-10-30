@@ -1,0 +1,13 @@
+{% extends 'base.html' %}{% load i18n %}
+{% block title %}{% trans "Page not found" %} — {{ SITE_NAME }}{% endblock %}
+{% block content %}
+<section class="panel error-panel">
+  <p class="error-code">404</p>
+  <h1>{% trans "Page not found" %}</h1>
+  <p class="muted">{% trans "The page you're looking for doesn't exist, or may have moved." %}</p>
+  <div class="actions">
+    <a class="btn" href="{% url 'home' %}">{% trans "Back to home" %}</a>
+    <a class="btn secondary" href="{% url 'search' %}">{% trans "Search the site" %}</a>
+  </div>
+</section>
+{% endblock %}

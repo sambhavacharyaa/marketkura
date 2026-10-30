@@ -5,6 +5,7 @@ import os
 from django.core.exceptions import ImproperlyConfigured
 
 from .base import *  # noqa: F403,F401
+from .base import env_bool
 
 
 def get_required_setting(name):
@@ -15,7 +16,7 @@ def get_required_setting(name):
 
 
 def get_bool_setting(name, default=False):
-    return os.getenv(name, str(default)).lower() in {'1', 'true', 'yes', 'on'}
+    return env_bool(name, default)
 
 
 DEBUG = False
@@ -51,3 +52,15 @@ SECURE_HSTS_INCLUDE_SUBDOMAINS = True
 SECURE_HSTS_PRELOAD = True
 SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
+SECURE_REFERRER_POLICY = 'same-origin'
+
+# Behind nginx/another TLS-terminating proxy, trust its forwarded-proto header.
+if get_bool_setting('BEHIND_PROXY', False):
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# Login throttling and rate limits need a cache shared by every worker. Use Redis
+# when REDIS_URL is set, otherwise a database cache (run `manage.py createcachetable`).
+if os.getenv('REDIS_URL'):
+    CACHES = {'default': {'BACKEND': 'django.core.cache.backends.redis.RedisCache', 'LOCATION': os.environ['REDIS_URL']}}
+else:
+    CACHES = {'default': {'BACKEND': 'django.core.cache.backends.db.DatabaseCache', 'LOCATION': 'marketkura_cache'}}

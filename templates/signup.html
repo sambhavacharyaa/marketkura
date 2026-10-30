@@ -1,3 +1,18 @@
-{% extends 'base.html' %}
-{% block title %}Sign up — MarketKura{% endblock %}
-{% block content %}<section class="panel form-panel"><h1>Join MarketKura</h1><form method="post">{% csrf_token %}{{ form.as_p }}<button class="btn" type="submit">Create account</button></form></section>{% endblock %}
+{% extends 'base_auth.html' %}{% load i18n %}
+{% block title %}{% trans "Sign up" %} — {{ SITE_NAME }}{% endblock %}
+{% block content %}<div class="auth-card">
+  <h1>{% trans "Join MarketKuraa" %}</h1>
+  <p class="auth-subtitle">{% trans "Create an account to post, vote and follow companies." %}</p>
+  {% if google_login_enabled %}
+  <div class="auth-oauth"><a class="btn secondary" href="{% url 'google_login' %}?process=login">{% trans "Continue with Google" %}</a></div>
+  <p class="auth-divider">{% trans "or" %}</p>
+  {% endif %}
+  <form method="post">{% csrf_token %}
+    {% for error in form.non_field_errors %}<p class="field-errors">{{ error }}</p>{% endfor %}
+    {% include 'partials/form_fields.html' %}
+    <p style="margin-top:20px"><button class="btn" type="submit">{% trans "Create account" %}</button></p>
+  </form>
+  <div class="auth-foot">
+    <span>{% trans "Already a member?" %} <a href="{% url 'login' %}">{% trans "Log in" %}</a></span>
+  </div>
+</div>{% endblock %}

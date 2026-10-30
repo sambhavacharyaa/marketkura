@@ -1,1 +1,10 @@
-{% extends 'base.html' %}{% block title %}Search — MarketKura{% endblock %}{% block content %}<h1>Search MarketKura</h1><form class="search"><input name="q" value="{{ query }}" placeholder="Companies, tickers, posts, users, tags"><button class="btn">Search</button></form>{% if query %}<section class="panel"><h2>Companies</h2>{% for company in companies %}<p><a href="{% url 'company_detail' company.ticker|default:company.slug %}">{{ company.ticker|default:company.name }}</a> — {{ company.display_name }}</p>{% empty %}<p class="muted">No companies found.</p>{% endfor %}</section><section class="panel"><h2>Contributors</h2>{% for result_user in users %}<p><a href="{% url 'profile' result_user.username %}">@{{ result_user.username }}</a>{% if result_user.is_verified %} <span class="verified">✓ Verified Contributor</span>{% endif %}</p>{% empty %}<p class="muted">No contributors found.</p>{% endfor %}</section><h2>Posts</h2>{% include 'post_list.html' with posts=posts %}{% endif %}{% endblock %}
+{% extends 'base.html' %}{% load i18n %}
+{% block title %}{% trans "Search" %} — {{ SITE_NAME }}{% endblock %}
+{% block seo %}<meta name="robots" content="noindex,follow">{% endblock %}
+{% block content %}<h1>{% trans "Search MarketKuraa" %}</h1>
+<form class="search" role="search"><input name="q" value="{{ query }}" placeholder="{% trans 'Companies, tickers, tags, posts, users' %}" aria-label="{% trans 'Search' %}"><button class="btn">{% trans "Search" %}</button></form>
+{% if query %}
+<section class="panel"><h2>{% trans "Companies and tags" %}</h2>{% for company in companies %}<p><a href="{{ company.get_absolute_url }}">{{ company.ticker|default:company.name }}</a> <span class="muted">{{ company.company_name|default:company.name }}</span></p>{% empty %}<p class="muted">{% trans "No matching companies or tags." %}</p>{% endfor %}</section>
+<section class="panel"><h2>{% trans "Members" %}</h2>{% for u in users %}<p>{% include 'partials/user_link.html' %}</p>{% empty %}<p class="muted">{% trans "No matching members." %}</p>{% endfor %}</section>
+<h2>{% trans "Posts" %}</h2>{% include 'post_list.html' %}
+{% endif %}{% endblock %}

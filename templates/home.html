@@ -1,43 +1,115 @@
-{% extends 'base.html' %}
-
-{% block title %}MarketKura — Home{% endblock %}
-
+{% extends 'base.html' %}{% load i18n humanize community_extras %}
+{% block title %}{{ SITE_NAME }} — {% trans "Investor community for markets worldwide" %}{% endblock %}
+{% block og_title %}{{ SITE_NAME }} — {% trans "Investor community for markets worldwide" %}{% endblock %}
 {% block content %}
-  <div class="layout">
-    <aside class="panel">
-      <h3>Categories</h3>
-      <ul>
-        {% for category in categories %}
-          <li><a href="{% url 'category_detail' category.slug %}">{{ category.name }}</a></li>
-        {% empty %}
-          <li class="muted">No categories yet.</li>
-        {% endfor %}
-      </ul>
-    </aside>
 
-    <section>
-      <form class="search" method="get"><input name="q" value="{{ query }}" placeholder="Search posts, topics, or tickers"><button class="btn" type="submit">Search</button></form>
-      <div class="panel" style="margin-bottom: 18px;">
-        <h1>Investor community forum</h1>
-        <p class="muted">Discuss NEPSE, global markets, personal finance, startups, and broader investor ideas in one place.</p>
-        <a class="btn" href="{% url 'create_post' %}">Create a post</a>
-      </div>
+<section class="strip" aria-label="{% trans 'Most discussed companies' %}">
+  <span class="strip-label">{% include 'partials/icon.html' with name='trending' %}{% trans "Most discussed" %}</span>
+  <ul class="strip-list">
+    {% for company in trending_companies %}<li><a href="{{ company.get_absolute_url }}" title="{{ company.display_name }}"><span class="ticker">${{ company.ticker|default:company.name }}</span><span class="num">{{ company.recent_posts }}</span></a></li>
+    {% empty %}<li class="muted">{% trans "No company discussions yet. Mention a ticker in a post to start one." %}</li>{% endfor %}
+  </ul>
+  <span class="strip-slot" data-slot="marketaux-prices" title="{% trans 'Live prices will be added later.' %}">{% trans "Live prices · coming soon" %}</span>
+</section>
 
-      {% for post in posts %}
-        <article class="post-card">
-          <div>
-            <span class="badge">{{ post.category.name }}</span>
-            <span class="badge">{{ post.get_type_display }}</span>
+<div class="home-grid">
+  <section class="feed" aria-label="{% trans 'Community feed' %}">
+    {% if user.is_authenticated %}
+    <form class="card composer" method="post" action="{% url 'create_post' %}" enctype="multipart/form-data">{% csrf_token %}
+      <input type="hidden" name="type" value="discussion">
+      <div class="composer-row-outer">
+        <span class="composer-avatar" aria-hidden="true">{% if user.avatar %}<img src="{{ user.avatar.url }}" alt="">{% else %}{{ user.username|slice:':1'|upper }}{% endif %}</span>
+        <div class="composer-main">
+          <label class="sr-only" for="c-title">{% trans "Title" %}</label>
+          <input id="c-title" name="title" maxlength="255" required placeholder="{% trans 'Share an insight, idea or question…' %}">
+          <label class="sr-only" for="c-body">{% trans "Details" %}</label>
+          <textarea id="c-body" name="body" rows="2" required placeholder="{% trans 'Add your reasoning. Markdown is supported.' %}"></textarea>
+          <div class="composer-row">
+            <label class="sr-only" for="c-cat">{% trans "Category" %}</label>
+            <select id="c-cat" name="category" required><option value="">{% trans "Category" %}</option>{% for category in categories %}<option value="{{ category.pk }}">{{ category.name }}</option>{% endfor %}</select>
+            <label class="sr-only" for="c-ticker">{% trans "Ticker (optional)" %}</label>
+            <span class="ticker-input"><span aria-hidden="true">$</span><input id="c-ticker" name="asset_tag" maxlength="20" placeholder="{% trans 'TICKER' %}"></span>
+            <input class="sr-only" type="file" id="c-image" name="image" accept="image/*">
+            <label class="action-link composer-image-label" for="c-image">{% include 'partials/icon.html' with name='image' %}<span class="composer-image-name" data-default="{% trans 'Add image' %}">{% trans "Add image" %}</span></label>
+            <a class="btn secondary small" href="{% url 'create_post' %}?type=thesis">{% trans "Write a thesis" %}</a>
+            <button class="btn small" type="submit">{% trans "Publish" %}</button>
           </div>
-          <h2><a href="{% url 'post_detail' post.pk %}">{{ post.title }}</a></h2>
-          <div class="meta">Posted by <a href="{% url 'profile' post.user.username %}">{{ post.user.username }}</a> · {{ post.created_at|date:'M d, Y' }} · {{ post.comment_count }} comments · {{ post.upvotes }} votes</div>
-          <p>{{ post.body|truncatewords:30 }}</p>
-        </article>
-      {% empty %}
-        <div class="panel">
-          <p class="muted">No posts yet. Seed the community to get traction.</p>
+          <p class="rail-note">{% trans "Posts are opinion, not investment advice." %} <a href="{% url 'guidelines' %}">{% trans "Community guidelines" %}</a></p>
         </div>
-      {% endfor %}
+      </div>
+    </form>
+    {% else %}
+    <div class="card join-card">
+      <div>
+        <h1>{% trans "Where investors talk shop" %}</h1>
+        <p class="muted">{% trans "Read everything openly. Join to post, vote, follow companies and build a reputation." %}</p>
+        {% if stats %}<div class="hero-stats num">
+          <span><strong>{{ stats.posts }}</strong> {% trans "posts" %}</span>
+          <span><strong>{{ stats.members }}</strong> {% trans "members" %}</span>
+          <span><strong>{{ stats.companies }}</strong> {% trans "companies tracked" %}</span>
+        </div>{% endif %}
+      </div>
+      <div class="actions"><a class="btn" href="{% url 'signup' %}">{% trans "Join the discussion" %}</a><a class="btn secondary" href="{% url 'login' %}">{% trans "Log in" %}</a></div>
+    </div>
+    {% endif %}
+
+    <div id="feed-results">
+      <div class="feed-controls">
+        <div class="tabs" role="tablist" aria-label="{% trans 'Sort feed' %}">
+          <a href="?{% query_string tab='latest' page='' type='' %}"{% if tab == 'latest' %} class="active" aria-current="page"{% endif %} hx-get="?{% query_string tab='latest' page='' type='' %}" hx-target="#feed-results" hx-select="#feed-results" hx-select-oob="#site-sidebar" hx-swap="outerHTML" hx-push-url="true" hx-indicator="#thread-skeleton">{% trans "Latest" %}</a>
+          <a href="?{% query_string tab='trending' page='' %}"{% if tab == 'trending' %} class="active" aria-current="page"{% endif %} hx-get="?{% query_string tab='trending' page='' %}" hx-target="#feed-results" hx-select="#feed-results" hx-select-oob="#site-sidebar" hx-swap="outerHTML" hx-push-url="true" hx-indicator="#thread-skeleton">{% trans "Trending" %}</a>
+          {% if user.is_authenticated %}<a href="?{% query_string tab='following' page='' %}"{% if tab == 'following' %} class="active" aria-current="page"{% endif %} hx-get="?{% query_string tab='following' page='' %}" hx-target="#feed-results" hx-select="#feed-results" hx-select-oob="#site-sidebar" hx-swap="outerHTML" hx-push-url="true" hx-indicator="#thread-skeleton">{% trans "Following" %}</a>{% endif %}
+        </div>
+        <form class="feed-search" method="get" role="search"><input type="search" name="q" value="{{ query }}" placeholder="{% trans 'Search this feed' %}" aria-label="{% trans 'Search this feed' %}"></form>
+      </div>
+      <div class="chips-row" role="group" aria-label="{% trans 'Filter by category' %}">
+        <a class="chip-filter{% if not active_category %} active{% endif %}" href="?{% query_string category='' page='' %}"{% if not active_category %} aria-current="true"{% endif %} hx-get="?{% query_string category='' page='' %}" hx-target="#feed-results" hx-select="#feed-results" hx-select-oob="#site-sidebar" hx-swap="outerHTML" hx-push-url="true" hx-indicator="#thread-skeleton">{% trans "All" %}</a>
+        {% for category in categories_all %}<a class="chip-filter{% if active_category == category.slug %} active{% endif %}" href="?{% query_string category=category.slug page='' %}"{% if active_category == category.slug %} aria-current="true"{% endif %} hx-get="?{% query_string category=category.slug page='' %}" hx-target="#feed-results" hx-select="#feed-results" hx-select-oob="#site-sidebar" hx-swap="outerHTML" hx-push-url="true" hx-indicator="#thread-skeleton">{{ category.name }}</a>{% endfor %}
+      </div>
+      {% include 'partials/post_filters.html' %}
+      {% if tab == 'following' and not posts %}<div class="panel"><p class="muted">{% trans "Follow members and categories to build your personal feed." %}</p></div>{% endif %}
+      {% include 'post_list.html' %}
+    </div>
+  </section>
+
+  <aside class="rail rail-right" aria-label="{% trans 'Community highlights' %}">
+    <section class="card rail-card" aria-labelledby="hours-title">
+      <h2 id="hours-title" class="rail-title">{% include 'partials/icon.html' with name='clock' %}{% trans "Market hours" %}</h2>
+      <ul class="hours" data-open="{% trans 'Open' %}" data-closed="{% trans 'Closed' %}">
+        <li data-tz="Asia/Kathmandu" data-days="0,1,2,3,4" data-sessions="11:00-15:00"><span class="hours-name">NEPSE</span><span class="hours-time num"></span><span class="hours-status"></span></li>
+        <li data-tz="Asia/Kolkata" data-days="1,2,3,4,5" data-sessions="09:15-15:30"><span class="hours-name">NSE India</span><span class="hours-time num"></span><span class="hours-status"></span></li>
+        <li data-tz="Europe/London" data-days="1,2,3,4,5" data-sessions="08:00-16:30"><span class="hours-name">London</span><span class="hours-time num"></span><span class="hours-status"></span></li>
+        <li data-tz="America/New_York" data-days="1,2,3,4,5" data-sessions="09:30-16:00"><span class="hours-name">NYSE / NASDAQ</span><span class="hours-time num"></span><span class="hours-status"></span></li>
+        <li data-tz="Asia/Tokyo" data-days="1,2,3,4,5" data-sessions="09:00-11:30,12:30-15:30"><span class="hours-name">Tokyo</span><span class="hours-time num"></span><span class="hours-status"></span></li>
+      </ul>
+      <p class="rail-note">{% trans "Regular weekday sessions in each exchange's local time. Holidays are not reflected." %}</p>
     </section>
-  </div>
+
+    <section class="card rail-card" aria-labelledby="ama-title">
+      <h2 id="ama-title" class="rail-title">{% include 'partials/icon.html' with name='ama' %}{% trans "AMAs" %}</h2>
+      {% for ama in upcoming_amas %}<a class="rail-item" href="{{ ama.get_absolute_url }}"><span class="rail-item-title">{{ ama.title }}</span><span class="rail-item-sub">{{ ama.user.username }} · {% if ama.ama_state == 'live' %}<strong class="live-tag">{% trans "Live now" %}</strong>{% elif ama.ama_starts_at %}{{ ama.ama_starts_at|date:'M d, H:i' }} UTC{% else %}{% trans "Upcoming" %}{% endif %}</span></a>
+      {% empty %}<p class="rail-note">{% trans "No AMAs scheduled." %}{% if user.is_verified %} <a href="{% url 'create_post' %}?type=ama">{% trans "Host one" %}</a>{% endif %}</p>{% endfor %}
+    </section>
+
+    <section class="card rail-card" aria-labelledby="top-title">
+      <h2 id="top-title" class="rail-title">{% include 'partials/icon.html' with name='trophy' %}{% trans "Top contributors" %}</h2>
+      <ol class="leaders">{% for member in top_contributors %}<li><span class="rank num rank-{{ forloop.counter }}">{{ forloop.counter }}</span><span class="leader-avatar" aria-hidden="true">{% if member.avatar %}<img src="{{ member.avatar.url }}" alt="">{% else %}{{ member.username|slice:':1'|upper }}{% endif %}</span><span class="leader-name">{% include 'partials/user_link_compact.html' with u=member %}</span><span class="num leader-score" title="{% trans 'Reputation' %}">{{ member.karma_score }}</span></li>{% empty %}<li class="rail-note">{% trans "Reputation is earned through upvotes. Be the first on the board." %}</li>{% endfor %}</ol>
+      <p class="rail-note">{% trans "Ranked by reputation from community upvotes, not by returns." %}</p>
+    </section>
+
+    <section class="card rail-card" aria-labelledby="sent-title">
+      <h2 id="sent-title" class="rail-title">{% include 'partials/icon.html' with name='chart' %}{% trans "Thesis split" %}</h2>
+      {% for company in thesis_sentiment %}<a class="rail-item" href="{{ company.get_absolute_url }}"><span class="rail-item-title"><span class="ticker">${{ company.ticker|default:company.name }}</span> <span class="muted num">{% blocktrans count n=company.theses %}{{ n }} thesis{% plural %}{{ n }} theses{% endblocktrans %}</span></span>
+        <span class="split" role="img" aria-label="{% blocktrans with l=company.long_pct s=company.short_pct %}{{ l }}% long, {{ s }}% short{% endblocktrans %}"><span class="split-long" style="width:{{ company.long_pct }}%"></span></span>
+        <span class="rail-item-sub num">{% blocktrans with l=company.long_pct s=company.short_pct %}{{ l }}% long · {{ s }}% short{% endblocktrans %}</span></a>
+      {% empty %}<p class="rail-note">{% blocktrans with n=min_theses %}Shows the long/short split once a company has {{ n }} or more theses.{% endblocktrans %}</p>{% endfor %}
+      <p class="rail-note">{% trans "Split of self-reported theses. Community opinion, not a signal or recommendation." %}</p>
+    </section>
+
+    <section class="card rail-card soon-card" data-slot="marketaux-news" aria-labelledby="news-title">
+      <h2 id="news-title" class="rail-title">{% include 'partials/icon.html' with name='news' %}{% trans "Market news" %} <span class="soon-tag">{% trans "Coming soon" %}</span></h2>
+      <p class="rail-note">{% trans "Headlines with sentiment for the companies discussed here will appear in this space." %}</p>
+    </section>
+  </aside>
+</div>
 {% endblock %}

@@ -1,19 +1,12 @@
-{% extends 'base.html' %}
-{% block title %}{% if editing %}Edit{% else %}Create{% endif %} post — MarketKura{% endblock %}
+{% extends 'base.html' %}{% load i18n %}
+{% block title %}{% if editing %}{% trans "Edit post" %}{% else %}{% trans "Create post" %}{% endif %} — {{ SITE_NAME }}{% endblock %}
 {% block content %}
-<section class="panel form-panel"><h1>{% if editing %}Edit{% else %}Create{% endif %} a post</h1>
-<p class="muted">MarketKura posts are user-generated. A thesis is self-reported and not financial advice.</p>
-<form method="post" novalidate>{% csrf_token %}
-  {% for field in form %}
-    <div class="form-field {% if field.name in 'position_type entry_price target_price stop_loss time_horizon thesis_risk disclosure' %}thesis-field{% endif %}">
-      <label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% for error in field.errors %}<p class="field-errors">{{ error }}</p>{% endfor %}
-    </div>
-  {% endfor %}
-  <button class="btn" type="submit">{% if editing %}Save changes{% else %}Publish post{% endif %}</button>
+<section class="panel form-panel"><h1>{% if editing %}{% trans "Edit post" %}{% else %}{% trans "Create a post" %}{% endif %}</h1>
+<p class="muted">{% trans "MarketKuraa posts are user-generated. A thesis is self-reported opinion, not financial advice. Do not promote or hype thinly traded stocks." %} <a href="{% url 'guidelines' %}">{% trans "Community guidelines" %}</a></p>
+<form method="post" enctype="multipart/form-data" novalidate>{% csrf_token %}
+  {% for error in form.non_field_errors %}<p class="field-errors">{{ error }}</p>{% endfor %}
+  {% include 'partials/form_fields.html' with thesis_fields='position_type entry_price target_price stop_loss time_horizon thesis_risk disclosure' ama_fields='ama_starts_at ama_ends_at' %}
+  {% if editing and post.image %}<p class="help">{% trans "Choose a new file above to replace the current image." %}</p>{% endif %}
+  <p style="margin-top:16px"><button class="btn" type="submit">{% if editing %}{% trans "Save changes" %}{% else %}{% trans "Publish post" %}{% endif %}</button></p>
 </form></section>
-<script>
-  const type = document.getElementById('id_type');
-  const toggleThesis = () => document.querySelectorAll('.thesis-field').forEach(el => el.hidden = type.value !== 'thesis');
-  type.addEventListener('change', toggleThesis); toggleThesis();
-</script>
 {% endblock %}

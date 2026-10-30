@@ -1,0 +1,7 @@
+{% extends 'base.html' %}{% load i18n %}
+{% block title %}{% trans "Disclaimer" %} — {{ SITE_NAME }}{% endblock %}
+{% block content %}<section class="panel prose"><h1>{% trans "Disclaimer" %}</h1>
+<p>{% trans "MarketKuraa is a community discussion platform. It is not a broker, an investment adviser or a securities exchange, and it does not execute trades or manage money." %}</p>
+<p>{% trans "All posts, theses, comments and startup profiles are created by members. They are personal opinion or self-reported information, may be wrong or out of date, and are not investment, legal or tax advice or a solicitation to buy or sell any security. Do your own research and consult a licensed professional." %}</p>
+<p>{% trans "A verified badge means MarketKuraa confirmed the member's identity and stated credentials. It is not an endorsement of the member's views or advice." %}</p>
+<p>{% trans "Company pages are built from community discussion. They contain no licensed market data, prices or ratings." %}</p></section>{% endblock %}

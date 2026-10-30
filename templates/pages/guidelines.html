@@ -1,0 +1,12 @@
+{% extends 'base.html' %}{% load i18n %}
+{% block title %}{% trans "Community guidelines" %} — {{ SITE_NAME }}{% endblock %}
+{% block content %}<section class="panel prose"><h1>{% trans "Community guidelines" %}</h1>
+<p>{% trans "MarketKuraa is a place for honest, respectful discussion about markets. Be useful, be civil and show your reasoning." %}</p>
+<h2>{% trans "What is not allowed" %}</h2><ul>
+<li><strong>{% trans "Coordinated hype and pump-and-dump" %}</strong> — {% trans "organising, promoting or repeatedly hyping a stock, especially a thinly traded one, to move its price. Sudden bursts of posts about the same illiquid stock are monitored and reviewed." %}</li>
+<li><strong>{% trans "Buy/sell signals and guaranteed returns" %}</strong> — {% trans "post your reasoning as opinion, not instructions. No claims of certain profits." %}</li>
+<li><strong>{% trans "Undisclosed conflicts" %}</strong> — {% trans "if you hold the stock you are writing about, say so in the disclosure field." %}</li>
+<li><strong>{% trans "Spam, scams and impersonation" %}</strong>. <strong>{% trans "Harassment and personal attacks" %}</strong>.</li>
+<li><strong>{% trans "Requests for broker or account credentials" %}</strong> — {% trans "never share or ask for them." %}</li></ul>
+<h2>{% trans "How moderation works" %}</h2><p>{% trans "Anyone signed in can report a post or comment. Moderators may remove content, lock threads and restrict accounts that repeatedly break these rules. New accounts have posting limits to keep spam out." %}</p>
+<h2>{% trans "Theses and verified badges" %}</h2><p>{% trans "A thesis is a timestamped, self-reported opinion. A verified badge means identity and credentials were confirmed, not that MarketKuraa endorses that member's views." %}</p></section>{% endblock %}

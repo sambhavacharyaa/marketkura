@@ -1,0 +1,32 @@
+{% extends 'base.html' %}{% load i18n community_extras %}
+{% block title %}{% trans "Moderation" %} — {{ SITE_NAME }}{% endblock %}
+{% block seo %}<meta name="robots" content="noindex">{% endblock %}
+{% block content %}<h1>{% trans "Moderation dashboard" %}</h1>
+<p><a href="{% url 'verification_dashboard' %}">{% blocktrans with n=pending_verifications %}{{ n }} verification application(s) pending{% endblocktrans %}</a> · <a href="{% url 'admin:index' %}">{% trans "Admin" %}</a></p>
+
+<section class="panel"><h2>{% trans "Report queue" %} ({{ groups|length }})</h2><p class="meta">{% trans "Most-reported items first." %}</p>
+{% for group in groups %}<article class="card">
+  <div class="meta"><strong>{{ group.count }}</strong> {% trans "report(s)" %} · {{ group.categories|join:", " }}</div>
+  {% if group.kind == 'post' %}<h3><a href="{{ group.target.get_absolute_url }}">{{ group.target.title }}</a></h3>{% else %}<h3><a href="{{ group.target.get_absolute_url }}">{% trans "Comment on" %} “{{ group.post.title }}”</a></h3><div class="prose">{{ group.target.body|excerpt:50 }}</div>{% endif %}
+  <p class="meta">{% trans "By" %} {{ group.target.user.username }}{% if group.target.user.is_shadow_banned %} ({% trans "shadow-banned" %}){% endif %}{% if group.target.is_removed %} · <strong>{% trans "removed" %}</strong>{% endif %}{% if group.post.is_locked %} · <strong>{% trans "locked" %}</strong>{% endif %}</p>
+  <ul>{% for report in group.reports %}<li>{{ report.reporter.username }}: {{ report.reason }}</li>{% endfor %}</ul>
+  <form class="actions" method="post" action="{% url 'moderation_action' %}">{% csrf_token %}<input type="hidden" name="target_type" value="{{ group.kind }}"><input type="hidden" name="target_id" value="{{ group.target.pk }}">
+    <button class="btn small secondary" name="action" value="dismiss">{% trans "Dismiss" %}</button>
+    {% if group.target.is_removed %}<button class="btn small secondary" name="action" value="restore">{% trans "Restore" %}</button>{% else %}<button class="btn small" name="action" value="remove">{% trans "Remove" %}</button>{% endif %}
+    {% if group.post.is_locked %}<button class="btn small secondary" name="action" value="unlock">{% trans "Unlock" %}</button>{% else %}<button class="btn small secondary" name="action" value="lock">{% trans "Lock thread" %}</button>{% endif %}
+    <button class="btn small secondary" name="action" value="shadowban">{% trans "Shadow-ban author" %}</button></form>
+</article>{% empty %}<p class="muted">{% trans "No open reports." %}</p>{% endfor %}</section>
+
+<section class="panel"><h2>{% trans "Pump-and-dump watch" %}</h2><p class="meta">{% blocktrans %}Assets with a sudden burst of posts from several authors. Check for coordinated hype, especially in illiquid stocks.{% endblocktrans %}</p>
+{% for asset in pump_watch %}<p><a href="{{ asset.get_absolute_url }}"><strong>{{ asset.ticker|default:asset.name }}</strong></a> — {% blocktrans with p=asset.recent_posts a=asset.recent_authors %}{{ p }} posts by {{ a }} authors recently{% endblocktrans %}</p>{% empty %}<p class="muted">{% trans "Nothing unusual right now." %}</p>{% endfor %}</section>
+
+<section class="panel"><h2>{% trans "Startup profiles awaiting approval" %} ({{ pending_startups|length }})</h2>
+{% for startup in pending_startups %}<p><a href="{{ startup.get_absolute_url }}">{{ startup.name }}</a> — {{ startup.owner.username }}
+<form class="inline" method="post" action="{% url 'approve_startup' startup.pk %}">{% csrf_token %}<button class="btn small" type="submit">{% trans "Approve" %}</button></form></p>{% empty %}<p class="muted">{% trans "None pending." %}</p>{% endfor %}</section>
+
+<section class="panel"><h2>{% trans "Shadow-banned members" %}</h2>
+{% for banned in shadow_banned %}<p>{{ banned.username }}</p>{% empty %}<p class="muted">{% trans "None." %}</p>{% endfor %}<p class="meta">{% trans "Lift a ban from any of their posts, or in the admin." %}</p></section>
+
+<section class="panel"><h2>{% trans "Recently resolved" %}</h2>
+{% for report in recently_resolved %}<p class="meta">{{ report.get_status_display }} — {{ report.get_category_display }} · {% trans "by" %} {{ report.reviewed_by.username|default:"—" }}</p>{% empty %}<p class="muted">{% trans "Nothing yet." %}</p>{% endfor %}</section>
+{% endblock %}

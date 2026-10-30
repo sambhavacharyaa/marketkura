@@ -12,11 +12,8 @@ class CommunityViewsTests(TestCase):
             email='trader@example.com',
             password='testpass123',
         )
-        self.category = Category.objects.create(
-            name='Nepse',
-            slug='nepse',
-            description='Nepal stock market discussion.',
-        )
+        # The six blueprint categories are seeded by a data migration.
+        self.category, _ = Category.objects.get_or_create(slug='nepse', defaults={'name': 'NEPSE'})
 
     def test_home_page_renders(self):
         response = self.client.get(reverse('home'))
@@ -55,12 +52,18 @@ class CommunityViewsTests(TestCase):
             'thesis_risk': '',
         })
         post = Post.objects.get(title='Banking sector discussion')
-        self.assertRedirects(response, reverse('post_detail', args=[post.pk]))
+        self.assertRedirects(response, post.get_absolute_url())
 
         self.client.post(reverse('add_comment', args=[post.pk]), {'body': 'Following this thread.'})
-        self.client.post(reverse('toggle_post_vote', args=[post.pk]))
         self.assertEqual(Comment.objects.filter(post=post).count(), 1)
-        self.assertEqual(PostVote.objects.filter(post=post, user=self.user).count(), 1)
+
+        # Members cannot upvote their own posts (it would inflate reputation); others can.
+        self.client.post(reverse('toggle_post_vote', args=[post.pk]))
+        self.assertEqual(PostVote.objects.filter(post=post).count(), 0)
+        voter = User.objects.create_user(username='voter', password='testpass123')
+        self.client.force_login(voter)
+        self.client.post(reverse('toggle_post_vote', args=[post.pk]))
+        self.assertEqual(PostVote.objects.filter(post=post, user=voter).count(), 1)
         self.assertEqual(Post.objects.get(pk=post.pk).upvotes, 1)
 
     def test_home_search_filters_posts(self):
@@ -94,7 +97,7 @@ class PhaseTwoTests(TestCase):
         thesis = Post.objects.get(type='thesis')
         self.assertEqual(thesis.entry_price, 520)
         self.assertEqual(thesis.asset, self.asset)
-        self.assertContains(self.client.get(reverse('post_detail', args=[thesis.pk])), 'Self-reported thesis')
+        self.assertContains(self.client.get(thesis.get_absolute_url()), 'Self-reported thesis')
         self.assertContains(self.client.post(reverse('create_post'), self.post_data(title='Bad', entry_price='-1')), 'Entry price must be positive')
         self.assertContains(self.client.post(reverse('create_post'), self.post_data(title='Bad target', target_price='0')), 'Target price must be positive')
         self.assertContains(self.client.post(reverse('create_post'), self.post_data(title='No body', body='')), 'A thesis body is required')
@@ -129,7 +132,7 @@ class PhaseTwoTests(TestCase):
 
     def test_verification_review_and_badge(self):
         self.client.force_login(self.user)
-        payload = {'full_name': 'Member Name', 'application_reason': 'I contribute research.', 'areas_of_expertise': 'Banks', 'experience': 'Five years', 'supporting_information': 'Writing samples', 'website_url': ''}
+        payload = {'requested_type': 'Verified Analyst', 'full_name': 'Member Name', 'application_reason': 'I contribute research.', 'areas_of_expertise': 'Banks', 'experience': 'Five years', 'supporting_information': 'Writing samples', 'website_url': ''}
         self.assertEqual(self.client.post(reverse('verification_apply'), payload).status_code, 302)
         self.assertContains(self.client.get(reverse('verification_status')), 'Pending')
         self.assertEqual(self.client.post(reverse('verification_apply'), payload).status_code, 302)
@@ -143,7 +146,7 @@ class PhaseTwoTests(TestCase):
         self.user.refresh_from_db(); application.refresh_from_db()
         self.assertTrue(self.user.is_verified); self.assertEqual(application.status, 'approved')
         self.assertTrue(Notification.objects.filter(recipient=self.user, notification_type='verification_approved').exists())
-        self.assertContains(self.client.get(reverse('profile', args=[self.user.username])), 'Verified Contributor')
+        self.assertContains(self.client.get(reverse('profile', args=[self.user.username])), 'Verified Analyst')
 
     def test_rejection_reason_and_company_filters_seo(self):
         application = VerificationRequest.objects.create(user=self.user, full_name='Member')
@@ -152,10 +155,10 @@ class PhaseTwoTests(TestCase):
         application.refresh_from_db(); self.assertEqual(application.rejection_reason, 'Need more supporting information.')
         self.create_post(type='discussion', title='NABIL discussion', body='Discussion', asset=self.asset)
         self.create_post(type='thesis', title='NABIL thesis', body='Thesis', asset=self.asset, position_type='long', entry_price='100', time_horizon='long')
-        response = self.client.get(reverse('company_detail', args=['NABIL']), {'section': 'theses'})
+        response = self.client.get(self.asset.get_absolute_url(), {'section': 'theses'})
         self.assertContains(response, 'NABIL thesis'); self.assertNotContains(response, 'NABIL discussion')
         self.assertContains(response, 'canonical'); self.assertContains(response, 'og:title')
-        response = self.client.get(reverse('company_detail', args=['NABIL']), {'section': 'discussions'})
+        response = self.client.get(self.asset.get_absolute_url(), {'section': 'discussions'})
         self.assertContains(response, 'NABIL discussion'); self.assertNotContains(response, 'NABIL thesis')
         self.assertContains(self.client.get(reverse('companies')), 'Nabil Bank Limited')
 
@@ -165,7 +168,7 @@ class PhaseTwoTests(TestCase):
                 position_type='long' if number == 0 else '', entry_price='20' if number == 0 else None, time_horizon='long' if number == 0 else '')
         response = self.client.get(reverse('posts'), {'type': 'thesis', 'asset': 'NABIL', 'position': 'long', 'horizon': 'long'})
         self.assertContains(response, 'Post 0'); self.assertNotContains(response, 'Post 1')
-        response = self.client.get(reverse('company_detail', args=['NABIL']), {'page': 2})
+        response = self.client.get(self.asset.get_absolute_url(), {'page': 2})
         self.assertContains(response, 'Page 2 of 2')
 
     def test_notifications_and_search(self):
@@ -181,7 +184,7 @@ class PhaseTwoTests(TestCase):
         self.assertFalse(Notification.objects.filter(recipient=self.user, is_read=False).exists())
         response = self.client.get(reverse('search'), {'q': 'nabil'})
         self.assertContains(response, 'Nabil Bank Limited'); self.assertContains(response, 'Why NABIL')
-        self.assertContains(self.client.get(reverse('search'), {'q': 'MEMBER'}), '@member')
+        self.assertContains(self.client.get(reverse('search'), {'q': 'MEMBER'}), reverse('profile', args=['member']))
         self.assertEqual(self.client.get(reverse('search')).status_code, 200)
         for number in range(13): self.create_post(type='discussion', title=f'Extra {number}', body='Search body', asset=self.asset)
         self.assertContains(self.client.get(reverse('search'), {'q': 'search', 'page': 2}), 'Page 2 of 2')

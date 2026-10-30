@@ -1,0 +1,12 @@
+{% load i18n %}{% if user.is_authenticated and user != post.user %}
+<form id="card-vote-{{ post.pk }}" class="card-vote" method="post" action="{% url 'toggle_post_vote' post.pk %}" hx-post="{% url 'toggle_post_vote' post.pk %}" hx-target="#card-vote-{{ post.pk }}" hx-swap="outerHTML">{% csrf_token %}<input type="hidden" name="next" value="{{ request.META.HTTP_HX_CURRENT_URL|default:request.get_full_path }}">
+  <button class="vote-arrow{% if user_voted or post.user_voted %} voted{% endif %}" type="submit" aria-pressed="{% if user_voted or post.user_voted %}true{% else %}false{% endif %}" aria-label="{% if user_voted or post.user_voted %}{% trans 'Remove upvote' %}{% else %}{% trans 'Upvote' %}{% endif %}">{% if user_voted or post.user_voted %}{% include 'partials/icon.html' with name='up-solid' cls='icon-solid' %}{% else %}{% include 'partials/icon.html' with name='up' %}{% endif %}</button>
+  <span class="vote-count num" aria-label="{% blocktrans count n=post.upvotes %}{{ n }} vote{% plural %}{{ n }} votes{% endblocktrans %}">{{ post.upvotes }}</span>
+</form>
+{% else %}
+<div id="card-vote-{{ post.pk }}" class="card-vote">
+  {% if user.is_authenticated %}<span class="vote-arrow static" title="{% trans 'You cannot upvote your own post.' %}">{% include 'partials/icon.html' with name='up' %}</span>
+  {% else %}<a class="vote-arrow" href="{% url 'login' %}?next={{ request.get_full_path|urlencode }}" aria-label="{% trans 'Log in to upvote' %}">{% include 'partials/icon.html' with name='up' %}</a>{% endif %}
+  <span class="vote-count num">{{ post.upvotes }}</span>
+</div>
+{% endif %}

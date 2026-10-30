@@ -1,51 +1,109 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.utils.translation import gettext_lazy as _
 
-from .models import Comment, Post, User, VerificationRequest, Watchlist
+from .models import Category, Comment, ContactMessage, NewsPost, Post, Report, StartupProfile, Tag, User, VerificationRequest, Watchlist
+from .services import parse_tag_names
+
+AVATAR_MAX_BYTES = 2 * 1024 * 1024
+POST_IMAGE_MAX_BYTES = 5 * 1024 * 1024
+DATETIME_LOCAL = '%Y-%m-%dT%H:%M'
+
+
+def email_in_use(email, exclude_pk=None):
+    return User.objects.filter(email__iexact=email).exclude(pk=exclude_pk).exists()
 
 
 class SignUpForm(UserCreationForm):
-    email = forms.EmailField(required=True)
+    email = forms.EmailField(required=True, label=_('Email'))
 
     class Meta:
         model = User
         fields = ('username', 'email', 'password1', 'password2')
 
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if email_in_use(email):
+            raise forms.ValidationError(_('An account with this email already exists.'))
+        return email
+
+
+class EmailAuthenticationForm(AuthenticationForm):
+    username = forms.CharField(label=_('Username or email'), max_length=254, widget=forms.TextInput(attrs={'autofocus': True}))
+
 
 class PostForm(forms.ModelForm):
+    tags = forms.CharField(required=False, max_length=300, label=_('Tags'), help_text=_('Comma-separated, up to 5. Example: ipo, banking'))
+
     class Meta:
         model = Post
-        fields = ('category', 'type', 'title', 'body', 'asset', 'asset_tag', 'position_type', 'entry_price', 'target_price', 'stop_loss', 'time_horizon', 'thesis_risk', 'disclosure')
+        fields = ('category', 'type', 'title', 'body', 'image', 'asset', 'asset_tag', 'tags', 'position_type',
+                  'entry_price', 'target_price', 'stop_loss', 'time_horizon', 'thesis_risk', 'disclosure',
+                  'ama_starts_at', 'ama_ends_at')
         widgets = {
             'body': forms.Textarea(attrs={'rows': 8}),
             'thesis_risk': forms.Textarea(attrs={'rows': 3}),
             'disclosure': forms.Textarea(attrs={'rows': 3}),
+            'ama_starts_at': forms.DateTimeInput(attrs={'type': 'datetime-local'}, format=DATETIME_LOCAL),
+            'ama_ends_at': forms.DateTimeInput(attrs={'type': 'datetime-local'}, format=DATETIME_LOCAL),
         }
+        help_texts = {
+            'body': _('Markdown is supported. Posts are opinion and discussion, not investment advice.'),
+            'image': _('Optional. A chart, screenshot or other supporting image — shown at the top of the post.'),
+        }
+
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+        self.fields['asset'].queryset = Tag.objects.filter(is_company=True).order_by('ticker', 'name')
+        self.fields['asset'].required = False
+        self.fields['category'].queryset = Category.objects.all()
+        if not (user and user.is_verified):
+            self.fields['type'].choices = [c for c in Post.POST_TYPES if c[0] != Post.TYPE_AMA]
+            del self.fields['ama_starts_at'], self.fields['ama_ends_at']
+        if self.instance.pk:
+            self.fields['tags'].initial = ', '.join(pt.tag.name for pt in self.instance.tags.select_related('tag'))
 
     def clean(self):
         cleaned = super().clean()
-        if cleaned.get('type') == 'thesis':
-            if not cleaned.get('body', '').strip():
-                self.add_error('body', 'A thesis body is required.')
+        post_type = cleaned.get('type')
+        if post_type == Post.TYPE_THESIS:
+            if not (cleaned.get('body') or '').strip():
+                self.add_error('body', _('A thesis body is required.'))
             if not cleaned.get('position_type'):
-                self.add_error('position_type', 'Choose a position type.')
+                self.add_error('position_type', _('Choose a position type.'))
             if not cleaned.get('entry_price'):
-                self.add_error('entry_price', 'Enter a positive entry price.')
+                self.add_error('entry_price', _('Enter a positive entry price.'))
             if not cleaned.get('time_horizon'):
-                self.add_error('time_horizon', 'Choose a time horizon.')
+                self.add_error('time_horizon', _('Choose a time horizon.'))
+        if post_type == Post.TYPE_AMA and 'ama_ends_at' in self.fields:
+            starts, ends = cleaned.get('ama_starts_at'), cleaned.get('ama_ends_at')
+            if not ends:
+                self.add_error('ama_ends_at', _('Set when the AMA closes.'))
+            elif starts and ends <= starts:
+                self.add_error('ama_ends_at', _('The AMA must end after it starts.'))
         return cleaned
 
     def clean_entry_price(self):
         value = self.cleaned_data.get('entry_price')
         if value is not None and value <= 0:
-            raise forms.ValidationError('Entry price must be positive.')
+            raise forms.ValidationError(_('Entry price must be positive.'))
         return value
 
     def clean_target_price(self):
         value = self.cleaned_data.get('target_price')
         if value is not None and value <= 0:
-            raise forms.ValidationError('Target price must be positive.')
+            raise forms.ValidationError(_('Target price must be positive.'))
         return value
+
+    def clean_tags(self):
+        return parse_tag_names(self.cleaned_data.get('tags'))
+
+    def clean_image(self):
+        image = self.cleaned_data.get('image')
+        if image and hasattr(image, 'size') and image.size > POST_IMAGE_MAX_BYTES:
+            raise forms.ValidationError(_('Please upload an image under 5 MB.'))
+        return image
 
 
 class CommentForm(forms.ModelForm):
@@ -53,10 +111,45 @@ class CommentForm(forms.ModelForm):
         model = Comment
         fields = ('body',)
         widgets = {'body': forms.Textarea(attrs={'rows': 4})}
+        labels = {'body': _('Your comment')}
+
+
+class ContactForm(forms.ModelForm):
+    class Meta:
+        model = ContactMessage
+        fields = ('name', 'email', 'subject', 'message')
+        widgets = {'message': forms.Textarea(attrs={'rows': 6})}
+        labels = {'name': _('Name'), 'email': _('Email'), 'subject': _('Subject'), 'message': _('Message')}
 
 
 class ReportForm(forms.Form):
-    reason = forms.CharField(widget=forms.Textarea(attrs={'rows': 3}), max_length=1000)
+    category = forms.ChoiceField(choices=Report.CATEGORY_CHOICES, label=_('Reason'))
+    reason = forms.CharField(required=False, max_length=1000, label=_('Details'), widget=forms.Textarea(attrs={'rows': 3}))
+
+    def clean(self):
+        cleaned = super().clean()
+        if cleaned.get('category') == 'other' and not (cleaned.get('reason') or '').strip():
+            self.add_error('reason', _('Please describe the problem.'))
+        return cleaned
+
+
+class ProfileForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ('email', 'bio', 'avatar')
+        widgets = {'bio': forms.Textarea(attrs={'rows': 4})}
+
+    def clean_email(self):
+        email = self.cleaned_data['email']
+        if email and email_in_use(email, self.instance.pk):
+            raise forms.ValidationError(_('An account with this email already exists.'))
+        return email
+
+    def clean_avatar(self):
+        avatar = self.cleaned_data.get('avatar')
+        if avatar and hasattr(avatar, 'size') and avatar.size > AVATAR_MAX_BYTES:
+            raise forms.ValidationError(_('Please upload an image under 2 MB.'))
+        return avatar
 
 
 class WatchlistForm(forms.ModelForm):
@@ -68,14 +161,44 @@ class WatchlistForm(forms.ModelForm):
 class VerificationRequestForm(forms.ModelForm):
     class Meta:
         model = VerificationRequest
-        fields = ('full_name', 'application_reason', 'areas_of_expertise', 'experience', 'supporting_information', 'website_url')
+        fields = ('requested_type', 'full_name', 'application_reason', 'areas_of_expertise', 'experience',
+                  'supporting_information', 'linkedin_url', 'website_url')
         widgets = {
             'application_reason': forms.Textarea(attrs={'rows': 4}),
             'areas_of_expertise': forms.Textarea(attrs={'rows': 3}),
             'experience': forms.Textarea(attrs={'rows': 4}),
             'supporting_information': forms.Textarea(attrs={'rows': 4}),
         }
+        labels = {'supporting_information': _('Credentials and licences')}
 
 
 class VerificationReviewForm(forms.Form):
     rejection_reason = forms.CharField(required=False, widget=forms.Textarea(attrs={'rows': 3}))
+
+
+class StartupForm(forms.ModelForm):
+    class Meta:
+        model = StartupProfile
+        fields = ('name', 'tagline', 'description', 'sector', 'stage', 'location', 'website_url', 'looking_for')
+        widgets = {'description': forms.Textarea(attrs={'rows': 6})}
+        help_texts = {'looking_for': _('For example: advisors, co-founder, customers. Profiles are not offers of securities.')}
+
+
+NEWS_IMAGE_MAX_BYTES = 5 * 1024 * 1024
+
+
+class NewsForm(forms.ModelForm):
+    class Meta:
+        model = NewsPost
+        fields = ('title', 'image', 'summary', 'body')
+        widgets = {'summary': forms.Textarea(attrs={'rows': 2}), 'body': forms.Textarea(attrs={'rows': 10})}
+        help_texts = {
+            'image': _('Shown as the background of the news tile — a wide, high-contrast photo reads best once a title is overlaid on it.'),
+            'summary': _('Optional. Shown in listings and search results; falls back to the start of the article.'),
+        }
+
+    def clean_image(self):
+        image = self.cleaned_data.get('image')
+        if image and hasattr(image, 'size') and image.size > NEWS_IMAGE_MAX_BYTES:
+            raise forms.ValidationError(_('Please upload an image under 5 MB.'))
+        return image

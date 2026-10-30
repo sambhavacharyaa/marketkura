@@ -1,3 +1,25 @@
-{% extends 'base.html' %}
-{% block title %}{{ profile_user.username }} — MarketKura{% endblock %}
-{% block content %}<section class="panel"><h1>{{ profile_user.username }}{% if profile_user.is_verified %} <span class="verified">✓ Verified Contributor</span>{% endif %}</h1><p class="muted">{{ profile_user.bio|default:'No bio yet.' }}</p><p>{{ profile_user.karma_score }} karma · Joined {{ profile_user.date_joined|date:'M Y' }}</p>{% if user == profile_user and not user.is_verified %}<a href="{% url 'verification_apply' %}">Apply to become a Verified Contributor</a>{% endif %}{% if user.is_authenticated and user != profile_user %}<form method="post" action="{% url 'toggle_follow' profile_user.username %}">{% csrf_token %}<input type="hidden" name="next" value="{{ request.path }}"><button class="btn" type="submit">{% if is_following %}Unfollow{% else %}Follow{% endif %}</button></form>{% endif %}</section><h2>{{ profile_user.username }}'s posts</h2>{% include 'post_list.html' with posts=posts %}{% endblock %}
+{% extends 'base.html' %}{% load i18n community_extras %}
+{% block title %}{{ profile_user.username }} — {{ SITE_NAME }}{% endblock %}
+{% block meta_description %}{{ profile_user.bio|default:profile_user.username|excerpt:25 }}{% endblock %}
+{% block seo %}{% if profile_user.is_shadow_banned %}<meta name="robots" content="noindex">{% endif %}{% endblock %}
+{% block content %}
+<section class="panel">
+  <div class="actions">{% if profile_user.avatar %}<img class="avatar" src="{{ profile_user.avatar.url }}" alt="">{% endif %}
+    <div><h1>{{ profile_user.username }}{% if profile_user.is_verified %} <span class="verified" title="{% trans 'Identity and credentials confirmed by MarketKuraa. Not an endorsement of their views.' %}">✓ {{ profile_user.verified_label }}</span>{% endif %}</h1>
+    <p class="muted">{{ profile_user.bio|default:_('No bio yet.') }}</p></div></div>
+  <div class="stats"><div><strong>{{ profile_user.karma_score }}</strong><span class="meta">{% trans "reputation" %}</span></div><div><strong>{{ post_count }}</strong><span class="meta">{% trans "posts" %}</span></div><div><strong>{{ follower_count }}</strong><span class="meta">{% trans "followers" %}</span></div><div><strong>{{ following_count }}</strong><span class="meta">{% trans "following" %}</span></div></div>
+  <p class="meta">{% blocktrans with d=profile_user.date_joined|date:'M Y' %}Joined {{ d }}{% endblocktrans %}{% if profile_user.is_shadow_banned and user.is_staff %} · <strong>{% trans "Shadow-banned" %}</strong>{% endif %}</p>
+  <div class="actions">
+    {% if user.is_authenticated and user != profile_user %}<form class="inline" method="post" action="{% url 'toggle_follow' profile_user.username %}">{% csrf_token %}<button class="btn secondary" type="submit">{% if is_following %}{% trans "Unfollow" %}{% else %}{% trans "Follow" %}{% endif %}</button></form>{% endif %}
+    {% if user == profile_user %}<a href="{% url 'settings' %}">{% trans "Edit profile" %}</a>{% if not user.is_verified %}<a href="{% url 'verification_apply' %}">{% trans "Apply for verification" %}</a>{% endif %}{% endif %}
+  </div>
+  {% if user == profile_user and not startup_unlocked %}<p class="meta">{% blocktrans with n=startup_unlock_karma %}Reach {{ n }} reputation to unlock startup profiles.{% endblocktrans %}</p>{% endif %}
+</section>
+{% if startups %}<section class="panel"><h2>{% trans "Startups" %}</h2>{% for s in startups %}<p><a href="{{ s.get_absolute_url }}">{{ s.name }}</a> — {{ s.tagline }}</p>{% endfor %}</section>{% endif %}
+<div class="tabs"><a href="?tab=posts"{% if tab == 'posts' %} class="active"{% endif %}>{% trans "Posts" %}</a><a href="?tab=comments"{% if tab == 'comments' %} class="active"{% endif %}>{% trans "Comments" %}</a></div>
+{% if tab == 'comments' %}
+  {% for comment in items %}<article class="post-card"><div class="meta">{% trans "On" %} <a href="{{ comment.get_absolute_url }}">{{ comment.post.title }}</a> · {{ comment.created_at|date:'M d, Y' }} · <span class="inline-stat">{% include 'partials/icon.html' with name='up' cls='vote-glyph' %} {{ comment.upvotes }}</span></div><p class="excerpt">{{ comment.body|excerpt:40 }}</p></article>
+  {% empty %}<div class="panel"><p class="muted">{% trans "No comments yet." %}</p></div>{% endfor %}
+  {% include 'partials/pagination.html' with page=items %}
+{% else %}{% include 'post_list.html' with posts=items %}{% endif %}
+{% endblock %}

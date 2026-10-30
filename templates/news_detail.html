@@ -1,0 +1,14 @@
+{% extends 'base.html' %}{% load i18n community_extras %}
+{% block title %}{{ article.title }} — {{ SITE_NAME }}{% endblock %}
+{% block meta_description %}{{ article.summary|default:article.body|excerpt:30 }}{% endblock %}
+{% block og_title %}{{ article.title }}{% endblock %}
+{% block content %}
+<article class="panel news-article">
+  <img class="news-article-image" src="{{ article.image.url }}" alt="">
+  <h1>{{ article.title }}</h1>
+  <div class="meta">{% blocktrans with d=article.created_at|date:'M d, Y' %}Published {{ d }}{% endblocktrans %}{% if article.author %} · {% include 'partials/user_link.html' with u=article.author %}{% endif %}{% if article.updated_at|date:'U' != article.created_at|date:'U' %} · {% blocktrans with d=article.updated_at|date:'M d, Y' %}Updated {{ d }}{% endblocktrans %}{% endif %}</div>
+  {% if article.summary %}<p class="muted">{{ article.summary }}</p>{% endif %}
+  <div class="prose">{{ article.body|markdown_safe }}</div>
+  {% if user.is_staff %}<div class="actions" style="margin-top:16px"><a class="btn secondary" href="{% url 'news_edit' article.slug %}">{% include 'partials/icon.html' with name='edit' %}{% trans "Edit" %}</a><a class="btn secondary" href="{% url 'news_delete' article.slug %}">{% include 'partials/icon.html' with name='trash' %}{% trans "Delete" %}</a></div>{% endif %}
+</article>
+{% endblock %}

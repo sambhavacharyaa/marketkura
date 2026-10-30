@@ -1,29 +1,62 @@
-{% extends 'base.html' %}
-
-{% block title %}{{ post.title }} — MarketKura{% endblock %}
-
+{% extends 'base.html' %}{% load i18n community_extras %}
+{% block title %}{{ post.title }} — {{ post.category.name }} | {{ SITE_NAME }}{% endblock %}
+{% block meta_description %}{{ post.body|excerpt:30 }}{% endblock %}
+{% block og_title %}{{ post.title }}{% endblock %}
+{% block canonical %}{{ canonical_url }}{% endblock %}
+{% block seo %}<meta property="og:type" content="article"><script type="application/ld+json">{{ json_ld|safe }}</script>{% if post.user.is_shadow_banned or post.is_removed %}<meta name="robots" content="noindex">{% endif %}{% endblock %}
 {% block content %}
-  <article class="panel">
-    <span class="badge">{{ post.category.name }}</span>
-    <span class="badge">{{ post.get_type_display }}</span>
-    <h1>{{ post.title }}</h1>
-    <div class="meta">Posted by <a href="{% url 'profile' post.user.username %}">{{ post.user.username }}</a>{% if post.user.is_verified %} <span class="verified">✓ Verified Contributor</span>{% endif %} · {{ post.created_at|date:'M d, Y' }} · Updated {{ post.updated_at|date:'M d, Y' }} · {{ post.upvotes }} votes</div>
-    {% if post.asset %}<p><a href="{% url 'company_detail' post.asset.ticker|default:post.asset.slug %}">{{ post.asset.ticker|default:post.asset.name }}</a></p>{% endif %}
-    {% if post.type == 'thesis' %}<section class="panel notice" style="margin:16px 0"><h2>Self-reported thesis</h2><p><strong>Position:</strong> {{ post.get_position_type_display }} · <strong>Entry:</strong> {{ post.entry_price }}{% if post.target_price %} · <strong>Target:</strong> {{ post.target_price }}{% endif %} · <strong>Horizon:</strong> {{ post.get_time_horizon_display }}</p>{% if post.stop_loss %}<p><strong>Risk level:</strong> {{ post.stop_loss }}</p>{% endif %}{% if post.thesis_risk %}<p><strong>Invalidation / risk:</strong> {{ post.thesis_risk }}</p>{% endif %}{% if post.disclosure %}<p><strong>Disclosure:</strong> {{ post.disclosure }}</p>{% endif %}<p class="muted">This is user-generated information, not personalized financial advice.</p></section>{% endif %}
-    <p>{{ post.body }}</p>
-    <form method="post" action="{% url 'toggle_post_vote' post.pk %}">{% csrf_token %}<input type="hidden" name="next" value="{{ request.path }}"><button class="btn" type="submit">{% if user_voted %}Remove vote{% else %}Upvote{% endif %}</button></form>
-    {% if user == post.user %}<p class="actions"><a href="{% url 'edit_post' post.pk %}">Edit</a><a class="danger" href="{% url 'delete_post' post.pk %}">Delete</a></p>{% endif %}
-  </article>
-  <section class="panel" style="margin-top:18px;">
-    <h2>Discussion</h2>
-    {% for comment in comments %}
-      <div class="comment"><div class="meta"><a href="{% url 'profile' comment.user.username %}">{{ comment.user.username }}</a>{% if comment.user.is_verified %} <span class="verified">✓ Verified Contributor</span>{% endif %} · {{ comment.created_at|date:'M d, Y H:i' }}</div><p>{{ comment.body }}</p>
-        {% for reply in comment.replies.all %}<div class="comment reply"><div class="meta">{{ reply.user.username }}{% if reply.user.is_verified %} <span class="verified">✓ Verified Contributor</span>{% endif %} · {{ reply.created_at|date:'M d, Y H:i' }}</div><p>{{ reply.body }}</p></div>{% endfor %}
-      </div>
-    {% empty %}<p class="muted">No comments yet. Start the conversation.</p>{% endfor %}
-    {% if user.is_authenticated %}
-      <form method="post" action="{% url 'add_comment' post.pk %}">{% csrf_token %}{{ comment_form.as_p }}<button class="btn" type="submit">Add comment</button></form>
-      <form method="post" action="{% url 'report_post' post.pk %}" style="margin-top:18px;">{% csrf_token %}{{ report_form.as_p }}<button class="danger" type="submit">Report this post</button></form>
-    {% else %}<p><a href="{% url 'login' %}?next={{ request.path }}">Log in</a> to comment or report.</p>{% endif %}
+{% if post.is_removed %}<div class="panel warn">{% trans "This post was removed. Only moderators can see it." %}</div>{% endif %}
+{% if post.user.is_shadow_banned and user.is_staff %}<div class="panel warn">{% trans "The author is shadow-banned. Only they and staff can see this post." %}</div>{% endif %}
+<article class="panel">
+  <div class="chips"><a class="badge" href="{{ post.category.get_absolute_url }}">{{ post.category.name }}</a><span class="badge type-{{ post.type }}">{{ post.get_type_display }}</span>{% if post.is_locked %}<span class="badge locked">🔒 {% trans "Locked" %}</span>{% endif %}{% for tag in tags %}<a class="badge" href="{{ tag.get_absolute_url }}">#{{ tag.name }}</a>{% endfor %}</div>
+  <h1>{{ post.title }}</h1>
+  <div class="meta">{% trans "Posted by" %} {% include 'partials/user_link.html' with u=post.user %} · {{ post.created_at|date:'M d, Y H:i' }}{% if post.was_edited %} · {% blocktrans with d=post.updated_at|date:'M d, Y' %}Updated {{ d }}{% endblocktrans %}{% endif %}</div>
+  {% if post.asset %}<p><a class="badge" href="{{ post.asset.get_absolute_url }}">{{ post.asset.ticker|default:post.asset.name }}{% if post.asset.company_name %} · {{ post.asset.company_name }}{% endif %}</a></p>{% endif %}
+
+  {% if post.type == 'thesis' %}
+  <section class="panel notice" style="margin:16px 0"><h2>{% trans "Self-reported thesis" %}</h2>
+    {% if post.position_type or post.entry_price or post.target_price or post.time_horizon %}<p
+      >{% if post.position_type %}<strong>{% trans "Position" %}:</strong> {{ post.get_position_type_display }}{% endif %}
+      {% if post.entry_price %}{% if post.position_type %} · {% endif %}<strong>{% trans "Entry" %}:</strong> {{ post.entry_price }}{% endif %}
+      {% if post.target_price %}{% if post.position_type or post.entry_price %} · {% endif %}<strong>{% trans "Target" %}:</strong> {{ post.target_price }}{% endif %}
+      {% if post.time_horizon %}{% if post.position_type or post.entry_price or post.target_price %} · {% endif %}<strong>{% trans "Horizon" %}:</strong> {{ post.get_time_horizon_display }}{% endif %}</p>{% endif %}
+    {% if post.stop_loss %}<p><strong>{% trans "Stop / exit plan" %}:</strong> {{ post.stop_loss }}</p>{% endif %}
+    {% if post.thesis_risk %}<p><strong>{% trans "Risks" %}:</strong> {{ post.thesis_risk }}</p>{% endif %}
+    {% if post.disclosure %}<p><strong>{% trans "Disclosure" %}:</strong> {{ post.disclosure }}</p>{% endif %}
+    <p class="meta">{% blocktrans with d=post.created_at|date:'M d, Y H:i' %}Published {{ d }} (UTC). Timestamped so it can be cited later. Not financial advice.{% endblocktrans %}</p>
   </section>
+  {% elif post.type == 'ama' %}
+  <section class="panel notice" style="margin:16px 0"><h2>{% trans "AMA with" %} {{ post.user.username }}</h2>
+    <p>{% if post.ama_state == 'upcoming' %}<strong>{% trans "Upcoming" %}</strong>{% elif post.ama_state == 'live' %}<strong>{% trans "Live now" %}</strong>{% else %}<strong>{% trans "Ended" %}</strong>{% endif %}
+      {% if post.ama_starts_at %} · {% trans "Starts" %} {{ post.ama_starts_at|date:'M d, Y H:i' }} UTC{% endif %}{% if post.ama_ends_at %} · {% trans "Closes" %} {{ post.ama_ends_at|date:'M d, Y H:i' }} UTC{% endif %}</p>
+    <p class="meta">{% blocktrans with n=unanswered_count %}{{ n }} unanswered question(s){% endblocktrans %}</p>
+  </section>
+  {% endif %}
+
+  {% if post.image %}<img class="post-image" src="{{ post.image.url }}" alt="">{% endif %}
+  <div class="prose">{{ post.body|markdown_safe }}</div>
+  <div class="actions" style="margin-top:16px">
+    {% if user.is_authenticated and user != post.user %}{% include 'partials/post_vote.html' %}{% else %}<span class="vote-btn">{% include 'partials/icon.html' with name='up' cls='vote-glyph' %} {{ post.upvotes }}</span>{% endif %}
+    <a class="action-link" href="#discussion">{% include 'partials/icon.html' with name='message' %} {{ comment_count }}</a>
+    {% if user == post.user %}<a class="action-link" href="{% url 'edit_post' post.pk %}">{% include 'partials/icon.html' with name='edit' %} {% trans "Edit" %}</a><a class="action-link is-danger" href="{% url 'delete_post' post.pk %}">{% include 'partials/icon.html' with name='trash' %} {% trans "Delete" %}</a>
+    {% elif user.is_authenticated %}<a class="action-link" href="{% url 'report_post' post.pk %}">{% include 'partials/icon.html' with name='flag' %} {% trans "Report" %}</a>{% endif %}
+  </div>
+  {% if user.is_staff %}
+  <form class="actions" method="post" action="{% url 'moderation_action' %}" style="margin-top:12px">{% csrf_token %}<input type="hidden" name="target_type" value="post"><input type="hidden" name="target_id" value="{{ post.pk }}"><input type="hidden" name="next" value="{{ request.path }}">
+    <strong class="meta">{% trans "Moderator" %}:</strong>
+    {% if post.is_locked %}<button class="btn small secondary" name="action" value="unlock">{% trans "Unlock" %}</button>{% else %}<button class="btn small secondary" name="action" value="lock">{% trans "Lock" %}</button>{% endif %}
+    {% if post.is_removed %}<button class="btn small secondary" name="action" value="restore">{% trans "Restore" %}</button>{% else %}<button class="btn small secondary" name="action" value="remove">{% trans "Remove" %}</button>{% endif %}
+    {% if post.user.is_shadow_banned %}<button class="btn small secondary" name="action" value="unshadowban">{% trans "Lift shadow-ban" %}</button>{% else %}<button class="btn small secondary" name="action" value="shadowban">{% trans "Shadow-ban author" %}</button>{% endif %}
+  </form>{% endif %}
+</article>
+
+<section class="panel" id="discussion">
+  <h2>{% if post.type == 'ama' %}{% trans "Questions and answers" %}{% else %}{% trans "Discussion" %}{% endif %} ({{ comment_count }})</h2>
+  {% for comment in comments %}{% include 'partials/comment.html' %}
+  {% empty %}<p class="muted">{% if post.type == 'ama' %}{% trans "No questions yet. Be the first to ask." %}{% else %}{% trans "No comments yet. Start the conversation." %}{% endif %}</p>{% endfor %}
+  {% if not can_reply %}<p class="meta">🔒 {{ closed_reason }}</p>
+  {% elif user.is_authenticated %}
+  <form method="post" action="{% url 'add_comment' post.pk %}" style="margin-top:16px">{% csrf_token %}{{ comment_form.as_p }}<p class="help">{% trans "Markdown is supported." %}</p><button class="btn" type="submit">{% if post.type == 'ama' %}{% trans "Ask a question" %}{% else %}{% trans "Add comment" %}{% endif %}</button></form>
+  {% else %}<p><a href="{% url 'login' %}?next={{ request.path|urlencode }}">{% trans "Log in" %}</a> {% trans "or" %} <a href="{% url 'signup' %}">{% trans "sign up" %}</a> {% trans "to comment, vote or report." %}</p>{% endif %}
+</section>
 {% endblock %}

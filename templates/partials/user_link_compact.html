@@ -1,0 +1,1 @@
+{% load i18n %}<a href="{{ u.get_absolute_url }}">{{ u.username }}</a>{% if u.is_verified %}<svg class="icon verified-icon" role="img" aria-label="{{ u.verified_label }}"><title>{{ u.verified_label }}</title><use href="#i-check"/></svg>{% endif %}

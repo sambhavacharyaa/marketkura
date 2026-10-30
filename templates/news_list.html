@@ -1,0 +1,13 @@
+{% extends 'base.html' %}{% load i18n %}
+{% block title %}{% trans "News" %} — {{ SITE_NAME }}{% endblock %}
+{% block meta_description %}{% trans "Market news and MarketKuraa announcements." %}{% endblock %}
+{% block content %}
+<div class="page-head"><h1>{% trans "News" %}</h1>{% if user.is_staff %}<a class="btn" href="{% url 'news_create' %}">{% include 'partials/icon.html' with name='plus' %}{% trans "Post news" %}</a>{% endif %}</div>
+<div class="news-grid">
+  {% for article in articles %}<a class="news-card" href="{{ article.get_absolute_url }}" style="background-image:url('{{ article.image.url }}')">
+    <span class="news-card-scrim" aria-hidden="true"></span>
+    <span class="news-card-title">{{ article.title }}</span>
+  </a>{% empty %}<div class="panel"><p class="muted">{% trans "No news yet." %}</p></div>{% endfor %}
+</div>
+{% include 'partials/pagination.html' with page=articles %}
+{% endblock %}

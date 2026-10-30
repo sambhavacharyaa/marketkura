@@ -1,0 +1,14 @@
+{% extends 'base.html' %}{% load i18n community_extras %}
+{% block title %}{{ startup.name }} — {{ startup.tagline }} | {{ SITE_NAME }}{% endblock %}
+{% block meta_description %}{{ startup.tagline }}{% endblock %}
+{% block canonical %}{{ canonical_url }}{% endblock %}
+{% block seo %}{% if not startup.is_approved %}<meta name="robots" content="noindex">{% endif %}{% endblock %}
+{% block content %}{% if not startup.is_approved %}<div class="panel warn">{% trans "Awaiting moderator approval. Only you and staff can see this page." %}</div>{% endif %}
+<section class="panel"><h1>{{ startup.name }}</h1><p class="muted">{{ startup.tagline }}</p>
+<p><span class="badge">{{ startup.get_stage_display }}</span>{% if startup.sector %}<span class="badge">{{ startup.sector }}</span>{% endif %}{% if startup.location %}<span class="badge">{{ startup.location }}</span>{% endif %}</p>
+<div class="prose">{{ startup.description|markdown_safe }}</div>
+{% if startup.looking_for %}<p><strong>{% trans "Looking for" %}:</strong> {{ startup.looking_for }}</p>{% endif %}
+{% if startup.website_url %}<p><a href="{{ startup.website_url }}" rel="nofollow noopener ugc" target="_blank">{{ startup.website_url }}</a></p>{% endif %}
+<p class="meta">{% trans "Founder" %}: {% include 'partials/user_link.html' with u=startup.owner %}</p>
+{% if is_owner %}<a href="{% url 'startup_edit' startup.slug %}">{% trans "Edit" %}</a>{% endif %}
+<p class="meta">{% trans "Self-reported by the founder. Not an offer of securities or investment advice." %}</p></section>{% endblock %}

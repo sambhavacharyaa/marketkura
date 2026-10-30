@@ -1,0 +1,11 @@
+{% extends 'base.html' %}{% load i18n %}
+{% block title %}{% if editing %}{% trans "Edit news article" %}{% else %}{% trans "Post news" %}{% endif %} — {{ SITE_NAME }}{% endblock %}
+{% block content %}
+<section class="panel form-panel"><h1>{% if editing %}{% trans "Edit news article" %}{% else %}{% trans "Post news" %}{% endif %}</h1>
+<form method="post" enctype="multipart/form-data" novalidate>{% csrf_token %}
+  {% for error in form.non_field_errors %}<p class="field-errors">{{ error }}</p>{% endfor %}
+  {% include 'partials/form_fields.html' %}
+  {% if editing and article.image %}<p class="help">{% trans "Choose a new file above to replace the current image." %}</p>{% endif %}
+  <p style="margin-top:16px"><button class="btn" type="submit">{% if editing %}{% trans "Save changes" %}{% else %}{% trans "Publish" %}{% endif %}</button></p>
+</form></section>
+{% endblock %}
