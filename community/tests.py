@@ -68,8 +68,13 @@ class CommunityViewsTests(TestCase):
         self.assertEqual(Post.objects.get(pk=post.pk).upvotes, 1)
 
     def test_home_search_filters_posts(self):
+        # "Global technology" lives in a different category on purpose: search also matches a
+        # post's category now (see community/services.py search_posts), so putting both posts in
+        # the NEPSE category would make this assert the wrong thing - that a sibling post in a
+        # matching category is correctly excluded, not included.
+        other_category = Category.objects.create(name='Global Markets', slug='global-markets-home-search-test')
         Post.objects.create(user=self.user, category=self.category, title='NEPSE banking', body='Local market')
-        Post.objects.create(user=self.user, category=self.category, title='Global technology', body='US markets')
+        Post.objects.create(user=self.user, category=other_category, title='Global technology', body='US markets')
         response = self.client.get(reverse('home'), {'q': 'NEPSE'})
         self.assertContains(response, 'NEPSE banking')
         self.assertNotContains(response, 'Global technology')

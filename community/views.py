@@ -662,13 +662,15 @@ def mark_all_notifications_read(request):
 def search(request):
     query = request.GET.get('q', '').strip()
     companies_found = users = Tag.objects.none()
+    categories_found = Category.objects.none()
     results = Post.objects.none()
     if query:
         companies_found = services.search_tags(query)
+        categories_found = services.search_categories(query)
         users = User.objects.filter(username__icontains=query, is_shadow_banned=False).order_by('username')
         results = services.search_posts(post_queryset(request.user), query)
     return render(request, 'search.html', {
-        'query': query, 'companies': companies_found[:10], 'users': users[:10],
+        'query': query, 'companies': companies_found[:10], 'categories': categories_found[:10], 'users': users[:10],
         'posts': paginate(request, results) if query else [], 'filter_query': query_without_page(request),
     })
 

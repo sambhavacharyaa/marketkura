@@ -4,7 +4,7 @@
 {% block content %}<h1>{% trans "Search MarketKuraa" %}</h1>
 <form class="search" role="search"><input name="q" value="{{ query }}" placeholder="{% trans 'Companies, tickers, tags, posts, users' %}" aria-label="{% trans 'Search' %}"><button class="btn">{% trans "Search" %}</button></form>
 {% if query %}
-<section class="panel"><h2>{% trans "Companies and tags" %}</h2>{% for company in companies %}<p><a href="{{ company.get_absolute_url }}">{{ company.ticker|default:company.name }}</a> <span class="muted">{{ company.company_name|default:company.name }}</span></p>{% empty %}<p class="muted">{% trans "No matching companies or tags." %}</p>{% endfor %}</section>
+<section class="panel"><h2>{% trans "Companies, categories and tags" %}</h2>{% for category in categories %}<p><a href="{{ category.get_absolute_url }}">{{ category.display_name }}</a> <span class="muted">{% trans "Category" %}</span></p>{% endfor %}{% for company in companies %}<p><a href="{{ company.get_absolute_url }}">{{ company.ticker|default:company.name }}</a> <span class="muted">{{ company.company_name|default:company.name }}</span></p>{% empty %}{% if not categories %}<p class="muted">{% trans "No matching companies, categories or tags." %}</p>{% endif %}{% endfor %}</section>
 <section class="panel"><h2>{% trans "Members" %}</h2>{% for u in users %}<p>{% include 'partials/user_link.html' %}</p>{% empty %}<p class="muted">{% trans "No matching members." %}</p>{% endfor %}</section>
 <h2>{% trans "Posts" %}</h2>{% include 'post_list.html' %}
 {% endif %}{% endblock %}

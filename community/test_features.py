@@ -1053,6 +1053,46 @@ class SearchTests(BaseCase):
         self.post(title='Untitled', body='no mention', asset=self.asset)
         self.assertEqual(self.titles('NAB'), ['Untitled'])
 
+    def test_search_finds_posts_only_in_a_matching_category(self):
+        # self.category is slug='nepse', name='NEPSE' — none of these posts mention "NEPSE" in
+        # their own title or body, only via their category. This was the reported bug: 3 of 4
+        # NEPSE posts (everything but the one with "NEPSE" literally in its title) went missing.
+        self.post(title='What going on market', body='Today market details')
+        self.post(title='New market system', body='Whats going on today')
+        self.post(title='Welcome to MarketKuraa', body='Live and ready.')
+        other_category = Category.objects.create(name='Personal Finance', slug='personal-finance-test')
+        self.post(title='Budgeting basics', body='unrelated', category=other_category)
+        self.assertEqual(
+            set(self.titles('NEPSE')),
+            {'What going on market', 'New market system', 'Welcome to MarketKuraa'},
+        )
+
+    def test_search_results_include_a_matching_category(self):
+        response = self.client.get(reverse('search'), {'q': 'NEPSE'})
+        self.assertContains(response, self.category.get_absolute_url())
+        self.assertContains(response, 'NEPSE')
+
+    def test_search_finds_posts_by_topic_tag(self):
+        tagged = self.post(title='Sector view', body='no keyword here')
+        PostTag.objects.create(post=tagged, tag=Tag.objects.create(name='ipo', slug='ipo-search-test', is_company=False))
+        self.assertEqual(self.titles('ipo'), ['Sector view'])
+
+    def test_search_ranks_title_matches_above_body_matches_regardless_of_database(self):
+        # The Postgres-only ranking test above (test_postgres_full_text_ranks_title_matches_first)
+        # only runs against Postgres. This covers the same requirement end to end on whatever
+        # database the suite is actually running against (SQLite in dev).
+        body_only = self.post(title='Weekly thread', body='People keep asking about dividends here.')
+        title_match = self.post(title='Dividends explained', body='A primer.')
+        Post.objects.filter(pk=title_match.pk).update(created_at=timezone.now() - timedelta(days=5))
+        self.assertEqual(self.titles('dividends'), ['Dividends explained', 'Weekly thread'])
+        del body_only
+
+    def test_search_is_case_insensitive(self):
+        self.post(title='NEPSE outlook', body='case test')
+        self.assertEqual(self.titles('nepse'), ['NEPSE outlook'])
+        self.assertEqual(self.titles('NEPSE'), ['NEPSE outlook'])
+        self.assertEqual(self.titles('NePsE'), ['NEPSE outlook'])
+
     @skipUnless(connection.vendor == 'postgresql', 'Full-text ranking needs PostgreSQL')
     def test_postgres_full_text_ranks_title_matches_first(self):
         body_only = self.post(title='Weekly thread', body='People keep asking about dividends here.')

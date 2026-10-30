@@ -12,13 +12,13 @@ from datetime import timedelta
 from django.conf import settings
 from django.core.cache import cache
 from django.db import IntegrityError, connection, transaction
-from django.db.models import Count, F, Q
+from django.db.models import Case, Count, F, IntegerField, Q, Value, When
 from django.utils import timezone
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.text import slugify
 from django.utils.translation import gettext as _
 
-from .models import Comment, CommentVote, Notification, Post, PostTag, PostVote, Report, Tag, User
+from .models import Category, Comment, CommentVote, Notification, Post, PostTag, PostVote, Report, Tag, User
 
 MAX_COMMENT_DEPTH = 5
 MAX_TAGS_PER_POST = 5
@@ -368,22 +368,34 @@ def search_posts(posts, query):
     """Full-text search on PostgreSQL (ranked), substring search elsewhere.
 
     The substring branch is always included so partial tickers and Nepali text, which the
-    default Postgres tokenizer can split badly, are still found.
+    default Postgres tokenizer can split badly, are still found. Matches on title, body, the
+    post's primary asset (ticker/company name), its category (name or slug) and any topic tags
+    (PostTag -> Tag) attached to it - a post filed under NEPSE with "NEPSE" nowhere in its own
+    title/body previously wasn't found searching "NEPSE" at all.
     """
     contains = (Q(title__icontains=query) | Q(body__icontains=query) | Q(asset_tag__icontains=query)
-                | Q(asset__ticker__icontains=query) | Q(asset__company_name__icontains=query))
+                | Q(asset__ticker__icontains=query) | Q(asset__company_name__icontains=query)
+                | Q(category__name__icontains=query) | Q(category__slug__icontains=query)
+                | Q(tags__tag__name__icontains=query) | Q(tags__tag__slug__icontains=query))
     if connection.vendor != 'postgresql':
-        return posts.filter(contains)
+        # No Postgres ranking available here, but "title matches above body matches" still
+        # needs to hold - a simple title-match flag, sorted first, gets that cheaply.
+        title_match = Case(When(title__icontains=query, then=Value(1)), default=Value(0), output_field=IntegerField())
+        return posts.filter(contains).distinct().annotate(title_match=title_match).order_by('-title_match', '-created_at')
     from django.contrib.postgres.search import SearchQuery, SearchRank, SearchVector
     vector = (SearchVector('title', weight='A', config='simple') + SearchVector('asset__ticker', 'asset__company_name', weight='A', config='simple')
               + SearchVector('body', weight='B', config='simple'))
     search_query = SearchQuery(query, config='simple', search_type='websearch')
     return (posts.annotate(search=vector, rank=SearchRank(vector, search_query))
-            .filter(Q(search=search_query) | contains).order_by('-rank', '-created_at'))
+            .filter(Q(search=search_query) | contains).distinct().order_by('-rank', '-created_at'))
 
 
 def search_tags(query):
     return Tag.objects.filter(Q(ticker__icontains=query) | Q(name__icontains=query) | Q(company_name__icontains=query)).order_by('ticker', 'name')
+
+
+def search_categories(query):
+    return Category.objects.filter(Q(name__icontains=query) | Q(slug__icontains=query)).order_by('name')
 
 
 # --- Moderation helpers ----------------------------------------------------------------
