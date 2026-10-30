@@ -4,7 +4,10 @@ from .models import Category
 
 
 def site(request):
-    return {'SITE_NAME': settings.SITE_NAME, 'google_login_enabled': settings.GOOGLE_LOGIN_ENABLED}
+    return {
+        'SITE_NAME': settings.SITE_NAME, 'google_login_enabled': settings.GOOGLE_LOGIN_ENABLED,
+        'turnstile_site_key': settings.TURNSTILE_SITE_KEY,
+    }
 
 
 def notification_counts(request):

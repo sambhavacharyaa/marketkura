@@ -1,7 +1,11 @@
 """Business rules shared by the HTML views and the REST API."""
 
 import hashlib
+import json
 import re
+import urllib.error
+import urllib.parse
+import urllib.request
 from collections import defaultdict
 from datetime import timedelta
 
@@ -90,6 +94,29 @@ def signup_limited(request):
 
 def contact_limited(request):
     return register_hit('contact', client_ip(request), window=3600) > settings.CONTACT_MAX_PER_HOUR
+
+
+TURNSTILE_VERIFY_URL = 'https://challenges.cloudflare.com/turnstile/v0/siteverify'
+
+
+def turnstile_passes(request):
+    """True when Turnstile isn't configured (local dev with no keys set) or the submitted token
+    verifies with Cloudflare. False — never raises — on a missing/invalid token or a network or
+    API failure, so a Cloudflare outage fails closed rather than letting spam through silently."""
+    if not settings.TURNSTILE_SECRET_KEY:
+        return True
+    token = request.POST.get('cf-turnstile-response', '')
+    if not token:
+        return False
+    data = urllib.parse.urlencode({
+        'secret': settings.TURNSTILE_SECRET_KEY, 'response': token, 'remoteip': client_ip(request),
+    }).encode()
+    try:
+        with urllib.request.urlopen(urllib.request.Request(TURNSTILE_VERIFY_URL, data=data), timeout=5) as resp:
+            result = json.loads(resp.read().decode())
+    except (urllib.error.URLError, TimeoutError, ValueError):
+        return False
+    return bool(result.get('success'))
 
 
 # --- Visibility (removed content and shadow-bans) ---------------------------------

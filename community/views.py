@@ -391,6 +391,9 @@ def signup(request):
         if services.signup_limited(request):
             messages.error(request, _('Too many sign-ups from this network. Please try again later.'))
             return render(request, 'signup.html', {'form': form}, status=429)
+        if not services.turnstile_passes(request):
+            messages.error(request, _('Please complete the verification challenge and try again.'))
+            return render(request, 'signup.html', {'form': form}, status=400)
         user = form.save()
         login(request, user, backend='community.backends.EmailOrUsernameBackend')
         return redirect('home')
@@ -817,6 +820,9 @@ def contact(request):
         if services.contact_limited(request):
             messages.error(request, _('Too many messages from this network. Please try again later.'))
             return render(request, 'pages/contact.html', {'form': form}, status=429)
+        if not services.turnstile_passes(request):
+            messages.error(request, _('Please complete the verification challenge and try again.'))
+            return render(request, 'pages/contact.html', {'form': form}, status=400)
         contact_message = form.save(commit=False)
         if request.user.is_authenticated:
             contact_message.user = request.user

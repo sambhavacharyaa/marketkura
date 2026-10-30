@@ -160,11 +160,20 @@ PUMP_WATCH_HOURS = 24
 # Failed logins allowed per (ip, username) before a temporary lockout.
 LOGIN_MAX_FAILURES = 5
 LOGIN_LOCKOUT_SECONDS = 15 * 60
-SIGNUP_MAX_PER_HOUR = 10
-CONTACT_MAX_PER_HOUR = 10
+SIGNUP_MAX_PER_HOUR = 5
+CONTACT_MAX_PER_HOUR = 5
+# Honeypot forms (signup, contact) reject a submission that arrives faster than this after the
+# page rendered — a human can't plausibly read and fill the form that quickly.
+FORM_MIN_SUBMIT_SECONDS = 3
 # Karma needed to unlock features (verified members always qualify).
 REPUTATION_UNLOCKS = {'startup_profile': 10}
 # When true, the client IP is read from X-Forwarded-For (only enable behind a trusted proxy).
 USE_X_FORWARDED_FOR = env_bool('USE_X_FORWARDED_FOR', False)
+
+# --- Cloudflare Turnstile (optional) ---------------------------------------
+# Unset in dev by default, so local signup/contact forms work without a Cloudflare account. Set
+# both env vars in production to turn the widget on.
+TURNSTILE_SITE_KEY = os.getenv('TURNSTILE_SITE_KEY', '')
+TURNSTILE_SECRET_KEY = os.getenv('TURNSTILE_SECRET_KEY', '')
 
 SITE_NAME = 'MarketKuraa'

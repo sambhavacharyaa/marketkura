@@ -1,7 +1,8 @@
 import io
 import tempfile
+import time
 from datetime import timedelta
-from unittest import skipUnless
+from unittest import mock, skipUnless
 
 from django.core import mail
 from django.core.cache import cache
@@ -112,6 +113,60 @@ class AuthTests(BaseCase):
         response = self.client.post(reverse('signup'), {'username': 'noagree', 'email': 'noagree@example.com', 'password1': 'a-strong-pass-123', 'password2': 'a-strong-pass-123'})
         self.assertContains(response, 'You must agree')
         self.assertFalse(User.objects.filter(username='noagree').exists())
+
+    def signup_payload(self, **overrides):
+        data = {'username': 'honeytest', 'email': 'honeytest@example.com', 'password1': 'a-strong-pass-123', 'password2': 'a-strong-pass-123', 'agree_to_terms': 'on'}
+        data.update(overrides)
+        return data
+
+    def test_signup_honeypot_field_blocks_registration(self):
+        response = self.client.post(reverse('signup'), self.signup_payload(website='http://spam.example'))
+        self.assertContains(response, 'Please try again')
+        self.assertFalse(User.objects.filter(username='honeytest').exists())
+
+    def test_signup_submitted_too_fast_is_blocked(self):
+        response = self.client.post(reverse('signup'), self.signup_payload(form_rendered_at=time.time()))
+        self.assertContains(response, 'Please try again')
+        self.assertFalse(User.objects.filter(username='honeytest').exists())
+
+    def test_signup_succeeds_with_empty_honeypot_and_a_plausible_delay(self):
+        response = self.client.post(reverse('signup'), self.signup_payload(website='', form_rendered_at=time.time() - 10))
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(User.objects.filter(username='honeytest').exists())
+
+    def test_signup_without_turnstile_keys_configured_skips_the_check(self):
+        # Default test settings have no TURNSTILE_SECRET_KEY — this is also what local dev looks
+        # like without Cloudflare keys, and signup must keep working.
+        response = self.client.post(reverse('signup'), self.signup_payload(form_rendered_at=time.time() - 10))
+        self.assertEqual(response.status_code, 302)
+
+    @override_settings(TURNSTILE_SECRET_KEY='test-secret-key')
+    def test_signup_blocked_without_a_turnstile_token_when_configured(self):
+        response = self.client.post(reverse('signup'), self.signup_payload(form_rendered_at=time.time() - 10))
+        self.assertEqual(response.status_code, 400)
+        self.assertFalse(User.objects.filter(username='honeytest').exists())
+
+    @override_settings(TURNSTILE_SECRET_KEY='test-secret-key')
+    def test_signup_succeeds_when_turnstile_verifies(self):
+        fake_response = mock.Mock()
+        fake_response.read.return_value = b'{"success": true}'
+        fake_response.__enter__ = mock.Mock(return_value=fake_response)
+        fake_response.__exit__ = mock.Mock(return_value=False)
+        with mock.patch('community.services.urllib.request.urlopen', return_value=fake_response):
+            response = self.client.post(reverse('signup'), self.signup_payload(form_rendered_at=time.time() - 10, **{'cf-turnstile-response': 'a-real-looking-token'}))
+        self.assertEqual(response.status_code, 302)
+        self.assertTrue(User.objects.filter(username='honeytest').exists())
+
+    @override_settings(TURNSTILE_SECRET_KEY='test-secret-key')
+    def test_signup_blocked_when_turnstile_rejects_the_token(self):
+        fake_response = mock.Mock()
+        fake_response.read.return_value = b'{"success": false}'
+        fake_response.__enter__ = mock.Mock(return_value=fake_response)
+        fake_response.__exit__ = mock.Mock(return_value=False)
+        with mock.patch('community.services.urllib.request.urlopen', return_value=fake_response):
+            response = self.client.post(reverse('signup'), self.signup_payload(form_rendered_at=time.time() - 10, **{'cf-turnstile-response': 'a-bad-token'}))
+        self.assertEqual(response.status_code, 400)
+        self.assertFalse(User.objects.filter(username='honeytest').exists())
 
     def test_signup_is_rate_limited_per_address(self):
         with override_settings(SIGNUP_MAX_PER_HOUR=2):
@@ -539,6 +594,37 @@ class ContactTests(BaseCase):
                 response = self.client.post(reverse('contact'), self.payload(subject=f'Question {n}'))
             self.assertEqual(response.status_code, 429)
             self.assertEqual(ContactMessage.objects.count(), 2)
+
+    def test_contact_honeypot_field_blocks_submission(self):
+        response = self.client.post(reverse('contact'), self.payload(website='http://spam.example'))
+        self.assertContains(response, 'Please try again')
+        self.assertEqual(ContactMessage.objects.count(), 0)
+
+    def test_contact_submitted_too_fast_is_blocked(self):
+        response = self.client.post(reverse('contact'), self.payload(form_rendered_at=time.time()))
+        self.assertContains(response, 'Please try again')
+        self.assertEqual(ContactMessage.objects.count(), 0)
+
+    def test_contact_succeeds_with_empty_honeypot_and_a_plausible_delay(self):
+        response = self.client.post(reverse('contact'), self.payload(website='', form_rendered_at=time.time() - 10))
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(ContactMessage.objects.count(), 1)
+
+    def test_contact_message_over_5000_characters_is_rejected(self):
+        response = self.client.post(reverse('contact'), self.payload(message='x' * 5001))
+        self.assertEqual(ContactMessage.objects.count(), 0)
+        self.assertContains(response, 'field-errors')
+
+    def test_contact_message_at_exactly_5000_characters_is_accepted(self):
+        response = self.client.post(reverse('contact'), self.payload(message='x' * 5000))
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(ContactMessage.objects.count(), 1)
+
+    @override_settings(TURNSTILE_SECRET_KEY='test-secret-key')
+    def test_contact_blocked_without_a_turnstile_token_when_configured(self):
+        response = self.client.post(reverse('contact'), self.payload())
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(ContactMessage.objects.count(), 0)
 
 
 class ModerationTests(BaseCase):

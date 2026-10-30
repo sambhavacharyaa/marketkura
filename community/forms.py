@@ -1,6 +1,8 @@
 import re
+import time
 
 from django import forms
+from django.conf import settings
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
 from django.urls import reverse_lazy
 from django.utils.html import format_html
@@ -35,7 +37,41 @@ def email_in_use(email, exclude_pk=None):
     return User.objects.filter(email__iexact=email).exclude(pk=exclude_pk).exists()
 
 
-class SignUpForm(UserCreationForm):
+class HoneypotMixin(forms.Form):
+    """Two lightweight, invisible anti-spam checks for public forms (signup, contact):
+
+    - `website`: a text field real users never see or fill (hidden off-screen, aria-hidden,
+      unreachable by keyboard) but that unsophisticated bots filling every field they find
+      often do. Any value in it fails the form.
+    - `form_rendered_at`: a hidden timestamp set when the form is first rendered. A submission
+      that arrives faster than a human could plausibly read and fill the form is rejected too.
+
+    Both fail with the same generic message, so neither gives a bot feedback on which check
+    it tripped.
+    """
+
+    website = forms.CharField(required=False, widget=forms.HiddenInput(attrs={'autocomplete': 'off'}))
+    form_rendered_at = forms.FloatField(required=False, widget=forms.HiddenInput())
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['website'].label = ''
+        self.fields['form_rendered_at'].label = ''
+        if not self.is_bound:
+            self.fields['form_rendered_at'].initial = time.time()
+
+    def clean(self):
+        cleaned_data = super().clean()
+        spam_error = forms.ValidationError(_('Please try again.'))
+        if cleaned_data.get('website'):
+            raise spam_error
+        rendered_at = cleaned_data.get('form_rendered_at')
+        if rendered_at and (time.time() - rendered_at) < settings.FORM_MIN_SUBMIT_SECONDS:
+            raise spam_error
+        return cleaned_data
+
+
+class SignUpForm(HoneypotMixin, UserCreationForm):
     email = forms.EmailField(required=True, label=_('Email'))
     agree_to_terms = forms.BooleanField(required=True, label='')
 
@@ -151,7 +187,7 @@ class CommentForm(forms.ModelForm):
         labels = {'body': _('Your comment')}
 
 
-class ContactForm(forms.ModelForm):
+class ContactForm(HoneypotMixin, forms.ModelForm):
     class Meta:
         model = ContactMessage
         fields = ('name', 'email', 'subject', 'message')
