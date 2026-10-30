@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MarketKuraa\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 20:47+0000\n"
+"POT-Creation-Date: 2026-10-30 20:53+0000\n"
 "PO-Revision-Date: 2026-09-20 00:00+0000\n"
 "Last-Translator: MarketKuraa\n"
 "Language-Team: Nepali\n"
@@ -738,6 +738,9 @@ msgstr "साइटम्याप"
 
 msgid "Alerts"
 msgstr "सूचना"
+
+msgid "Create post"
+msgstr "पोस्ट बनाउनुहोस्"
 
 msgid "Menu"
 msgstr "मेनू"
@@ -1763,9 +1766,6 @@ msgstr "टिप्पणी, भोट वा रिपोर्ट गर्�
 msgid "Edit post"
 msgstr "पोस्ट सम्पादन गर्नुहोस्"
 
-msgid "Create post"
-msgstr "पोस्ट बनाउनुहोस्"
-
 msgid ""
 "MarketKuraa posts are user-generated. A thesis is self-reported opinion, not "
 "financial advice. Do not promote or hype thinly traded stocks."
@@ -1822,6 +1822,9 @@ msgstr "यसमा:"
 
 msgid "No comments yet."
 msgstr "अहिलेसम्म कुनै टिप्पणी छैन।"
+
+msgid "Log in to create a post."
+msgstr "पोस्ट बनाउन लग इन गर्नुहोस्।"
 
 msgid "Welcome back — log in to post, vote and follow companies."
 msgstr "फेरि स्वागत छ — पोस्ट गर्न, भोट हाल्न र कम्पनीहरू फलो गर्न लग इन गर्नुहोस्।"

@@ -2,7 +2,8 @@
 {% block title %}{% trans "Log in" %} — {{ SITE_NAME }}{% endblock %}
 {% block content %}<div class="auth-card">
   <h1>{% trans "Log in" %}</h1>
-  <p class="auth-subtitle">{% trans "Welcome back — log in to post, vote and follow companies." %}</p>
+  {% url 'create_post' as create_post_url %}
+  <p class="auth-subtitle">{% if next == create_post_url %}{% trans "Log in to create a post." %}{% else %}{% trans "Welcome back — log in to post, vote and follow companies." %}{% endif %}</p>
   {% if google_login_enabled %}
   <div class="auth-oauth"><a class="btn secondary" href="{% url 'google_login' %}?process=login{% if next %}&next={{ next|urlencode }}{% endif %}">{% trans "Continue with Google" %}</a></div>
   <p class="auth-divider">{% trans "or" %}</p>

@@ -665,9 +665,12 @@ a.chip-cat:hover { background: var(--brand-soft); color: var(--brand-dark); text
   body { padding-bottom: calc(58px + env(safe-area-inset-bottom)); }
   /* The signed-out header crammed a hamburger, logo, "Log in", a "Sign up" button and the language
      switcher into one row with nothing to spare, wrapping into a cramped, uneven mess on true phone
-     widths. Both auth actions are one tap away in the bottom nav now (its Sign up tab and "+" → log
-     in button), so dropping them here just removes the duplication instead of losing anything. */
-  .hdr-auth-links { display: none; }
+     widths. Sign up stays one tap away via the bottom nav's own Sign up tab, so dropping the
+     button here just removes that duplication. "Log in" itself stays as a plain text link though —
+     the bottom nav's "+" also leads there when signed out, but nothing marks it as a login
+     shortcut (it just looks like "new post"), so without this there was no visible, obvious way
+     to log in on mobile at all. */
+  .hdr-auth-links .btn { display: none; }
   /* Signed in, the same crowding showed up one row down: New Post, the notification bell, the
      avatar and the language switcher all squeezed together — and New Post/Notifications are now
      exact duplicates of the bottom nav's "+" and Alerts tabs, not just tight for space. */

@@ -202,6 +202,28 @@ class AuthTests(BaseCase):
     def test_google_login_url_is_wired(self):
         self.assertEqual(reverse('google_login'), '/auth/google/login/')
 
+    def test_mobile_bottom_nav_plus_button_sends_anonymous_users_to_login_with_next(self):
+        page = self.client.get(reverse('home')).content.decode()
+        bottom_nav = page[page.index('id="bottom-nav"'):]
+        plus_link = bottom_nav[bottom_nav.index('bottom-nav-new'):bottom_nav.index('</a>', bottom_nav.index('bottom-nav-new'))]
+        self.assertIn(f'href="{reverse("login")}?next={reverse("create_post")}"', plus_link)
+        self.assertIn('aria-label="Create post"', plus_link)
+        self.assertNotIn('aria-label="Log in"', plus_link)
+
+    def test_login_page_shows_a_create_post_specific_message_when_that_is_the_destination(self):
+        response = self.client.get(reverse('login'), {'next': reverse('create_post')})
+        self.assertContains(response, 'Log in to create a post.')
+        response = self.client.get(reverse('login'))
+        self.assertNotContains(response, 'Log in to create a post.')
+        self.assertContains(response, 'Welcome back')
+
+    def test_login_link_is_present_for_anonymous_mobile_users(self):
+        # The header's "Log in" link must exist in the markup (CSS alone decides whether it's
+        # visible at a given width) and is distinct from the bottom-nav "+" button.
+        page = self.client.get(reverse('home')).content.decode()
+        self.assertIn('class="hdr-auth-links"', page)
+        self.assertIn(f'class="hdr-link" href="{reverse("login")}"', page)
+
 
 class SafeRedirectTests(BaseCase):
     def test_next_parameter_cannot_redirect_off_site(self):

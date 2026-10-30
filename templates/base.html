@@ -163,7 +163,8 @@
         <span>{% trans "Alerts" %}</span>
       </a>
       {% else %}
-      <a class="bottom-nav-item bottom-nav-new" href="{% url 'login' %}" aria-label="{% trans 'Log in' %}">{% include 'partials/icon.html' with name='plus' %}</a>
+      {% url 'create_post' as create_post_url %}
+      <a class="bottom-nav-item bottom-nav-new" href="{% url 'login' %}?next={{ create_post_url|urlencode }}" aria-label="{% trans 'Create post' %}">{% include 'partials/icon.html' with name='plus' %}</a>
       <a class="bottom-nav-item" href="{% url 'signup' %}"{% if current == 'signup' %} aria-current="page"{% endif %}>{% include 'partials/icon.html' with name='users' %}<span>{% trans "Sign up" %}</span></a>
       {% endif %}
       <button type="button" class="bottom-nav-item sidebar-toggle" aria-controls="site-sidebar" aria-expanded="false" aria-label="{% trans 'Open navigation' %}">{% include 'partials/icon.html' with name='menu' %}<span>{% trans "Menu" %}</span></button>
