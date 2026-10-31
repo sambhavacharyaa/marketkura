@@ -493,6 +493,19 @@ class UrlTests(BaseCase):
         # test_posts_redirects_permanently_to_home_with_filters below.
         self.assertEqual(self.client.get('/posts/').status_code, 301)
 
+    def test_no_em_dashes_anywhere_in_rendered_pages(self):
+        # Default site content (titles included) should read in plain ASCII punctuation, not
+        # typographic em dashes — covers a representative page of most kinds, in both languages.
+        post = self.post()
+        urls = ['/', self.category.get_absolute_url(), post.get_absolute_url(), '/companies/',
+                '/startups/', '/guidelines/', '/disclaimer/', '/about/', '/contact/', '/privacy/',
+                '/terms/', reverse('signup'), reverse('login'), reverse('profile', args=['alice'])]
+        for url in urls:
+            for lang in ('en', 'ne'):
+                self.client.cookies['django_language'] = lang
+                response = self.client.get(url)
+                self.assertNotIn('—', response.content.decode(), f'{url} ({lang})')
+
     def test_disclaimer_is_shown_site_wide(self):
         self.assertContains(self.client.get('/'), 'not investment advice')
         self.assertContains(self.client.get(self.post().get_absolute_url()), 'not investment advice')

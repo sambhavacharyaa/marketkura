@@ -1,5 +1,5 @@
 {% extends 'base.html' %}{% load i18n %}
-{% block title %}{% trans "Watchlists" %} — {{ SITE_NAME }}{% endblock %}
-{% block content %}<section class="panel"><h1>{% trans "Your watchlists" %}</h1><p class="muted">{% trans "Static lists only — no live prices or portfolio tracking." %}</p>
+{% block title %}{% trans "Watchlists" %} | {{ SITE_NAME }}{% endblock %}
+{% block content %}<section class="panel"><h1>{% trans "Your watchlists" %}</h1><p class="muted">{% trans "Static lists only: no live prices or portfolio tracking." %}</p>
 <form method="post">{% csrf_token %}{% include 'partials/form_fields.html' %}<button class="btn" type="submit">{% trans "Create watchlist" %}</button></form></section>
 <section><h2>{% trans "Saved lists" %}</h2>{% for watchlist in watchlists %}<article class="card"><h3><a href="{% url 'watchlist_detail' watchlist.pk %}">{{ watchlist.name }}</a></h3><p class="muted">{% blocktrans count n=watchlist.items.all|length %}{{ n }} company{% plural %}{{ n }} companies{% endblocktrans %}</p></article>{% empty %}<div class="panel"><p class="muted">{% trans "No watchlists yet." %}</p></div>{% endfor %}</section>{% endblock %}

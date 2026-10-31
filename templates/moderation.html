@@ -1,5 +1,5 @@
 {% extends 'base.html' %}{% load i18n community_extras %}
-{% block title %}{% trans "Moderation" %} — {{ SITE_NAME }}{% endblock %}
+{% block title %}{% trans "Moderation" %} | {{ SITE_NAME }}{% endblock %}
 {% block seo %}<meta name="robots" content="noindex">{% endblock %}
 {% block content %}<h1>{% trans "Moderation dashboard" %}</h1>
 <p><a href="{% url 'verification_dashboard' %}">{% blocktrans with n=pending_verifications %}{{ n }} verification application(s) pending{% endblocktrans %}</a> · <a href="{% url 'admin:index' %}">{% trans "Admin" %}</a></p>
@@ -18,15 +18,15 @@
 </article>{% empty %}<p class="muted">{% trans "No open reports." %}</p>{% endfor %}</section>
 
 <section class="panel"><h2>{% trans "Pump-and-dump watch" %}</h2><p class="meta">{% blocktrans %}Assets with a sudden burst of posts from several authors. Check for coordinated hype, especially in illiquid stocks.{% endblocktrans %}</p>
-{% for asset in pump_watch %}<p><a href="{{ asset.get_absolute_url }}"><strong>{{ asset.ticker|default:asset.name }}</strong></a> — {% blocktrans with p=asset.recent_posts a=asset.recent_authors %}{{ p }} posts by {{ a }} authors recently{% endblocktrans %}</p>{% empty %}<p class="muted">{% trans "Nothing unusual right now." %}</p>{% endfor %}</section>
+{% for asset in pump_watch %}<p><a href="{{ asset.get_absolute_url }}"><strong>{{ asset.ticker|default:asset.name }}</strong></a> · {% blocktrans with p=asset.recent_posts a=asset.recent_authors %}{{ p }} posts by {{ a }} authors recently{% endblocktrans %}</p>{% empty %}<p class="muted">{% trans "Nothing unusual right now." %}</p>{% endfor %}</section>
 
 <section class="panel"><h2>{% trans "Startup profiles awaiting approval" %} ({{ pending_startups|length }})</h2>
-{% for startup in pending_startups %}<p><a href="{{ startup.get_absolute_url }}">{{ startup.name }}</a> — {{ startup.owner.username }}
+{% for startup in pending_startups %}<p><a href="{{ startup.get_absolute_url }}">{{ startup.name }}</a> · {{ startup.owner.username }}
 <form class="inline" method="post" action="{% url 'approve_startup' startup.pk %}">{% csrf_token %}<button class="btn small" type="submit">{% trans "Approve" %}</button></form></p>{% empty %}<p class="muted">{% trans "None pending." %}</p>{% endfor %}</section>
 
 <section class="panel"><h2>{% trans "Shadow-banned members" %}</h2>
 {% for banned in shadow_banned %}<p>{{ banned.username }}</p>{% empty %}<p class="muted">{% trans "None." %}</p>{% endfor %}<p class="meta">{% trans "Lift a ban from any of their posts, or in the admin." %}</p></section>
 
 <section class="panel"><h2>{% trans "Recently resolved" %}</h2>
-{% for report in recently_resolved %}<p class="meta">{{ report.get_status_display }} — {{ report.get_category_display }} · {% trans "by" %} {{ report.reviewed_by.username|default:"—" }}</p>{% empty %}<p class="muted">{% trans "Nothing yet." %}</p>{% endfor %}</section>
+{% for report in recently_resolved %}<p class="meta">{{ report.get_status_display }} · {{ report.get_category_display }} · {% trans "by" %} {{ report.reviewed_by.username|default:"-" }}</p>{% empty %}<p class="muted">{% trans "Nothing yet." %}</p>{% endfor %}</section>
 {% endblock %}

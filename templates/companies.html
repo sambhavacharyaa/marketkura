@@ -1,5 +1,5 @@
 {% extends 'base.html' %}{% load i18n %}
-{% block title %}{% trans "Companies" %} — {% trans "Discussions and theses" %} | {{ SITE_NAME }}{% endblock %}
+{% block title %}{% trans "Companies" %} | {% trans "Discussions and theses" %} | {{ SITE_NAME }}{% endblock %}
 {% block meta_description %}{% trans "Browse companies and tickers discussed by the MarketKuraa community, with all related posts and theses on one page." %}{% endblock %}
 {% block og_description %}{% trans "Browse companies and tickers discussed by the MarketKuraa community, with all related posts and theses on one page." %}{% endblock %}
 {% block content %}{% url 'create_post' as create_post_url %}<h1>{% trans "Companies" %}</h1>

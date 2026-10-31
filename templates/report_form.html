@@ -1,5 +1,5 @@
 {% extends 'base.html' %}{% load i18n community_extras %}
-{% block title %}{% trans "Report content" %} — {{ SITE_NAME }}{% endblock %}
+{% block title %}{% trans "Report content" %} | {{ SITE_NAME }}{% endblock %}
 {% block content %}<section class="panel form-panel"><h1>{% if is_comment %}{% trans "Report this comment" %}{% else %}{% trans "Report this post" %}{% endif %}</h1>
 <blockquote class="muted">{% if is_comment %}{{ target.body|excerpt:40 }}{% else %}{{ target.title }}{% endif %}</blockquote>
 <p class="muted">{% trans "Reports go to the moderation team. Coordinated hype, spam and harassment are not allowed." %}</p>

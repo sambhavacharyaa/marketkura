@@ -1,5 +1,5 @@
 {% extends 'base.html' %}{% load i18n %}
-{% block title %}{% trans "Privacy Policy" %} — {{ SITE_NAME }}{% endblock %}
+{% block title %}{% trans "Privacy Policy" %} | {{ SITE_NAME }}{% endblock %}
 {% block meta_description %}{% trans "How MarketKuraa collects, uses and protects your information." %}{% endblock %}
 {% block og_description %}{% trans "How MarketKuraa collects, uses and protects your information." %}{% endblock %}
 {% block content %}<section class="panel prose"><h1>{% trans "Privacy Policy" %}</h1>
@@ -10,7 +10,7 @@
 <p>{% trans "Account information: when you sign up, we collect your username, email address and password (stored as a one-way hash, never in plain text). If you sign in with Google, we receive your name and email address from Google instead." %}</p>
 <p>{% trans "Content you post: discussion posts, theses, comments, startup profiles, votes, watchlists and any profile bio or photo you add. This content is visible to other members as described in our Community Guidelines." %}</p>
 <p>{% trans "Usage and device data: IP address, browser type and basic access logs. We use this to keep the service secure, prevent spam and abuse (for example, rate-limiting sign-ups and login attempts), and to understand aggregate usage of the site." %}</p>
-<p>{% trans "Cookies: we use a small number of cookies for essential functions — keeping you signed in, remembering your language preference, and protecting forms against cross-site request forgery. We do not use third-party advertising cookies." %}</p>
+<p>{% trans "Cookies: we use a small number of cookies for essential functions, keeping you signed in, remembering your language preference, and protecting forms against cross-site request forgery. We do not use third-party advertising cookies." %}</p>
 
 <h2>{% trans "How we use your information" %}</h2>
 <ul>

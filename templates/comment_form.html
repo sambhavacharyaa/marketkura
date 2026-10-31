@@ -1,3 +1,3 @@
 {% extends 'base.html' %}{% load i18n %}
-{% block title %}{% trans "Edit comment" %} — {{ SITE_NAME }}{% endblock %}
+{% block title %}{% trans "Edit comment" %} | {{ SITE_NAME }}{% endblock %}
 {% block content %}<section class="panel form-panel"><h1>{% trans "Edit comment" %}</h1><form method="post">{% csrf_token %}{{ form.as_p }}<button class="btn" type="submit">{% trans "Save changes" %}</button> <a href="{{ comment.get_absolute_url }}">{% trans "Cancel" %}</a></form></section>{% endblock %}

@@ -452,4 +452,4 @@ class ContactMessage(models.Model):
         ordering = ['-created_at']
 
     def __str__(self):
-        return f'{self.name} — {self.subject}'
+        return f'{self.name} - {self.subject}'

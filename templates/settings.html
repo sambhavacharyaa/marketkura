@@ -1,5 +1,5 @@
 {% extends 'base.html' %}{% load i18n %}
-{% block title %}{% trans "Settings" %} — {{ SITE_NAME }}{% endblock %}
+{% block title %}{% trans "Settings" %} | {{ SITE_NAME }}{% endblock %}
 {% block content %}<section class="panel form-panel"><h1>{% trans "Account settings" %}</h1>
 <form method="post" enctype="multipart/form-data">{% csrf_token %}
   {% if user.avatar %}<img class="avatar" src="{{ user.avatar.url }}" alt="">{% endif %}

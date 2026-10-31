@@ -1,5 +1,5 @@
 {% extends 'base.html' %}{% load i18n %}
-{% block title %}{% trans "Review application" %} — {{ SITE_NAME }}{% endblock %}
+{% block title %}{% trans "Review application" %} | {{ SITE_NAME }}{% endblock %}
 {% block content %}<section class="panel"><h1>{% trans "Review" %} {{ application.user.username }}</h1>
 <p><strong>{% trans "Requested badge" %}:</strong> {{ application.get_requested_type_display }}</p>
 <p><strong>{% trans "Name" %}:</strong> {{ application.full_name }}</p><p><strong>{% trans "Reason" %}:</strong> {{ application.application_reason }}</p><p><strong>{% trans "Expertise" %}:</strong> {{ application.areas_of_expertise }}</p><p><strong>{% trans "Experience" %}:</strong> {{ application.experience }}</p><p><strong>{% trans "Credentials" %}:</strong> {{ application.supporting_information }}</p>

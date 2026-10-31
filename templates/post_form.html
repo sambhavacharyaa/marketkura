@@ -1,5 +1,5 @@
 {% extends 'base.html' %}{% load i18n %}
-{% block title %}{% if editing %}{% trans "Edit post" %}{% else %}{% trans "Create post" %}{% endif %} — {{ SITE_NAME }}{% endblock %}
+{% block title %}{% if editing %}{% trans "Edit post" %}{% else %}{% trans "Create post" %}{% endif %} | {{ SITE_NAME }}{% endblock %}
 {% block content %}
 <section class="panel form-panel"><h1>{% if editing %}{% trans "Edit post" %}{% else %}{% trans "Create a post" %}{% endif %}</h1>
 <p class="muted">{% trans "MarketKuraa posts are user-generated. A thesis is self-reported opinion, not financial advice. Do not promote or hype thinly traded stocks." %} <a href="{% url 'guidelines' %}">{% trans "Community guidelines" %}</a></p>

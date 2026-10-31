@@ -1,5 +1,5 @@
 {% extends 'base.html' %}{% load i18n community_extras %}
-{% block title %}{{ profile_user.username }} — {{ SITE_NAME }}{% endblock %}
+{% block title %}{{ profile_user.username }} | {{ SITE_NAME }}{% endblock %}
 {% block meta_description %}{{ profile_user.bio|default:profile_user.username|excerpt:25 }}{% endblock %}
 {% block og_description %}{{ profile_user.bio|default:profile_user.username|excerpt:25 }}{% endblock %}
 {% block seo %}{% if profile_user.is_shadow_banned %}<meta name="robots" content="noindex">{% endif %}{% endblock %}
@@ -16,7 +16,7 @@
   </div>
   {% if user == profile_user and not startup_unlocked %}<p class="meta">{% blocktrans with n=startup_unlock_karma %}Reach {{ n }} reputation to unlock startup profiles.{% endblocktrans %}</p>{% endif %}
 </section>
-{% if startups %}<section class="panel"><h2>{% trans "Startups" %}</h2>{% for s in startups %}<p><a href="{{ s.get_absolute_url }}">{{ s.name }}</a> — {{ s.tagline }}</p>{% endfor %}</section>{% endif %}
+{% if startups %}<section class="panel"><h2>{% trans "Startups" %}</h2>{% for s in startups %}<p><a href="{{ s.get_absolute_url }}">{{ s.name }}</a>: {{ s.tagline }}</p>{% endfor %}</section>{% endif %}
 <div class="tabs"><a href="?tab=posts"{% if tab == 'posts' %} class="active"{% endif %}>{% trans "Posts" %}</a><a href="?tab=comments"{% if tab == 'comments' %} class="active"{% endif %}>{% trans "Comments" %}</a></div>
 {% if tab == 'comments' %}
   {% for comment in items %}<article class="post-card"><div class="meta">{% trans "On" %} <a href="{{ comment.get_absolute_url }}">{{ comment.post.title }}</a> · {{ comment.created_at|date:'M d, Y' }} · <span class="inline-stat">{% include 'partials/icon.html' with name='up' cls='icon-solid vote-glyph' %} {{ comment.upvotes }}</span></div><p class="excerpt">{{ comment.body|excerpt:40 }}</p></article>

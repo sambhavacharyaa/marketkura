@@ -1,3 +1,3 @@
 {% extends 'base.html' %}{% load i18n %}
-{% block title %}{% trans "Confirm delete" %} — {{ SITE_NAME }}{% endblock %}
+{% block title %}{% trans "Confirm delete" %} | {{ SITE_NAME }}{% endblock %}
 {% block content %}<section class="panel form-panel"><h1>{% blocktrans with label=label %}Delete {{ label }}{% endblocktrans %}</h1><p>{% blocktrans with object=object %}Are you sure you want to delete “{{ object }}”?{% endblocktrans %}</p><form method="post">{% csrf_token %}<button class="btn" style="background:var(--danger)">{% trans "Delete permanently" %}</button> <a href="javascript:history.back()">{% trans "Cancel" %}</a></form></section>{% endblock %}

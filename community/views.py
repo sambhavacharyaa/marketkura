@@ -847,7 +847,7 @@ def contact(request):
         if request.user.is_authenticated:
             contact_message.user = request.user
         contact_message.save()
-        messages.success(request, _("Thanks — we've received your message and will get back to you soon."))
+        messages.success(request, _("Thanks! We've received your message and will get back to you soon."))
         return redirect('contact')
     return render(request, 'pages/contact.html', {'form': form})
 

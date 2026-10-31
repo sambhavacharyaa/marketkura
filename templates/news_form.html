@@ -1,5 +1,5 @@
 {% extends 'base.html' %}{% load i18n %}
-{% block title %}{% if editing %}{% trans "Edit news article" %}{% else %}{% trans "Post news" %}{% endif %} — {{ SITE_NAME }}{% endblock %}
+{% block title %}{% if editing %}{% trans "Edit news article" %}{% else %}{% trans "Post news" %}{% endif %} | {{ SITE_NAME }}{% endblock %}
 {% block content %}
 <section class="panel form-panel"><h1>{% if editing %}{% trans "Edit news article" %}{% else %}{% trans "Post news" %}{% endif %}</h1>
 <form method="post" enctype="multipart/form-data" novalidate>{% csrf_token %}

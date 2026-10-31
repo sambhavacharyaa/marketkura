@@ -130,7 +130,7 @@ class PostForm(forms.ModelForm):
         }
         help_texts = {
             'body': _('Markdown is supported. Posts are opinion and discussion, not investment advice.'),
-            'image': _('Optional. A chart, screenshot or other supporting image — shown at the top of the post.'),
+            'image': _('Optional. A chart, screenshot or other supporting image, shown at the top of the post.'),
         }
         labels = {
             'category': _('Category'), 'type': _('Type'), 'title': _('Title'), 'body': _('Body'),
@@ -283,7 +283,7 @@ class NewsForm(forms.ModelForm):
         fields = ('title', 'image', 'summary', 'body')
         widgets = {'summary': forms.Textarea(attrs={'rows': 2}), 'body': forms.Textarea(attrs={'rows': 10})}
         help_texts = {
-            'image': _('Shown as the background of the news tile — a wide, high-contrast photo reads best once a title is overlaid on it.'),
+            'image': _('Shown as the background of the news tile. A wide, high-contrast photo reads best once a title is overlaid on it.'),
             'summary': _('Optional. Shown in listings and search results; falls back to the start of the article.'),
         }
 

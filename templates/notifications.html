@@ -1,5 +1,5 @@
 {% extends 'base.html' %}{% load i18n %}
-{% block title %}{% trans "Notifications" %} — {{ SITE_NAME }}{% endblock %}
+{% block title %}{% trans "Notifications" %} | {{ SITE_NAME }}{% endblock %}
 {% block content %}<div class="page-head"><h1>{% trans "Notifications" %}</h1><form method="post" action="{% url 'mark_all_notifications_read' %}">{% csrf_token %}<button class="btn secondary" type="submit">{% trans "Mark all as read" %}</button></form></div>
 {% for notification in notifications %}<article class="post-card {% if not notification.is_read %}notice{% endif %}"><p>{% if notification.target_url %}<a href="{{ notification.target_url }}">{{ notification.message }}</a>{% else %}{{ notification.message }}{% endif %}</p><div class="actions"><span class="meta">{{ notification.created_at|timesince }} {% trans "ago" %}</span>{% if not notification.is_read %}<form class="inline" method="post" action="{% url 'mark_notification_read' notification.pk %}">{% csrf_token %}<button class="linklike" type="submit">{% trans "Mark as read" %}</button></form>{% endif %}</div></article>
 {% empty %}<div class="panel"><p class="muted">{% trans "You're all caught up." %}</p></div>{% endfor %}

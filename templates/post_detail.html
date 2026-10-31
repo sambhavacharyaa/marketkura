@@ -1,5 +1,5 @@
 {% extends 'base.html' %}{% load i18n community_extras %}
-{% block title %}{{ post.title }} — {{ post.category.display_name }} | {{ SITE_NAME }}{% endblock %}
+{% block title %}{{ post.title }} | {{ post.category.display_name }} | {{ SITE_NAME }}{% endblock %}
 {% block meta_description %}{{ post.body|excerpt:30 }}{% endblock %}
 {% block og_description %}{{ post.body|excerpt:30 }}{% endblock %}
 {% block og_title %}{{ post.title }}{% endblock %}

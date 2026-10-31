@@ -1,5 +1,5 @@
 {% extends 'base.html' %}{% load i18n %}
-{% block title %}{% trans "Apply for verification" %} — {{ SITE_NAME }}{% endblock %}
+{% block title %}{% trans "Apply for verification" %} | {{ SITE_NAME }}{% endblock %}
 {% block content %}<section class="panel form-panel"><h1>{% trans "Apply for a verified badge" %}</h1>
 <p class="muted">{% trans "Analysts, finance professionals and fund managers can apply. Staff review your credentials (LinkedIn, licence, professional profile). Verification means identity and credentials were confirmed. It does not mean MarketKuraa endorses your views or that you are licensed to give advice here." %}</p>
 <form method="post">{% csrf_token %}{% include 'partials/form_fields.html' %}<button class="btn" type="submit">{% trans "Submit application" %}</button></form></section>{% endblock %}

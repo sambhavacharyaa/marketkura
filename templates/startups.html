@@ -1,5 +1,5 @@
 {% extends 'base.html' %}{% load i18n %}
-{% block title %}{% trans "Startups and founders" %} — {{ SITE_NAME }}{% endblock %}
+{% block title %}{% trans "Startups and founders" %} | {{ SITE_NAME }}{% endblock %}
 {% block meta_description %}{% trans "Discover early-stage startups and founders from the MarketKuraa community." %}{% endblock %}
 {% block og_description %}{% trans "Discover early-stage startups and founders from the MarketKuraa community." %}{% endblock %}
 {% block content %}{% url 'startup_create' as startup_create_url %}<div class="page-head"><h1>{% trans "Startups and founders" %}</h1>{% if user.is_authenticated %}<a class="btn" href="{{ startup_create_url }}">{% trans "List your startup" %}</a>{% endif %}</div>
