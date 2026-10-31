@@ -746,6 +746,10 @@ a.chip-cat:hover { background: var(--brand-soft); color: var(--brand-dark); text
   .feed { grid-row: 1; } .rail-right { grid-row: 2; }
   .strip { flex-wrap: wrap; } .strip-slot { display: none; }
   .strip-desktop { display: none; } .strip-mobile { display: flex; }
+  /* Full-width stacked pills on phones, matching the search bar above them, instead of the
+     desktop pair's narrower centered buttons sitting side by side. */
+  .hero-cta { flex-direction: column; align-items: stretch; max-width: 520px; margin-left: auto; margin-right: auto; }
+  .hero-cta-btn { width: 100%; min-width: 0; }
   .comment .children { margin-left: 8px; padding-left: 8px; }
   .feed-card { padding-right: 12px; } .card-vote { width: 40px; }
   .md-toolbar { flex-direction: column; align-items: stretch; }
