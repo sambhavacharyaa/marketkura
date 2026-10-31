@@ -172,7 +172,9 @@ class PhaseTwoTests(TestCase):
         for number in range(13):
             self.create_post(type='thesis' if number == 0 else 'discussion', title=f'Post {number}', body='Body', asset=self.asset,
                 position_type='long' if number == 0 else '', entry_price='20' if number == 0 else None, time_horizon='long' if number == 0 else '')
-        response = self.client.get(reverse('posts'), {'type': 'thesis', 'asset': 'NABIL', 'position': 'long', 'horizon': 'long'})
+        # /posts/ redirects to the home feed with the same filters (see community/views.posts) -
+        # follow=True exercises that end to end, the same path a real browser takes.
+        response = self.client.get(reverse('posts'), {'type': 'thesis', 'asset': 'NABIL', 'position': 'long', 'horizon': 'long'}, follow=True)
         self.assertContains(response, 'Post 0'); self.assertNotContains(response, 'Post 1')
         response = self.client.get(self.asset.get_absolute_url(), {'page': 2})
         self.assertContains(response, 'Page 2 of 2')

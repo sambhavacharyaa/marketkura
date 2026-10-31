@@ -117,10 +117,16 @@ def home(request):
 
 
 def posts(request):
-    return render(request, 'posts.html', {
-        'posts': paginate(request, apply_post_filters(request, post_queryset(request.user))),
-        'assets': asset_choices(), 'filter_query': query_without_page(request),
-    })
+    # /posts/ was an unfiltered listing of exactly the same posts the home feed already shows
+    # (same apply_post_filters(), same post_filters.html form) with none of home's own chrome
+    # (tabs, category chips, right rail). Rather than maintain two pages for one feed, redirect
+    # permanently to home with whatever filters were in the query string carried over unchanged —
+    # same filter function, same param names, so the results are identical either way.
+    target = reverse('home')
+    query_string = request.META.get('QUERY_STRING', '')
+    if query_string:
+        target = f'{target}?{query_string}'
+    return redirect(target, permanent=True)
 
 
 def category_detail(request, slug):

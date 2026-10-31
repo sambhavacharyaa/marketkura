@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MarketKuraa\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-30 20:53+0000\n"
+"POT-Creation-Date: 2026-10-31 02:02+0000\n"
 "PO-Revision-Date: 2026-09-20 00:00+0000\n"
 "Last-Translator: MarketKuraa\n"
 "Language-Team: Nepali\n"
@@ -597,9 +597,6 @@ msgstr "मुख्य"
 
 msgid "Home"
 msgstr "गृहपृष्ठ"
-
-msgid "Posts"
-msgstr "पोस्टहरू"
 
 msgid "Companies"
 msgstr "कम्पनीहरू"
@@ -1813,6 +1810,9 @@ msgstr "प्रमाणीकरणका लागि निवेदन द
 #, python-format
 msgid "Reach %(n)s reputation to unlock startup profiles."
 msgstr "स्टार्टअप प्रोफाइल खोल्न %(n)s प्रतिष्ठा पुर्‍याउनुहोस्।"
+
+msgid "Posts"
+msgstr "पोस्टहरू"
 
 msgid "Comments"
 msgstr "टिप्पणीहरू"

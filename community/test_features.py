@@ -373,6 +373,19 @@ class UrlTests(BaseCase):
         response = self.client.get(old_url)
         self.assertEqual((response.status_code, response.url), (301, post.get_absolute_url()))
 
+    def test_posts_redirects_permanently_to_home_with_filters_preserved(self):
+        # /posts/ used to render its own unfiltered listing — same apply_post_filters(), same
+        # post_filters.html form as the home feed, none of home's own chrome. Now it 301s to home,
+        # carrying the query string through unchanged (same filter param names on both).
+        response = self.client.get(reverse('posts'))
+        self.assertEqual((response.status_code, response.url), (301, reverse('home')))
+        response = self.client.get(reverse('posts'), {'type': 'thesis', 'sort': 'discussed'})
+        self.assertEqual((response.status_code, response.url), (301, f'{reverse("home")}?type=thesis&sort=discussed'))
+
+    def test_posts_link_is_gone_from_the_nav_now_that_it_redirects_to_home(self):
+        page = self.client.get(reverse('home')).content.decode()
+        self.assertNotIn(f'href="{reverse("posts")}"', page)
+
     def test_unknown_or_garbled_post_urls_404(self):
         self.assertEqual(self.client.get('/post/nope/').status_code, 404)
         self.assertEqual(self.client.get('/post/nope-999999/').status_code, 404)
@@ -410,9 +423,12 @@ class UrlTests(BaseCase):
 
     def test_public_read_access_needs_no_login(self):
         post = self.post()
-        for url in ('/', '/posts/', self.category.get_absolute_url(), post.get_absolute_url(), '/companies/', '/startups/',
+        for url in ('/', self.category.get_absolute_url(), post.get_absolute_url(), '/companies/', '/startups/',
                     '/guidelines/', '/disclaimer/', '/about/', reverse('profile', args=['alice'])):
             self.assertEqual(self.client.get(url).status_code, 200, url)
+        # /posts/ redirects (no login needed either) rather than rendering its own 200 - see
+        # test_posts_redirects_permanently_to_home_with_filters below.
+        self.assertEqual(self.client.get('/posts/').status_code, 301)
 
     def test_disclaimer_is_shown_site_wide(self):
         self.assertContains(self.client.get('/'), 'not investment advice')
@@ -1310,7 +1326,7 @@ class SidebarTests(BaseCase):
 
     def test_sidebar_appears_on_every_kind_of_page_not_just_home(self):
         post = self.post()
-        for url in (reverse('home'), reverse('posts'), reverse('companies'), reverse('startups'),
+        for url in (reverse('home'), reverse('companies'), reverse('startups'),
                     post.get_absolute_url(), self.asset.get_absolute_url(), reverse('search')):
             page = self.client.get(url)
             self.assertContains(page, 'id="site-sidebar"', msg_prefix=url)
@@ -1498,7 +1514,7 @@ class ThreadListHtmxNavigationTests(BaseCase):
         self.assertIn('id="primary-nav"', page)
         self.assertIn('id="bottom-nav"', page)
         primary_nav = page[page.index('id="primary-nav"'):page.index('</nav>', page.index('id="primary-nav"'))]
-        self.assertIn(f'hx-get="{reverse("posts")}" hx-target="#app-shell"', primary_nav)
+        self.assertIn(f'hx-get="{reverse("companies")}" hx-target="#app-shell"', primary_nav)
         self.assertIn(f'hx-get="{reverse("news_list")}" hx-target="#app-shell"', primary_nav)
         bottom_nav = page[page.index('id="bottom-nav"'):]
         self.assertIn(f'hx-get="{reverse("home")}" hx-target="#app-shell"', bottom_nav)
