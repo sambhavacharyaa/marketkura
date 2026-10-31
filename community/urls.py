@@ -92,5 +92,5 @@ urlpatterns = [
     path('sitemap.xml', sitemap, {'sitemaps': SITEMAPS}, name='sitemap'),
     # Browsers and crawlers request /favicon.ico directly, ignoring the <link rel="icon"> in
     # base.html's <head> — redirect to the same icon already served from static instead of 404ing.
-    path('favicon.ico', RedirectView.as_view(url=static('img/favicon.ico'), permanent=True)),
+    path('favicon.ico', RedirectView.as_view(url=static('favicons/favicon.ico'), permanent=True)),
 ]

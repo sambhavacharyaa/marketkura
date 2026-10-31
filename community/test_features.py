@@ -482,7 +482,7 @@ class UrlTests(BaseCase):
     def test_favicon_ico_redirects_to_the_static_icon(self):
         response = self.client.get('/favicon.ico')
         self.assertEqual(response.status_code, 301)
-        self.assertIn('/static/img/favicon.ico', response.url)
+        self.assertIn('/static/favicons/favicon.ico', response.url)
 
     def test_public_read_access_needs_no_login(self):
         post = self.post()

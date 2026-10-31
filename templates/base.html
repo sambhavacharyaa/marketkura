@@ -6,10 +6,12 @@
     <title>{% block title %}{{ SITE_NAME }}{% endblock %}</title>
     <meta name="description" content="{% block meta_description %}{% trans "MarketKuraa is a public investor community: market discussions from around the world, self-reported theses and company pages." %}{% endblock %}">
     <link rel="canonical" href="{% block canonical %}{{ request.scheme }}://{{ request.get_host }}{{ request.path }}{% endblock %}">
-    <link rel="icon" href="{% static 'img/favicon.ico' %}" sizes="any">
-    <link rel="icon" href="{% static 'img/favicon-32.png' %}" type="image/png" sizes="32x32">
-    <link rel="icon" href="{% static 'img/favicon-192.png' %}" type="image/png" sizes="192x192">
-    <link rel="apple-touch-icon" href="{% static 'img/apple-touch-icon.png' %}">
+    <link rel="icon" href="{% static 'favicons/favicon.ico' %}" sizes="any">
+    <link rel="icon" href="{% static 'favicons/favicon-16x16.png' %}" type="image/png" sizes="16x16">
+    <link rel="icon" href="{% static 'favicons/favicon-32x32.png' %}" type="image/png" sizes="32x32">
+    <link rel="icon" href="{% static 'favicons/android-chrome-192x192.png' %}" type="image/png" sizes="192x192">
+    <link rel="apple-touch-icon" href="{% static 'favicons/apple-touch-icon.png' %}">
+    <link rel="manifest" href="{% static 'favicons/site.webmanifest' %}">
     <meta property="og:site_name" content="{{ SITE_NAME }}">
     <meta property="og:type" content="website">
     <meta property="og:title" content="{% block og_title %}{{ SITE_NAME }}{% endblock %}">
