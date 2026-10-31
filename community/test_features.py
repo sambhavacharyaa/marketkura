@@ -1598,6 +1598,17 @@ class HomePageTests(BaseCase):
         names = [c.ticker for c in self.home().context['trending_companies']]
         self.assertEqual(names, ['NABIL'])
 
+    def test_most_discussed_strip_renders_twice_for_mobile_reordering(self):
+        # One copy sits above .home-grid (desktop position); a second sits just below the
+        # hero/composer, hidden by default and shown only under the mobile breakpoint — CSS can't
+        # otherwise move .strip relative to the hero, since they live in different DOM branches.
+        page = self.home().content.decode()
+        self.assertEqual(page.count('aria-label="Most discussed companies"'), 2)
+        self.assertIn('class="strip strip-desktop"', page)
+        self.assertIn('class="strip strip-mobile"', page)
+        self.assertLess(page.index('strip-desktop'), page.index('class="hero"'))
+        self.assertLess(page.index('class="hero"'), page.index('strip-mobile'))
+
     def test_thesis_split_needs_enough_theses_and_computes_percentages(self):
         def thesis(position):
             return self.post(asset=self.asset, type='thesis', position_type=position, entry_price=1, time_horizon='long', title=f't-{position}')

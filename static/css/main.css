@@ -439,6 +439,12 @@ a.badge:active { transform: translateY(0) scale(.95); }
 
 /* ---- Home: trending strip ---- */
 .strip { display: flex; align-items: center; gap: var(--s3); background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 8px 14px; margin-bottom: var(--s4); box-shadow: var(--shadow); }
+/* most_discussed_strip.html is rendered twice — above .home-grid (desktop position, unchanged)
+   and again inside .feed just below the hero/composer (where it's wanted on phone, where .strip
+   and the hero live in different DOM branches so CSS order alone can't move one relative to the
+   other). Only one copy is ever visible at a time; the hidden one also leaves the a11y tree via
+   display:none, so nothing gets announced twice. */
+.strip-mobile { display: none; }
 .strip-label { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); font-size: .82rem; font-weight: 600; white-space: nowrap; text-transform: uppercase; letter-spacing: .04em; }
 .strip-list { display: flex; gap: 6px; list-style: none; margin: 0; padding: 0; overflow-x: auto; flex: 1; scrollbar-width: thin; }
 .strip-list a { display: inline-flex; align-items: center; gap: 8px; padding: 5px 10px; border: 1px solid var(--line); border-radius: 999px; color: var(--text); white-space: nowrap; min-height: 32px; transition: border-color var(--dur) var(--ease), transform var(--dur-fast) var(--ease), box-shadow var(--dur) var(--ease); }
@@ -739,6 +745,7 @@ a.chip-cat:hover { background: var(--brand-soft); color: var(--brand-dark); text
   .feed, .rail-right { grid-column: 1; }
   .feed { grid-row: 1; } .rail-right { grid-row: 2; }
   .strip { flex-wrap: wrap; } .strip-slot { display: none; }
+  .strip-desktop { display: none; } .strip-mobile { display: flex; }
   .comment .children { margin-left: 8px; padding-left: 8px; }
   .feed-card { padding-right: 12px; } .card-vote { width: 40px; }
   .md-toolbar { flex-direction: column; align-items: stretch; }

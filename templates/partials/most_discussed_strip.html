@@ -1,0 +1,8 @@
+{% load i18n %}<section class="strip {{ extra_class }}" aria-label="{% trans 'Most discussed companies' %}">
+  <span class="strip-label">{% include 'partials/icon.html' with name='trending' %}{% trans "Most discussed" %}</span>
+  <ul class="strip-list">
+    {% for company in trending_companies %}<li><a href="{{ company.get_absolute_url }}" title="{{ company.display_name }}"><span class="ticker">${{ company.ticker|default:company.name }}</span><span class="num">{{ company.recent_posts }}</span></a></li>
+    {% empty %}<li class="muted">{% trans "No company discussions yet. Mention a ticker in a post to start one." %}</li>{% endfor %}
+  </ul>
+  {% if show_coming_soon_widgets %}<span class="strip-slot" data-slot="marketaux-prices" title="{% trans 'Live prices will be added later.' %}">{% trans "Live prices · coming soon" %}</span>{% endif %}
+</section>

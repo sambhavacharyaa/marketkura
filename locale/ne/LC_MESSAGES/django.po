@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MarketKuraa\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-31 10:51+0000\n"
+"POT-Creation-Date: 2026-10-31 11:18+0000\n"
 "PO-Revision-Date: 2026-09-20 00:00+0000\n"
 "Last-Translator: MarketKuraa\n"
 "Language-Team: Nepali\n"
@@ -877,21 +877,6 @@ msgstr "के तपाईं “%(object)s” मेटाउन निश्�
 msgid "Delete permanently"
 msgstr "स्थायी रूपमा मेटाउनुहोस्"
 
-msgid "Most discussed companies"
-msgstr "सबैभन्दा बढी छलफल भएका कम्पनीहरू"
-
-msgid "Most discussed"
-msgstr "सबैभन्दा बढी छलफल भएको"
-
-msgid "No company discussions yet. Mention a ticker in a post to start one."
-msgstr "अहिलेसम्म कुनै कम्पनीबारे छलफल छैन। पोस्टमा टिकर उल्लेख गरेर सुरु गर्नुहोस्।"
-
-msgid "Live prices will be added later."
-msgstr "लाइभ मूल्य पछि थपिनेछ।"
-
-msgid "Live prices · coming soon"
-msgstr "लाइभ मूल्य · छिट्टै आउँदैछ"
-
 msgid "Community feed"
 msgstr "सामुदायिक फिड"
 
@@ -1690,6 +1675,21 @@ msgstr "देखाउनुहोस्"
 
 msgid "Nothing to preview yet."
 msgstr "अहिलेसम्म पूर्वावलोकन गर्ने केही छैन।"
+
+msgid "Most discussed companies"
+msgstr "सबैभन्दा बढी छलफल भएका कम्पनीहरू"
+
+msgid "Most discussed"
+msgstr "सबैभन्दा बढी छलफल भएको"
+
+msgid "No company discussions yet. Mention a ticker in a post to start one."
+msgstr "अहिलेसम्म कुनै कम्पनीबारे छलफल छैन। पोस्टमा टिकर उल्लेख गरेर सुरु गर्नुहोस्।"
+
+msgid "Live prices will be added later."
+msgstr "लाइभ मूल्य पछि थपिनेछ।"
+
+msgid "Live prices · coming soon"
+msgstr "लाइभ मूल्य · छिट्टै आउँदैछ"
 
 msgid "Pagination"
 msgstr "पृष्ठ सङ्ख्या"
