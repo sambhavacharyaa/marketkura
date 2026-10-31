@@ -751,3 +751,24 @@ a.chip-cat:hover { background: var(--brand-soft); color: var(--brand-dark); text
 .error-panel .muted { margin-bottom: 24px; }
 .error-panel .actions { justify-content: center; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition: none !important; animation: none !important; scroll-behavior: auto !important; } }
+
+/* ---- Touch tap targets ----
+   A handful of small, frequently-tapped controls (upvote arrows aside — .vote-arrow is already
+   40x40) render well under a comfortable touch target on phones/tablets: usernames, category
+   chips and timestamps packed into .feed-meta with only a 4-6px gap between them; reply counts
+   and read-time in .feed-foot; footer links; the "More filters" <summary>; comment upvotes.
+   Growing padding would grow the visible pill/text box along with it, so plain text links get an
+   invisible vertical reach via padding + an equal negative margin (taller tap area, identical
+   visual position — nothing to see, so nothing looks different), and .chip-cat (which has a
+   visible pill background) gets a borderless ::after sized to its own width instead, so its hit
+   area only grows taller, never wider into the 4-6px gap next to it. Comment votes and "More
+   filters" just get a plain min-height bump — both already stand alone with no tight neighbours. */
+@media (max-width: 1024px), (pointer: coarse) {
+  .feed-meta a:not(.chip), .feed-foot a, .footer-links a {
+    position: relative; padding-block: 10px; margin-block: -10px;
+  }
+  a.chip-cat { position: relative; }
+  a.chip-cat::after { content: ''; position: absolute; left: 0; right: 0; top: 50%; transform: translateY(-50%); height: 40px; }
+  details.panel > summary { min-height: 40px; display: flex; align-items: center; }
+  .vote-btn { min-height: 40px; }
+}
