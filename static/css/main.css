@@ -118,7 +118,12 @@ button.sidebar-toggle { display: none; }
 button.sidebar-close { display: none; }
 .sidebar-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; margin-bottom: var(--s4); }
 .sidebar-brand { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
-.sidebar-brand-logo { height: 22px; width: auto; }
+/* .sidebar-brand is a column flex container with no align-items set, so this <img> (width: auto)
+   was stretched to the container's full cross-axis (horizontal) width by flexbox's default
+   align-items: stretch — and since <img> defaults to object-fit: fill, the logo itself rendered
+   horizontally distorted rather than just boxed differently. align-self: flex-start opts it out
+   of that stretch so width: auto actually sizes from the image's own aspect ratio. */
+.sidebar-brand-logo { height: 22px; width: auto; align-self: flex-start; }
 .sidebar-tagline { font-size: .72rem; color: var(--muted); font-weight: 500; }
 .sidebar-nav { display: flex; flex-direction: column; gap: 2px; margin-bottom: var(--s4); }
 .sidebar-nav a { display: flex; align-items: center; gap: 10px; padding: 9px 10px; border-radius: var(--radius-sm); color: var(--text); font-weight: 500; font-size: .92rem; transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease); }
