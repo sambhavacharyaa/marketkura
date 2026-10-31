@@ -88,6 +88,13 @@ class SignUpForm(HoneypotMixin, UserCreationForm):
             _('I agree to the'), reverse_lazy('terms'), _('Terms of Service'), _('and'), reverse_lazy('privacy'), _('Privacy Policy'),
         )
         self.fields['agree_to_terms'].error_messages['required'] = _('You must agree to the Terms of Service and Privacy Policy to create an account.')
+        # UserCreationForm's defaults are Django's own generic, technical wording (the username
+        # field's default help text doesn't even match validate_username's narrower charset
+        # below, and the password fields' default help text is a dense validator-rule dump) —
+        # replaced with one plain sentence each.
+        self.fields['username'].help_text = _('Letters, numbers, and . _ - only. No spaces.')
+        self.fields['password1'].help_text = _('At least 8 characters. Avoid common passwords or ones based on your username or email.')
+        self.fields['password2'].help_text = _('Enter the same password again.')
 
     def clean_email(self):
         email = self.cleaned_data['email']

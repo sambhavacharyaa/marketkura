@@ -10,7 +10,7 @@
   {% endif %}
   <form method="post">{% csrf_token %}
     {% for error in form.non_field_errors %}<p class="field-errors">{{ error }}</p>{% endfor %}
-    {% include 'partials/form_fields.html' %}
+    {% include 'partials/form_fields.html' with show_password_toggle=True %}
     <input type="hidden" name="next" value="{{ next }}">
     <p style="margin-top:20px"><button class="btn" type="submit">{% trans "Log in" %}</button></p>
   </form>

@@ -109,6 +109,26 @@ class AuthTests(BaseCase):
         self.assertEqual(response.status_code, 302)
         self.assertTrue(User.objects.filter(username='trader_99').exists())
 
+    def test_signup_shows_plain_language_help_text_not_djangos_raw_defaults(self):
+        page = self.client.get(reverse('signup'))
+        self.assertContains(page, 'Letters, numbers, and . _ - only. No spaces.')
+        self.assertContains(page, 'Avoid common passwords')
+        self.assertNotContains(page, 'Your password can')
+        self.assertNotContains(page, "150 characters or fewer")
+
+    def test_signup_hides_help_text_once_a_field_has_an_error(self):
+        response = self.client.post(reverse('signup'), {'username': 'ab!!', 'email': 'bad@example.com', 'password1': 'a-strong-pass-123', 'password2': 'a-strong-pass-123', 'agree_to_terms': 'on'})
+        self.assertContains(response, 'Usernames can only use English letters')
+        self.assertNotContains(response, 'Letters, numbers, and . _ - only. No spaces.')
+
+    def test_signup_and_login_render_a_password_show_hide_toggle(self):
+        self.assertContains(self.client.get(reverse('signup')), 'password-toggle')
+        self.assertContains(self.client.get(reverse('login')), 'password-toggle')
+
+    def test_password_change_form_has_no_toggle_scope_is_signup_and_login_only(self):
+        self.login(self.alice)
+        self.assertNotContains(self.client.get(reverse('password_change')), 'password-toggle')
+
     def test_signup_requires_agreeing_to_terms(self):
         response = self.client.post(reverse('signup'), {'username': 'noagree', 'email': 'noagree@example.com', 'password1': 'a-strong-pass-123', 'password2': 'a-strong-pass-123'})
         self.assertContains(response, 'You must agree')

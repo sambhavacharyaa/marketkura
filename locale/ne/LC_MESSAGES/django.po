@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MarketKuraa\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-31 03:02+0000\n"
+"POT-Creation-Date: 2026-10-31 03:09+0000\n"
 "PO-Revision-Date: 2026-09-20 00:00+0000\n"
 "Last-Translator: MarketKuraa\n"
 "Language-Team: Nepali\n"
@@ -103,6 +103,17 @@ msgid ""
 "You must agree to the Terms of Service and Privacy Policy to create an "
 "account."
 msgstr "खाता बनाउन तपाईंले सेवाका सर्तहरू र गोपनीयता नीतिमा सहमत हुनुपर्छ।"
+
+msgid "Letters, numbers, and . _ - only. No spaces."
+msgstr "अंग्रेजी अक्षर, अंक, र . _ - मात्र। खाली ठाउँ हुँदैन।"
+
+msgid ""
+"At least 8 characters. Avoid common passwords or ones based on your username "
+"or email."
+msgstr "कम्तीमा ८ अक्षर। सामान्य पासवर्ड वा आफ्नो प्रयोगकर्ता नाम वा इमेलमा आधारित पासवर्ड नराख्नुहोस्।"
+
+msgid "Enter the same password again."
+msgstr "उही पासवर्ड फेरि हाल्नुहोस्।"
 
 msgid "An account with this email already exists."
 msgstr "यो इमेल भएको खाता पहिले नै छ।"
@@ -1644,6 +1655,12 @@ msgstr "तपाईंको जवाफ"
 
 msgid "Post reply"
 msgstr "जवाफ पोस्ट गर्नुहोस्"
+
+msgid "Hide"
+msgstr "लुकाउनुहोस्"
+
+msgid "Show"
+msgstr "देखाउनुहोस्"
 
 msgid "Nothing to preview yet."
 msgstr "अहिलेसम्म पूर्वावलोकन गर्ने केही छैन।"

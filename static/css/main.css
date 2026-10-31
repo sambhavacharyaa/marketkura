@@ -250,6 +250,10 @@ label { display: block; font-weight: 600; margin: 14px 0 6px; }
 input, select, textarea { width: 100%; padding: 10px 12px; min-height: 40px; border: 1px solid var(--line-strong); border-radius: var(--radius-sm); font: inherit; background: #fff; color: var(--text); transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease); }
 input:focus, select:focus, textarea:focus { border-color: var(--brand); outline: 2px solid var(--brand-line); outline-offset: 0; }
 input[type=checkbox] { width: auto; min-height: 0; }
+.password-field { position: relative; display: flex; }
+.password-field input { padding-right: 56px; }
+.password-toggle { position: absolute; right: 4px; top: 50%; transform: translateY(-50%); width: auto; min-height: 0; padding: 6px 10px; border: 0; background: none; color: var(--brand); font-size: .85rem; font-weight: 600; cursor: pointer; }
+.password-toggle:hover { text-decoration: underline; }
 /* The native file-picker button otherwise renders as unstyled OS chrome sitting inside our
    rounded field — one of the clearest "unfinished prototype" tells on an otherwise polished form. */
 input[type=file] { padding: 7px 10px; min-height: 0; background: var(--bg); font-size: .88rem; color: var(--muted); }

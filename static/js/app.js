@@ -339,4 +339,17 @@
       showCopied();
     }
   });
+
+  // Signup/login password show/hide toggle.
+  document.addEventListener('click', function (event) {
+    var button = event.target.closest && event.target.closest('.password-toggle');
+    if (!button) return;
+    var input = button.previousElementSibling;
+    if (!input) return;
+    if (!button.dataset.hiddenLabel) button.dataset.hiddenLabel = button.textContent;
+    var shown = input.type === 'text';
+    input.type = shown ? 'password' : 'text';
+    button.setAttribute('aria-pressed', String(!shown));
+    button.textContent = shown ? button.dataset.hiddenLabel : button.dataset.shownLabel;
+  });
 })();
