@@ -125,6 +125,14 @@ class AuthTests(BaseCase):
         self.assertContains(self.client.get(reverse('signup')), 'password-toggle')
         self.assertContains(self.client.get(reverse('login')), 'password-toggle')
 
+    def test_signup_and_login_fields_have_correct_autocomplete_attributes(self):
+        signup = self.client.get(reverse('signup')).content.decode()
+        self.assertIn('autocomplete="username"', signup)
+        self.assertIn('autocomplete="email"', signup)
+        login = self.client.get(reverse('login')).content.decode()
+        self.assertIn('autocomplete="username"', login)
+        self.assertIn('autocomplete="current-password"', login)
+
     def test_password_change_form_has_no_toggle_scope_is_signup_and_login_only(self):
         self.login(self.alice)
         self.assertNotContains(self.client.get(reverse('password_change')), 'password-toggle')

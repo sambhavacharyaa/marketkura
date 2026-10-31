@@ -72,7 +72,7 @@ class HoneypotMixin(forms.Form):
 
 
 class SignUpForm(HoneypotMixin, UserCreationForm):
-    email = forms.EmailField(required=True, label=_('Email'))
+    email = forms.EmailField(required=True, label=_('Email'), widget=forms.EmailInput(attrs={'autocomplete': 'email'}))
     agree_to_terms = forms.BooleanField(required=True, label='')
 
     class Meta:
@@ -95,6 +95,7 @@ class SignUpForm(HoneypotMixin, UserCreationForm):
         self.fields['username'].help_text = _('Letters, numbers, and . _ - only. No spaces.')
         self.fields['password1'].help_text = _('At least 8 characters. Avoid common passwords or ones based on your username or email.')
         self.fields['password2'].help_text = _('Enter the same password again.')
+        self.fields['username'].widget.attrs['autocomplete'] = 'username'
 
     def clean_email(self):
         email = self.cleaned_data['email']
@@ -109,7 +110,7 @@ class SignUpForm(HoneypotMixin, UserCreationForm):
 
 
 class EmailAuthenticationForm(AuthenticationForm):
-    username = forms.CharField(label=_('Username or email'), max_length=254, widget=forms.TextInput(attrs={'autofocus': True}))
+    username = forms.CharField(label=_('Username or email'), max_length=254, widget=forms.TextInput(attrs={'autofocus': True, 'autocomplete': 'username'}))
 
 
 class PostForm(forms.ModelForm):
