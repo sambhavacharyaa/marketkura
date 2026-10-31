@@ -1,5 +1,5 @@
 {% load i18n community_extras %}<div class="comment depth-{{ comment.depth }}{% if comment.is_removed %} removed{% endif %}{% if is_ama and comment.user_id == post.user_id and comment.parent_comment_id %} host-answer{% endif %}" id="comment-{{ comment.pk }}">
-  <div class="meta">{% include 'partials/user_link.html' with u=comment.user %}{% if comment.user_id == post.user_id %}<span class="host">{% if is_ama %}{% trans "Host" %}{% else %}{% trans "Author" %}{% endif %}</span>{% endif %} · {{ comment.created_at|date:'M d, Y H:i' }}{% if comment.was_edited and not comment.is_removed %} · {% trans "edited" %}{% endif %}</div>
+  <div class="meta">{% include 'partials/user_link.html' with u=comment.user %}{% if comment.user_id == post.user_id %}<span class="host">{% if is_ama %}{% trans "Host" %}{% else %}{% trans "Author" %}{% endif %}</span>{% endif %} · <time datetime="{{ comment.created_at|date:'c' }}" title="{{ comment.created_at|nepal_time_full }}">{{ comment.created_at|nepal_time }}</time>{% if comment.was_edited and not comment.is_removed %} · {% trans "edited" %}{% endif %}</div>
   {% if comment.is_removed %}
     <div class="prose"><p>{% trans "[This comment was removed]" %}</p></div>
   {% else %}

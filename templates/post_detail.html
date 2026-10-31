@@ -11,7 +11,7 @@
 <article class="panel">
   <div class="chips"><a class="badge" href="{{ post.category.get_absolute_url }}">{{ post.category.display_name }}</a><span class="badge type-{{ post.type }}">{{ post.get_type_display }}</span>{% if post.is_locked %}<span class="badge locked">🔒 {% trans "Locked" %}</span>{% endif %}{% for tag in tags %}<a class="badge" href="{{ tag.get_absolute_url }}">#{{ tag.name }}</a>{% endfor %}</div>
   <h1>{{ post.title }}</h1>
-  <div class="meta">{% trans "Posted by" %} {% include 'partials/user_link.html' with u=post.user %} · {{ post.created_at|date:'M d, Y H:i' }}{% if post.was_edited %} · {% blocktrans with d=post.updated_at|date:'M d, Y' %}Updated {{ d }}{% endblocktrans %}{% endif %}</div>
+  <div class="meta">{% trans "Posted by" %} {% include 'partials/user_link.html' with u=post.user %} · <time datetime="{{ post.created_at|date:'c' }}" title="{{ post.created_at|nepal_time_full }}">{{ post.created_at|nepal_time }}</time>{% if post.was_edited %} · {% blocktrans with d=post.updated_at|date:'M d, Y' %}Updated {{ d }}{% endblocktrans %}{% endif %}</div>
   {% if post.asset %}<p><a class="badge" href="{{ post.asset.get_absolute_url }}">{{ post.asset.ticker|default:post.asset.name }}{% if post.asset.company_name %} · {{ post.asset.company_name }}{% endif %}</a></p>{% endif %}
 
   {% if post.type == 'thesis' %}
@@ -24,12 +24,12 @@
     {% if post.stop_loss %}<p><strong>{% trans "Stop / exit plan" %}:</strong> {{ post.stop_loss }}</p>{% endif %}
     {% if post.thesis_risk %}<p><strong>{% trans "Risks" %}:</strong> {{ post.thesis_risk }}</p>{% endif %}
     {% if post.disclosure %}<p><strong>{% trans "Disclosure" %}:</strong> {{ post.disclosure }}</p>{% endif %}
-    <p class="meta">{% blocktrans with d=post.created_at|date:'M d, Y H:i' %}Published {{ d }} (UTC). Timestamped so it can be cited later. Not financial advice.{% endblocktrans %}</p>
+    <p class="meta">{% blocktrans with d=post.created_at|nepal_time %}Published {{ d }}. Timestamped so it can be cited later. Not financial advice.{% endblocktrans %}</p>
   </section>
   {% elif post.type == 'ama' %}
   <section class="panel notice" style="margin:16px 0"><h2>{% trans "AMA with" %} {{ post.user.username }}</h2>
     <p>{% if post.ama_state == 'upcoming' %}<strong>{% trans "Upcoming" %}</strong>{% elif post.ama_state == 'live' %}<strong>{% trans "Live now" %}</strong>{% else %}<strong>{% trans "Ended" %}</strong>{% endif %}
-      {% if post.ama_starts_at %} · {% trans "Starts" %} {{ post.ama_starts_at|date:'M d, Y H:i' }} UTC{% endif %}{% if post.ama_ends_at %} · {% trans "Closes" %} {{ post.ama_ends_at|date:'M d, Y H:i' }} UTC{% endif %}</p>
+      {% if post.ama_starts_at %} · {% trans "Starts" %} <time datetime="{{ post.ama_starts_at|date:'c' }}" title="{{ post.ama_starts_at|nepal_time_full }}">{{ post.ama_starts_at|nepal_time }}</time>{% endif %}{% if post.ama_ends_at %} · {% trans "Closes" %} <time datetime="{{ post.ama_ends_at|date:'c' }}" title="{{ post.ama_ends_at|nepal_time_full }}">{{ post.ama_ends_at|nepal_time }}</time>{% endif %}</p>
     <p class="meta">{% blocktrans with n=unanswered_count %}{{ n }} unanswered question(s){% endblocktrans %}</p>
   </section>
   {% endif %}

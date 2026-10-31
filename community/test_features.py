@@ -1075,6 +1075,26 @@ class LocalisationTests(BaseCase):
             self.assertNotIn('month', result)
             self.assertNotIn('week', result)
 
+    def test_nepal_time_converts_utc_to_kathmandu_with_an_npt_label(self):
+        from datetime import datetime, timezone as dt_timezone
+        from community.templatetags.community_extras import nepal_time, nepal_time_full
+        # Asia/Kathmandu is UTC+5:45 with no DST, so a fixed UTC instant always converts the
+        # same way regardless of when the test runs.
+        moment = datetime(2026, 9, 4, 8, 57, 30, tzinfo=dt_timezone.utc)
+        self.assertEqual(nepal_time(moment), 'Sep 04, 2026 14:42 NPT')
+        self.assertEqual(nepal_time_full(moment), 'Friday, September 04, 2026, 14:42:30 NPT')
+
+    def test_nepal_time_handles_missing_values(self):
+        from community.templatetags.community_extras import nepal_time, nepal_time_full
+        self.assertEqual(nepal_time(None), '')
+        self.assertEqual(nepal_time_full(None), '')
+
+    def test_post_detail_shows_nepal_time_not_utc(self):
+        post = self.post()
+        response = self.client.get(post.get_absolute_url())
+        self.assertContains(response, 'NPT')
+        self.assertNotContains(response, '(UTC)')
+
     def test_category_display_name_is_translated_in_nepali_and_english_elsewhere(self):
         from django.utils import translation
         with translation.override('en'):

@@ -1,4 +1,5 @@
 import os
+import zoneinfo
 
 import markdown
 import nh3
@@ -134,6 +135,29 @@ def local_naturaltime(value):
 
     delta_str = ', '.join(_english_unit(count, unit_en) for count, unit_en, _unit_ne in parts)
     return (_('%(delta)s from now') if future else _('%(delta)s ago')) % {'delta': delta_str}
+
+
+# The server stores and would otherwise display everything in UTC (settings.TIME_ZONE), which is
+# meaningless to almost every reader of a Nepal-focused platform. Converting to Asia/Kathmandu
+# (UTC+5:45, no DST) and labelling it "NPT" removes that silent mismatch without needing a
+# visitor-by-visitor timezone guess.
+_KATHMANDU_TZ = zoneinfo.ZoneInfo('Asia/Kathmandu')
+
+
+@register.filter
+def nepal_time(value):
+    """Short absolute timestamp in Nepal time, e.g. "Sep 04, 2026 14:42 NPT"."""
+    if not value:
+        return ''
+    return f"{timezone.localtime(value, _KATHMANDU_TZ).strftime('%b %d, %Y %H:%M')} NPT"
+
+
+@register.filter
+def nepal_time_full(value):
+    """Fuller timestamp (weekday + seconds) for a title tooltip on the short version above."""
+    if not value:
+        return ''
+    return f"{timezone.localtime(value, _KATHMANDU_TZ).strftime('%A, %B %d, %Y, %H:%M:%S')} NPT"
 
 
 @register.simple_tag

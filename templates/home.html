@@ -89,7 +89,7 @@
 
     <section class="card rail-card" aria-labelledby="ama-title">
       <h2 id="ama-title" class="rail-title">{% include 'partials/icon.html' with name='ama' %}{% trans "AMAs" %}</h2>
-      {% for ama in upcoming_amas %}<a class="rail-item" href="{{ ama.get_absolute_url }}"><span class="rail-item-title">{{ ama.title }}</span><span class="rail-item-sub">{{ ama.user.username }} · {% if ama.ama_state == 'live' %}<strong class="live-tag">{% trans "Live now" %}</strong>{% elif ama.ama_starts_at %}{{ ama.ama_starts_at|date:'M d, H:i' }} UTC{% else %}{% trans "Upcoming" %}{% endif %}</span></a>
+      {% for ama in upcoming_amas %}<a class="rail-item" href="{{ ama.get_absolute_url }}"><span class="rail-item-title">{{ ama.title }}</span><span class="rail-item-sub">{{ ama.user.username }} · {% if ama.ama_state == 'live' %}<strong class="live-tag">{% trans "Live now" %}</strong>{% elif ama.ama_starts_at %}<time datetime="{{ ama.ama_starts_at|date:'c' }}" title="{{ ama.ama_starts_at|nepal_time_full }}">{{ ama.ama_starts_at|nepal_time }}</time>{% else %}{% trans "Upcoming" %}{% endif %}</span></a>
       {% empty %}<p class="rail-note">{% trans "No AMAs scheduled." %}{% if user.is_verified %} <a href="{% url 'create_post' %}?type=ama">{% trans "Host one" %}</a>{% endif %}</p>{% endfor %}
     </section>
 

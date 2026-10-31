@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MarketKuraa\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-31 02:28+0000\n"
+"POT-Creation-Date: 2026-10-31 02:37+0000\n"
 "PO-Revision-Date: 2026-09-20 00:00+0000\n"
 "Last-Translator: MarketKuraa\n"
 "Language-Team: Nepali\n"
@@ -1717,10 +1717,9 @@ msgstr "स्वयं-रिपोर्ट गरिएको थेसिस
 
 #, python-format
 msgid ""
-"Published %(d)s (UTC). Timestamped so it can be cited later. Not financial "
-"advice."
+"Published %(d)s. Timestamped so it can be cited later. Not financial advice."
 msgstr ""
-"%(d)s (UTC) मा प्रकाशित। पछि उल्लेख गर्न सकिने गरी समय-छाप लगाइएको। वित्तीय सल्लाह "
+"%(d)s मा प्रकाशित। पछि उल्लेख गर्न सकिने गरी समय-छाप लगाइएको। वित्तीय सल्लाह "
 "होइन।"
 
 msgid "AMA with"
