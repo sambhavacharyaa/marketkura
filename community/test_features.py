@@ -14,7 +14,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from .models import (Category, CategoryFollow, Comment, CommentVote, ContactMessage, NewsPost, Notification, Post,
-                     PostTag, Report, StartupProfile, Tag, User, VerificationRequest)
+                     PostTag, PostVote, Report, StartupProfile, Tag, User, VerificationRequest)
 from .services import pump_watch, recalculate_karma
 
 
@@ -625,31 +625,87 @@ class VoteAndKarmaTests(BaseCase):
     def test_htmx_vote_returns_partial_not_a_full_page(self):
         post = self.post()
         self.login(self.bob)
-        response = self.client.post(reverse('toggle_post_vote', args=[post.pk]), HTTP_HX_REQUEST='true')
+        response = self.client.post(reverse('toggle_post_vote', args=[post.pk]), {'direction': 'up'}, HTTP_HX_REQUEST='true')
         self.assertContains(response, 'id="post-vote"')
         self.assertNotContains(response, '<html')
-        self.assertContains(response, 'Upvoted')
+        self.assertContains(response, 'value="up" aria-pressed="true"')
+
+    def test_post_downvote_lowers_score_below_zero_and_toggles_off(self):
+        post = self.post()
+        self.login(self.bob)
+        self.client.post(reverse('toggle_post_vote', args=[post.pk]), {'direction': 'down'})
+        post.refresh_from_db()
+        self.assertEqual(post.upvotes, -1)
+        self.client.post(reverse('toggle_post_vote', args=[post.pk]), {'direction': 'down'})
+        post.refresh_from_db()
+        self.assertEqual(post.upvotes, 0)
+        self.assertEqual(PostVote.objects.filter(post=post, user=self.bob).count(), 0)
+
+    def test_post_vote_switches_direction_instead_of_stacking(self):
+        post = self.post()
+        self.login(self.bob)
+        self.client.post(reverse('toggle_post_vote', args=[post.pk]), {'direction': 'up'})
+        post.refresh_from_db()
+        self.assertEqual(post.upvotes, 1)
+        self.client.post(reverse('toggle_post_vote', args=[post.pk]), {'direction': 'down'})
+        post.refresh_from_db()
+        self.assertEqual(post.upvotes, -1)
+        self.assertEqual(PostVote.objects.filter(post=post, user=self.bob).count(), 1)
+        self.assertEqual(PostVote.objects.get(post=post, user=self.bob).direction, 'down')
+
+    def test_karma_is_the_net_score_not_a_raw_vote_count(self):
+        post = self.post()
+        post.votes.create(user=self.bob, direction='up')
+        other = self.post(title='Second post')
+        other.votes.create(user=self.bob, direction='down')
+        self.assertEqual(recalculate_karma(self.alice), 0)
+
+    def test_comment_downvote_lowers_score(self):
+        post = self.post()
+        comment = Comment.objects.create(post=post, user=self.bob, body='useful')
+        self.login(self.alice)
+        self.client.post(reverse('toggle_comment_vote', args=[comment.pk]), {'direction': 'down'})
+        comment.refresh_from_db()
+        self.bob.refresh_from_db()
+        self.assertEqual((comment.upvotes, self.bob.karma_score), (-1, -1))
+
+    def test_an_invalid_direction_value_falls_back_to_upvote(self):
+        post = self.post()
+        self.login(self.bob)
+        self.client.post(reverse('toggle_post_vote', args=[post.pk]), {'direction': 'sideways'})
+        post.refresh_from_db()
+        self.assertEqual(post.upvotes, 1)
+        self.assertEqual(PostVote.objects.get(post=post, user=self.bob).direction, 'up')
+
+    def test_cannot_downvote_your_own_post_or_comment(self):
+        post = self.post()
+        comment = Comment.objects.create(post=post, user=self.alice, body='mine')
+        self.login(self.alice)
+        self.client.post(reverse('toggle_post_vote', args=[post.pk]), {'direction': 'down'})
+        self.client.post(reverse('toggle_comment_vote', args=[comment.pk]), {'direction': 'down'})
+        self.assertEqual(PostVote.objects.filter(post=post).count(), 0)
+        self.assertEqual(CommentVote.objects.filter(comment=comment).count(), 0)
 
 
 class PostDetailPageTests(BaseCase):
-    def test_anonymous_visitor_sees_a_log_in_to_upvote_link_not_a_dead_button(self):
+    def test_anonymous_visitor_sees_a_log_in_to_vote_link_not_a_dead_button(self):
         post = self.post()
         response = self.client.get(post.get_absolute_url())
-        self.assertContains(response, 'Log in to upvote')
+        self.assertContains(response, 'Log in to vote')
         self.assertContains(response, f'{reverse("login")}?next={post.get_absolute_url()}')
 
     def test_post_author_sees_a_non_interactive_vote_count_not_a_login_link(self):
         post = self.post()
         self.login(self.alice)
         response = self.client.get(post.get_absolute_url())
-        self.assertNotContains(response, 'Log in to upvote')
-        self.assertContains(response, 'cannot upvote your own post')
+        self.assertNotContains(response, 'Log in to vote')
+        self.assertContains(response, 'cannot vote on your own post')
 
     def test_other_logged_in_users_still_get_the_real_vote_button(self):
         post = self.post()
         self.login(self.bob)
         response = self.client.get(post.get_absolute_url())
-        self.assertNotContains(response, 'Log in to upvote')
+        self.assertNotContains(response, 'Log in to vote')
         self.assertContains(response, 'id="post-vote"')
 
     def test_breadcrumb_shows_home_category_and_post_title(self):
@@ -1398,7 +1454,7 @@ class HomePageTests(BaseCase):
         page = self.home()
         self.assertContains(page, 'Join the discussion')
         self.assertNotContains(page, 'id="c-title"')
-        self.assertContains(page, 'aria-label="Log in to upvote"')  # anonymous vote arrows lead to login
+        self.assertContains(page, 'aria-label="Log in to vote"')  # anonymous vote arrows lead to login
 
     def test_member_sees_working_composer(self):
         self.login(self.alice)

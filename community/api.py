@@ -17,7 +17,7 @@ from rest_framework.views import APIView
 
 from . import services
 from .forms import CommentForm, PostForm, ReportForm, SignUpForm, VerificationRequestForm
-from .models import Category, Comment, Post, Tag, User, VerificationRequest
+from .models import Category, Comment, Post, PostVote, Tag, User, VerificationRequest
 from .services import PostingBlocked, post_queryset
 
 
@@ -179,13 +179,18 @@ class CommentListView(WriteThrottleMixin, APIView):
 
 
 class UpvoteView(WriteThrottleMixin, APIView):
+    """Despite the name (kept for API backward compatibility), this also handles downvotes via an
+    optional "direction" field - "up" (default, matches the old upvote-only behavior) or "down"."""
 
     def post(self, request, pk):
         post = get_object_or_404(post_queryset(request.user), pk=pk)
         if post.user == request.user:
-            return Response({'detail': _('You cannot upvote your own post.')}, status=status.HTTP_400_BAD_REQUEST)
-        voted = services.toggle_post_vote(request.user, post)
-        return Response({'voted': voted, 'upvotes': post.upvotes})
+            return Response({'detail': _('You cannot vote on your own post.')}, status=status.HTTP_400_BAD_REQUEST)
+        direction = request.data.get('direction', PostVote.DIRECTION_UP)
+        if direction not in (PostVote.DIRECTION_UP, PostVote.DIRECTION_DOWN):
+            direction = PostVote.DIRECTION_UP
+        result = services.toggle_post_vote(request.user, post, direction)
+        return Response({'voted': result is not None, 'direction': result, 'upvotes': post.upvotes})
 
 
 # --- Users, tags, verification, reports ---------------------------------------------------------

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MarketKuraa\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-31 03:09+0000\n"
+"POT-Creation-Date: 2026-10-31 07:36+0000\n"
 "PO-Revision-Date: 2026-09-20 00:00+0000\n"
 "Last-Translator: MarketKuraa\n"
 "Language-Team: Nepali\n"
@@ -27,8 +27,8 @@ msgstr "धेरै असफल प्रयास भए। कृपया �
 msgid "Invalid credentials."
 msgstr "अमान्य विवरण।"
 
-msgid "You cannot upvote your own post."
-msgstr "तपाईं आफ्नै पोस्टमा अपभोट गर्न सक्नुहुन्न।"
+msgid "You cannot vote on your own post."
+msgstr "तपाईं आफ्नै पोस्टमा भोट गर्न सक्नुहुन्न।"
 
 msgid "You are already verified."
 msgstr "तपाईं पहिले नै प्रमाणित हुनुहुन्छ।"
@@ -110,7 +110,9 @@ msgstr "अंग्रेजी अक्षर, अंक, र . _ - मात
 msgid ""
 "At least 8 characters. Avoid common passwords or ones based on your username "
 "or email."
-msgstr "कम्तीमा ८ अक्षर। सामान्य पासवर्ड वा आफ्नो प्रयोगकर्ता नाम वा इमेलमा आधारित पासवर्ड नराख्नुहोस्।"
+msgstr ""
+"कम्तीमा ८ अक्षर। सामान्य पासवर्ड वा आफ्नो प्रयोगकर्ता नाम वा इमेलमा आधारित पासवर्ड "
+"नराख्नुहोस्।"
 
 msgid "Enter the same password again."
 msgstr "उही पासवर्ड फेरि हाल्नुहोस्।"
@@ -285,6 +287,12 @@ msgstr "मध्यम अवधि"
 
 msgid "Long term"
 msgstr "लामो अवधि"
+
+msgid "Up"
+msgstr "माथि"
+
+msgid "Down"
+msgstr "तल"
 
 msgid "Contributor"
 msgstr "योगदानकर्ता"
@@ -471,8 +479,8 @@ msgstr "तपाईं आफ्नै टिप्पणी मात्र �
 msgid "comment"
 msgstr "टिप्पणी"
 
-msgid "You cannot upvote your own comment."
-msgstr "तपाईं आफ्नै टिप्पणीमा अपभोट गर्न सक्नुहुन्न।"
+msgid "You cannot vote on your own comment."
+msgstr "तपाईं आफ्नै टिप्पणीमा भोट गर्न सक्नुहुन्न।"
 
 msgid "Thanks. The moderation team will review this report."
 msgstr "धन्यवाद। मोडरेसन टोलीले यो रिपोर्ट समीक्षा गर्नेछ।"
@@ -752,9 +760,6 @@ msgstr "सूचना"
 
 msgid "Create post"
 msgstr "पोस्ट बनाउनुहोस्"
-
-msgid "Menu"
-msgstr "मेनू"
 
 msgid "Community discussion for this category."
 msgstr "यस वर्गका लागि सामुदायिक छलफल।"
@@ -1629,8 +1634,14 @@ msgid_plural "%(n)s votes"
 msgstr[0] "%(n)s भोट"
 msgstr[1] "%(n)s भोटहरू"
 
-msgid "Log in to upvote"
-msgstr "अपभोट गर्न लग इन गर्नुहोस्"
+msgid "Remove downvote"
+msgstr "डाउनभोट हटाउनुहोस्"
+
+msgid "Downvote"
+msgstr "डाउनभोट गर्नुहोस्"
+
+msgid "Log in to vote"
+msgstr "भोट गर्न लग इन गर्नुहोस्"
 
 msgid "Host"
 msgstr "होस्ट"
@@ -1723,9 +1734,6 @@ msgstr "लागू गर्नुहोस्"
 
 msgid "Clear filters"
 msgstr "फिल्टरहरू हटाउनुहोस्"
-
-msgid "Upvoted"
-msgstr "अपभोट गरियो"
 
 msgid ""
 "Identity and credentials confirmed by MarketKuraa. Not an endorsement of "
@@ -2172,6 +2180,12 @@ msgstr[1] "%(n)s कम्पनीहरू"
 
 msgid "No watchlists yet."
 msgstr "अहिलेसम्म कुनै वाचलिस्ट छैन।"
+
+#~ msgid "Menu"
+#~ msgstr "मेनू"
+
+#~ msgid "Upvoted"
+#~ msgstr "अपभोट गरियो"
 
 #~ msgid "Go"
 #~ msgstr "जानुहोस्"

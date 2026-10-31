@@ -152,7 +152,7 @@ class Post(models.Model):
     disclosure = models.TextField(blank=True)
     ama_starts_at = models.DateTimeField(null=True, blank=True)
     ama_ends_at = models.DateTimeField(null=True, blank=True)
-    upvotes = models.IntegerField(default=0)
+    upvotes = models.IntegerField(default=0)  # net score: upvotes minus downvotes, kept denormalized for sorting
     is_locked = models.BooleanField(default=False)
     is_removed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
@@ -191,8 +191,13 @@ class Post(models.Model):
 
 
 class PostVote(models.Model):
+    DIRECTION_UP = 'up'
+    DIRECTION_DOWN = 'down'
+    DIRECTION_CHOICES = [(DIRECTION_UP, _('Up')), (DIRECTION_DOWN, _('Down'))]
+
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='votes')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='post_votes')
+    direction = models.CharField(max_length=4, choices=DIRECTION_CHOICES, default=DIRECTION_UP)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -206,7 +211,7 @@ class Comment(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='comments')
     parent_comment = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, related_name='replies')
     body = models.TextField()
-    upvotes = models.IntegerField(default=0)
+    upvotes = models.IntegerField(default=0)  # net score: upvotes minus downvotes, kept denormalized for sorting
     is_removed = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -228,6 +233,7 @@ class Comment(models.Model):
 class CommentVote(models.Model):
     comment = models.ForeignKey(Comment, on_delete=models.CASCADE, related_name='votes')
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='comment_votes')
+    direction = models.CharField(max_length=4, choices=PostVote.DIRECTION_CHOICES, default=PostVote.DIRECTION_UP)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:

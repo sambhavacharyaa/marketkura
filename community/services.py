@@ -12,7 +12,7 @@ from datetime import timedelta
 from django.conf import settings
 from django.core.cache import cache
 from django.db import IntegrityError, connection, transaction
-from django.db.models import Case, Count, F, IntegerField, Q, Value, When
+from django.db.models import Case, Count, F, IntegerField, Q, Sum, Value, When
 from django.utils import timezone
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.text import slugify
@@ -312,52 +312,80 @@ def notify_mentions(text, actor, target, limit=10):
 
 # --- Votes and karma ---------------------------------------------------------
 
+def _vote_score(vote_queryset):
+    """Net score (upvotes minus downvotes) for a PostVote/CommentVote queryset."""
+    score = vote_queryset.aggregate(
+        score=Sum(Case(When(direction=PostVote.DIRECTION_UP, then=1), When(direction=PostVote.DIRECTION_DOWN, then=-1), output_field=IntegerField()))
+    )['score']
+    return score or 0
+
+
 def recalculate_karma(user):
-    """Karma is the number of upvotes a member's posts and comments received from others."""
-    karma = (PostVote.objects.filter(post__user=user).exclude(user=user).count()
-             + CommentVote.objects.filter(comment__user=user).exclude(user=user).count())
+    """Karma is the net (up minus down) votes a member's posts and comments received from others."""
+    karma = (_vote_score(PostVote.objects.filter(post__user=user).exclude(user=user))
+             + _vote_score(CommentVote.objects.filter(comment__user=user).exclude(user=user)))
     if user.karma_score != karma:
         user.karma_score = karma
         user.save(update_fields=['karma_score'])
     return karma
 
 
-def toggle_post_vote(user, post):
-    """Flip the member's upvote on a post and return True if it is now voted."""
-    vote, created = PostVote.objects.get_or_create(post=post, user=user)
-    if not created:
-        vote.delete()
+def toggle_post_vote(user, post, direction=PostVote.DIRECTION_UP):
+    """Set, clear or switch the member's vote on a post. Returns the resulting direction
+    ('up'/'down'), or None if this click cleared an existing vote of the same direction."""
+    existing = PostVote.objects.filter(post=post, user=user).first()
+    if existing and existing.direction == direction:
+        existing.delete()
+        result = None
     else:
-        create_notification(post.user, user, 'reaction', _('%(user)s reacted to your post.') % {'user': user.username}, post)
-    post.upvotes = post.votes.count()
+        if existing:
+            existing.direction = direction
+            existing.save(update_fields=['direction'])
+        else:
+            PostVote.objects.create(post=post, user=user, direction=direction)
+        if direction == PostVote.DIRECTION_UP:
+            create_notification(post.user, user, 'reaction', _('%(user)s reacted to your post.') % {'user': user.username}, post)
+        result = direction
+    post.upvotes = _vote_score(post.votes)
     post.save(update_fields=['upvotes'])
     recalculate_karma(post.user)
-    return created
+    return result
 
 
-def toggle_comment_vote(user, comment):
-    vote, created = CommentVote.objects.get_or_create(comment=comment, user=user)
-    if not created:
-        vote.delete()
-    comment.upvotes = comment.votes.count()
+def toggle_comment_vote(user, comment, direction=PostVote.DIRECTION_UP):
+    """Set, clear or switch the member's vote on a comment. Same return convention as
+    toggle_post_vote."""
+    existing = CommentVote.objects.filter(comment=comment, user=user).first()
+    if existing and existing.direction == direction:
+        existing.delete()
+        result = None
+    else:
+        if existing:
+            existing.direction = direction
+            existing.save(update_fields=['direction'])
+        else:
+            CommentVote.objects.create(comment=comment, user=user, direction=direction)
+        result = direction
+    comment.upvotes = _vote_score(comment.votes)
     comment.save(update_fields=['upvotes'])
     recalculate_karma(comment.user)
-    return created
+    return result
 
 
 # --- Comment threads ---------------------------------------------------------------
 
 def build_comment_tree(post, viewer):
-    """Return top-level comments, each with .children (recursive), .depth and .user_voted set."""
+    """Return top-level comments, each with .children (recursive), .depth and .user_vote_direction
+    (None, 'up' or 'down') set."""
     comments = list(post.comments.select_related('user'))
     can_see_hidden = viewer.is_authenticated and viewer.is_staff
-    voted = set(CommentVote.objects.filter(user=viewer, comment__post=post).values_list('comment_id', flat=True)) if viewer.is_authenticated else set()
+    voted = dict(CommentVote.objects.filter(user=viewer, comment__post=post).values_list('comment_id', 'direction')) if viewer.is_authenticated else {}
     by_parent = defaultdict(list)
     for comment in comments:
         hidden = comment.user.is_shadow_banned and not can_see_hidden and comment.user_id != getattr(viewer, 'pk', None)
         if hidden:
             continue
-        comment.user_voted = comment.pk in voted
+        comment.user_vote_direction = voted.get(comment.pk)
         by_parent[comment.parent_comment_id].append(comment)
 
     def attach(comment, depth):

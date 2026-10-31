@@ -124,8 +124,8 @@ class ApiTests(TestCase):
         reply = self.api.post(f'/api/posts/{post.pk}/comments/', {'body': 'reply', 'parent': top.json()['id']}, format='json')
         self.assertEqual(reply.json()['parent'], top.json()['id'])
         self.assertEqual(self.api.get(f'/api/posts/{post.pk}/comments/').json()['count'], 2)
-        self.assertEqual(self.api.post(f'/api/posts/{post.pk}/upvote').json(), {'voted': True, 'upvotes': 1})
-        self.assertEqual(self.api.post(f'/api/posts/{post.pk}/upvote').json(), {'voted': False, 'upvotes': 0})
+        self.assertEqual(self.api.post(f'/api/posts/{post.pk}/upvote').json(), {'voted': True, 'direction': 'up', 'upvotes': 1})
+        self.assertEqual(self.api.post(f'/api/posts/{post.pk}/upvote').json(), {'voted': False, 'direction': None, 'upvotes': 0})
         self.alice.refresh_from_db()
         self.assertEqual(self.alice.karma_score, 0)
 

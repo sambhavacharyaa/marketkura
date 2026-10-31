@@ -396,13 +396,12 @@ a.badge:active { transform: translateY(0) scale(.95); }
 .vote-btn { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: #fff; border-radius: 999px; padding: 6px 14px; min-height: 36px; cursor: pointer; font: inherit; color: var(--text); transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease), transform var(--dur-fast) var(--ease), opacity var(--dur) var(--ease); }
 .vote-btn.voted { background: var(--brand-soft); border-color: var(--brand); color: var(--brand-dark); }
 .vote-btn:active { transform: scale(.96); }
-form.htmx-request .vote-btn { opacity: .55; cursor: progress; pointer-events: none; }
 .card-vote.htmx-request .vote-arrow { opacity: .55; }
 .card-vote.htmx-request .vote-count { opacity: .45; }
-/* Inline vote glyph: a crisp vector chevron everywhere a vote count appears, replacing the plain
-   "▲" text character that rendered as whatever blunt system-font glyph the viewer's OS shipped —
-   inconsistent with every other icon in the app, which is all hand-drawn line icons. Solid fill on
-   the voted state mirrors the familiar "filled once you've voted" convention (Reddit, HN, etc). */
+/* Inline vote glyph: a crisp vector arrow everywhere a vote count appears, replacing the plain
+   "▲" text character that rendered as whatever blunt system-font glyph the viewer's OS shipped.
+   Both up and down icons are solid shapes (icon-solid), unlike this app's other hand-drawn line
+   icons — their voted state is shown by color, not by switching from outline to filled. */
 .vote-glyph { width: 14px; height: 14px; flex: none; }
 .icon-solid { fill: currentColor; stroke: none; }
 .inline-stat { display: inline-flex; align-items: center; gap: 4px; vertical-align: middle; }
@@ -413,7 +412,6 @@ form.htmx-request .vote-btn { opacity: .55; cursor: progress; pointer-events: no
 @keyframes vote-count-bounce { 0% { transform: scale(1); } 45% { transform: scale(1.3); } 100% { transform: scale(1); } }
 .just-voted .vote-arrow .icon { animation: vote-arrow-bounce .45s var(--ease) both; }
 .just-voted .vote-count { display: inline-block; animation: vote-count-bounce .35s var(--ease) .08s both; }
-.just-voted.vote-btn .icon, .just-voted .vote-btn .icon { animation: vote-arrow-bounce .45s var(--ease) both; }
 .comment { border-top: 1px solid var(--line); padding: 14px 0 6px; animation: fade-up var(--dur-slow) var(--ease) both; }
 .comment .children { margin-left: 18px; border-left: 2px solid var(--line); padding-left: 14px; }
 .comment.depth-5 .children { margin-left: 0; padding-left: 0; border-left: 0; }
@@ -598,7 +596,21 @@ p:has(> .md-editor) { margin: 0 0 8px; }
 .vote-arrow:hover { background: var(--brand-soft); color: var(--brand-dark); text-decoration: none; } .vote-arrow.voted { color: var(--brand-dark); background: var(--brand-soft); } .vote-arrow.static { cursor: default; opacity: .5; } .vote-arrow.static:hover { background: none; color: var(--muted); }
 .vote-arrow:active { transform: scale(.88); }
 .vote-arrow .icon { width: 22px; height: 22px; stroke-width: 2.2; }
+/* Downvote reuses .vote-arrow's layout/sizing but gets its own hover/voted tint — red rather than
+   the brand green, same long/short color pairing already used for position badges elsewhere. */
+.vote-arrow.down:hover { background: var(--danger-soft); color: var(--short); }
+.vote-arrow.down.voted { color: var(--short); background: var(--danger-soft); }
 .vote-count { font-weight: 700; font-size: .95rem; font-family: var(--font-mono); }
+/* Compact up/count/down pill — replaces the old single-button .vote-btn toggle now that voting
+   has two directions. Used inline (post actions row, comment actions row), so it's row- not
+   column-oriented unlike .card-vote's vertical arrangement in the feed. */
+.vote-group { display: inline-flex; align-items: center; gap: 2px; border: 1px solid var(--line); background: #fff; border-radius: 999px; padding: 3px; }
+.vote-group .vote-arrow { width: 34px; height: 34px; }
+.vote-group .vote-count { min-width: 22px; text-align: center; }
+.vote-group.htmx-request .vote-arrow { opacity: .55; cursor: progress; pointer-events: none; }
+.vote-group-sm .vote-arrow { width: 28px; height: 28px; }
+.vote-group-sm .vote-arrow .icon { width: 16px; height: 16px; }
+.vote-group-sm .vote-count { font-size: .85rem; }
 .feed-body { min-width: 0; flex: 1; }
 .feed-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; color: var(--muted); font-size: .85rem; }
 .feed-meta a:not(.chip) { color: var(--text); font-weight: 600; }

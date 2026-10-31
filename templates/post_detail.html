@@ -40,8 +40,8 @@
   <div class="prose">{{ post.body|markdown_safe }}</div>
   <div class="actions" style="margin-top:16px">
     {% if user.is_authenticated and user != post.user %}{% include 'partials/post_vote.html' %}
-    {% elif user.is_authenticated %}<span class="vote-btn" title="{% trans 'You cannot upvote your own post.' %}">{% include 'partials/icon.html' with name='up' cls='vote-glyph' %} {{ post.upvotes }}</span>
-    {% else %}<a class="vote-btn" href="{% url 'login' %}?next={{ request.path|urlencode }}">{% include 'partials/icon.html' with name='up' cls='vote-glyph' %} {% trans "Log in to upvote" %} · {{ post.upvotes }}</a>{% endif %}
+    {% elif user.is_authenticated %}<span class="vote-btn" title="{% trans 'You cannot vote on your own post.' %}">{% include 'partials/icon.html' with name='up' cls='icon-solid vote-glyph' %} {{ post.upvotes }}</span>
+    {% else %}<a class="vote-btn" href="{% url 'login' %}?next={{ request.path|urlencode }}">{% include 'partials/icon.html' with name='up' cls='icon-solid vote-glyph' %} {% trans "Log in to vote" %} · {{ post.upvotes }}</a>{% endif %}
     <a class="action-link" href="#discussion">{% include 'partials/icon.html' with name='message' %} {{ comment_count }}</a>
     <details class="menu share-menu">
       <summary class="action-link" aria-label="{% trans 'Share' %}">{% include 'partials/icon.html' with name='share' %} {% trans "Share" %}</summary>

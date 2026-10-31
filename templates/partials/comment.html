@@ -5,7 +5,7 @@
   {% else %}
     <div class="prose">{{ comment.body|markdown_safe }}</div>
     <div class="comment-actions">
-      {% if user.is_authenticated and user != comment.user %}{% include 'partials/comment_vote.html' %}{% else %}<span class="muted">{% include 'partials/icon.html' with name='up' cls='vote-glyph' %} {{ comment.upvotes }}</span>{% endif %}
+      {% if user.is_authenticated and user != comment.user %}{% include 'partials/comment_vote.html' %}{% else %}<span class="muted">{% include 'partials/icon.html' with name='up' cls='icon-solid vote-glyph' %} {{ comment.upvotes }}</span>{% endif %}
       {% if user.is_authenticated and can_reply %}<label class="action-link" for="reply-toggle-{{ comment.pk }}">{% include 'partials/icon.html' with name='message' %} {% trans "Reply" %}</label>{% endif %}
       {% if user == comment.user %}<a class="action-link" href="{% url 'edit_comment' comment.pk %}">{% include 'partials/icon.html' with name='edit' %} {% trans "Edit" %}</a><a class="action-link is-danger" href="{% url 'delete_comment' comment.pk %}">{% include 'partials/icon.html' with name='trash' %} {% trans "Delete" %}</a>
       {% elif user.is_authenticated %}<a class="action-link" href="{% url 'report_comment' comment.pk %}">{% include 'partials/icon.html' with name='flag' %} {% trans "Report" %}</a>{% endif %}

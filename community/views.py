@@ -46,10 +46,10 @@ def paginate(request, queryset, per_page=12):
         queryset = queryset.order_by('-created_at')
     page = Paginator(queryset, per_page).get_page(request.GET.get('page'))
     if queryset.model is Post:
-        # One query tells every post card on the page whether this member already upvoted it.
-        voted = set(PostVote.objects.filter(user=request.user, post__in=[p.pk for p in page]).values_list('post_id', flat=True)) if request.user.is_authenticated else set()
+        # One query tells every post card on the page which way (if any) this member already voted.
+        voted = dict(PostVote.objects.filter(user=request.user, post__in=[p.pk for p in page]).values_list('post_id', 'direction')) if request.user.is_authenticated else {}
         for post in page:
-            post.user_voted = post.pk in voted
+            post.user_vote_direction = voted.get(post.pk)
     return page
 
 
@@ -191,9 +191,10 @@ def post_detail(request, slug):
     if slug != post.url_slug:
         return redirect(post.get_absolute_url(), permanent=True)
     comments = services.build_comment_tree(post, request.user)
-    user_voted = request.user.is_authenticated and post.votes.filter(user=request.user).exists()
+    user_vote = post.votes.filter(user=request.user).first() if request.user.is_authenticated else None
+    post.user_vote_direction = user_vote.direction if user_vote else None
     context = {
-        'post': post, 'comments': comments, 'comment_form': CommentForm(), 'user_voted': user_voted,
+        'post': post, 'comments': comments, 'comment_form': CommentForm(),
         'comment_count': post.comments.filter(is_removed=False).count(),
         'tags': [pt.tag for pt in post.tags.select_related('tag')],
         'json_ld': structured_data(request, post),
@@ -314,6 +315,11 @@ def vote_response(request, template, context, fallback):
     return redirect(safe_next_url(request, fallback))
 
 
+def _vote_direction(request):
+    direction = request.POST.get('direction', PostVote.DIRECTION_UP)
+    return direction if direction in (PostVote.DIRECTION_UP, PostVote.DIRECTION_DOWN) else PostVote.DIRECTION_UP
+
+
 @login_required
 @require_POST
 def toggle_post_vote(request, pk):
@@ -321,14 +327,14 @@ def toggle_post_vote(request, pk):
     if not services.can_view_post(request.user, post):
         raise Http404
     if post.user == request.user:
-        messages.info(request, _('You cannot upvote your own post.'))
+        messages.info(request, _('You cannot vote on your own post.'))
         return redirect(safe_next_url(request, post.get_absolute_url()))
-    voted = services.toggle_post_vote(request.user, post)
+    direction = services.toggle_post_vote(request.user, post, _vote_direction(request))
     # Cards in lists and the vote bar on the post page swap different fragments.
     on_card = request.htmx and (request.htmx.target or '').startswith('card-vote-')
     template = 'partials/card_vote.html' if on_card else 'partials/post_vote.html'
-    post.user_voted = voted
-    return vote_response(request, template, {'post': post, 'user_voted': voted}, post.get_absolute_url())
+    post.user_vote_direction = direction
+    return vote_response(request, template, {'post': post}, post.get_absolute_url())
 
 
 @login_required
@@ -338,9 +344,9 @@ def toggle_comment_vote(request, pk):
     if not services.can_view_post(request.user, comment.post):
         raise Http404
     if comment.user == request.user:
-        messages.info(request, _('You cannot upvote your own comment.'))
+        messages.info(request, _('You cannot vote on your own comment.'))
         return redirect(comment.get_absolute_url())
-    comment.user_voted = services.toggle_comment_vote(request.user, comment)
+    comment.user_vote_direction = services.toggle_comment_vote(request.user, comment, _vote_direction(request))
     return vote_response(request, 'partials/comment_vote.html', {'comment': comment}, comment.get_absolute_url())
 
 
