@@ -1,0 +1,6 @@
+---
+deployment:
+  tasks:
+    # Runs when you click "Deploy HEAD Commit" in cPanel > Git Version Control.
+    # Copies code into the live app, installs deps, migrates, collects static, restarts.
+    - /home/marketkura/virtualenv/marketkura_app/3.10/bin/python deploy/cpanel_deploy.py
