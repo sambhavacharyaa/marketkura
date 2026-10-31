@@ -65,7 +65,7 @@
       <div class="chips-row-wrap">
         <div class="chips-row" role="group" aria-label="{% trans 'Filter by category' %}">
           <a class="chip-filter{% if not active_category %} active{% endif %}" href="?{% query_string category='' page='' %}"{% if not active_category %} aria-current="true"{% endif %} hx-get="?{% query_string category='' page='' %}" hx-target="#feed-results" hx-select="#feed-results" hx-select-oob="#site-sidebar" hx-swap="outerHTML" hx-push-url="true" hx-indicator="#thread-skeleton">{% trans "All" %}</a>
-          {% for category in categories_all %}<a class="chip-filter{% if active_category == category.slug %} active{% endif %}" href="?{% query_string category=category.slug page='' %}"{% if active_category == category.slug %} aria-current="true"{% endif %} hx-get="?{% query_string category=category.slug page='' %}" hx-target="#feed-results" hx-select="#feed-results" hx-select-oob="#site-sidebar" hx-swap="outerHTML" hx-push-url="true" hx-indicator="#thread-skeleton">{{ category.display_name }}</a>{% endfor %}
+          {% for category in categories_all %}<a class="chip-filter{% if active_category == category.slug %} active{% endif %}" href="{{ category.get_absolute_url }}"{% if active_category == category.slug %} aria-current="true"{% endif %} hx-get="{{ category.get_absolute_url }}" hx-target="#app-shell" hx-select="#app-shell" hx-swap="outerHTML show:window:top" hx-push-url="true" hx-indicator="#thread-skeleton">{{ category.display_name }}</a>{% endfor %}
         </div>
       </div>
       {% include 'partials/post_filters.html' %}

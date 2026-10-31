@@ -1397,14 +1397,20 @@ class HomePageTests(BaseCase):
         self.assertContains(page, 'chip-filter active')
         self.assertEqual([p.title for p in self.home(category='market-news', tab='trending').context['posts']], ['In news'])
 
-    def test_tab_and_chip_links_are_query_strings_not_bare_paths(self):
+    def test_tab_links_are_query_strings_not_bare_paths(self):
         # Regression: these must start with "?" — without it, the browser treats the query
-        # string as a relative path segment (e.g. "category=x" resolves to "/category=x", 404).
+        # string as a relative path segment (e.g. "tab=x" resolves to "/tab=x", 404).
         page = self.home().content.decode()
         self.assertIn('href="?tab=trending', page)
-        self.assertIn('href="?category=market-news', page)
         self.assertNotIn('href="tab=', page)
-        self.assertNotIn('href="category=', page)
+
+    def test_category_chips_link_to_the_category_page_not_a_query_string(self):
+        # /?category=slug still works (apply_post_filters reads it directly) for anyone with an
+        # old link, but the chips themselves now point at the category's own indexable URL.
+        other = Category.objects.get(slug='market-news')
+        page = self.home().content.decode()
+        self.assertIn(f'href="{other.get_absolute_url()}"', page)
+        self.assertNotIn('href="?category=', page)
 
     def test_rail_navigation_type_filters(self):
         self.post(title='A discussion')
@@ -1750,11 +1756,20 @@ class ThreadListHtmxNavigationTests(BaseCase):
         self.assertNotIn(f'hx-get="{reverse("login")}"', page)
         self.assertNotIn(f'hx-get="{reverse("signup")}"', page)
 
-    def test_home_tabs_and_chips_target_feed_results(self):
+    def test_home_tabs_target_feed_results(self):
+        # Tabs (Latest/Trending/Following) and the "All" category chip stay same-page filters, so
+        # they swap only #feed-results rather than a full #app-shell navigation.
         page = self.client.get(reverse('home')).content.decode()
         self.assertIn('id="feed-results"', page)
         self.assertIn('hx-target="#feed-results" hx-select="#feed-results"', page)
-        self.assertIn(f'category={self.category.slug}" hx-get=', page.replace('&amp;', '&'))
+        self.assertIn('tab=trending" hx-get=', page.replace('&amp;', '&'))
+
+    def test_home_category_chips_target_app_shell_not_feed_results(self):
+        # Unlike the tabs above, a specific category chip now navigates to that category's own
+        # URL (item 28) rather than refining the home feed in place, so it uses the general
+        # cross-page #app-shell swap, matching every other nav link to a different page.
+        page = self.client.get(reverse('home')).content.decode()
+        self.assertIn(f'href="{self.category.get_absolute_url()}" hx-get="{self.category.get_absolute_url()}" hx-target="#app-shell"', page)
 
     def test_category_page_swap_brings_the_category_panel_and_list_together(self):
         # Both live inside #main, so switching categories via the sidebar can't show a stale
