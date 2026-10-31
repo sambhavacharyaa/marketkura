@@ -1570,6 +1570,14 @@ class SidebarTests(BaseCase):
         page = self.client.get(reverse('companies'))
         self.assertContains(page, 'href="/companies/" aria-current="page"')
 
+    def test_sidebar_categories_label_is_not_a_heading_before_the_page_h1(self):
+        # The sidebar (and its "Categories" label) sits before <main> in the DOM on every page,
+        # so an <h2> there would outrank every page's own <h1> in heading order.
+        page = self.client.get(reverse('home')).content.decode()
+        self.assertNotIn('<h2 class="sidebar-heading">', page)
+        self.assertIn('<p class="sidebar-heading">', page)
+        self.assertLess(page.index('<p class="sidebar-heading">'), page.index('<h1>'))
+
     def test_sidebar_category_links_point_at_the_real_pages(self):
         page = self.client.get(reverse('home'))
         self.assertContains(page, f'href="{self.category.get_absolute_url()}"')
