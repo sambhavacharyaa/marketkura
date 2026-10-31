@@ -98,6 +98,7 @@
           </a>
           <button type="button" class="icon-btn sidebar-close" id="sidebar-close" aria-label="{% trans 'Close navigation' %}">{% include 'partials/icon.html' with name='close' %}</button>
         </div>
+        <div class="sidebar-scroll">
         <nav class="sidebar-nav" aria-label="{% trans 'Feeds' %}">
           <a href="{% url 'home' %}"{% if current == 'home' and request.GET.tab != 'trending' and request.GET.tab != 'following' and request.GET.type != 'thesis' and request.GET.type != 'ama' %} aria-current="page"{% endif %} hx-get="{% url 'home' %}" hx-target="#app-shell" hx-select="#app-shell" hx-swap="outerHTML show:window:top" hx-push-url="true" hx-indicator="#thread-skeleton">{% include 'partials/icon.html' with name='feed' %}{% trans "Feed" %}</a>
           <a href="{% url 'home' %}?tab=trending"{% if current == 'home' and request.GET.tab == 'trending' %} aria-current="page"{% endif %} hx-get="{% url 'home' %}?tab=trending" hx-target="#app-shell" hx-select="#app-shell" hx-swap="outerHTML show:window:top" hx-push-url="true" hx-indicator="#thread-skeleton">{% include 'partials/icon.html' with name='trending' %}{% trans "Trending" %}<span class="sidebar-flame">{% include 'partials/icon.html' with name='flame' %}</span></a>
@@ -112,6 +113,7 @@
         <div class="sidebar-section">
           <h2 class="sidebar-heading">{% include 'partials/icon.html' with name='hash' %}{% trans "Categories" %}</h2>
           <div class="sidebar-grid">{% for category in sidebar_categories %}<div class="sidebar-grid-item"><a href="{{ category.get_absolute_url }}"{% if current == 'category_detail' and request.resolver_match.kwargs.slug == category.slug %} aria-current="page"{% endif %} hx-get="{{ category.get_absolute_url }}" hx-target="#app-shell" hx-select="#app-shell" hx-swap="outerHTML show:window:top" hx-push-url="true" hx-indicator="#thread-skeleton"><span class="sidebar-grid-icon">{% include 'partials/icon.html' with name=category|category_icon %}</span><span class="sidebar-grid-label">{{ category.display_name }}</span></a>{% if category.id in sidebar_followed_categories %}<span class="sidebar-grid-badge" title="{% trans 'Following' %}">★</span>{% elif category.is_restricted %}<span class="sidebar-grid-badge muted">{% include 'partials/icon.html' with name='lock' %}<span class="sr-only">{% trans "High-trust section" %}</span></span>{% endif %}</div>{% empty %}<p class="muted">{% trans "No categories yet." %}</p>{% endfor %}</div>
+        </div>
         </div>
         {% if not user.is_authenticated %}
         <a class="sidebar-cta" href="{% url 'signup' %}">

@@ -103,9 +103,16 @@ main:focus { outline: none; }
 .page-shell { display: flex; align-items: flex-start; }
 .site-sidebar {
   flex: none; width: 240px; position: sticky; top: var(--header-h); height: calc(100vh - var(--header-h));
-  overflow-y: auto; display: flex; flex-direction: column; padding: var(--s4) var(--s3); border-right: 1px solid var(--line);
+  display: flex; flex-direction: column; padding: var(--s4) var(--s3); border-right: 1px solid var(--line);
   background: rgba(255, 255, 255, .6); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
 }
+/* The nav list/categories scroll on their own; the CTA and footer links below them (sidebar-cta,
+   sidebar-foot) are siblings of this, not inside it, so they stay put at the bottom of a short
+   viewport instead of scrolling out of view with everything else — previously the whole sidebar
+   was one scrolling region and the CTA got clipped below ~929px of height. min-height: 0 is load-
+   bearing here: without it a flex child won't shrink below its content's natural height, so
+   overflow-y: auto would never actually kick in. */
+.sidebar-scroll { flex: 1 1 auto; min-height: 0; overflow-y: auto; }
 .main-content { flex: 1; min-width: 0; }
 button.sidebar-toggle { display: none; }
 button.sidebar-close { display: none; }
