@@ -152,9 +152,19 @@ def posts_for_tag(user, tag):
 
 
 def trending_posts(user, days=7):
+    """Score-ranked posts from the last `days`. Falls back to the most-upvoted posts from the
+    last 30 days if that window has nothing, then to the latest posts overall — so the Trending
+    tab is only ever empty when there are no posts at all, not just no recent ones."""
     since = timezone.now() - timedelta(days=days)
-    return (post_queryset(user).filter(created_at__gte=since)
-            .annotate(score=F('upvotes') + 2 * F('comment_count')).order_by('-score', '-created_at'))
+    posts = (post_queryset(user).filter(created_at__gte=since)
+             .annotate(score=F('upvotes') + 2 * F('comment_count')).order_by('-score', '-created_at'))
+    if posts.exists():
+        return posts
+    month_since = timezone.now() - timedelta(days=30)
+    recent_upvoted = post_queryset(user).filter(created_at__gte=month_since).order_by('-upvotes', '-comment_count', '-created_at')
+    if recent_upvoted.exists():
+        return recent_upvoted
+    return post_queryset(user).order_by('-created_at')
 
 
 # --- Posting rules -------------------------------------------------------------

@@ -1032,6 +1032,25 @@ class FeedTests(BaseCase):
         self.assertEqual(titles, ['Busy thread', 'Quiet thread'])
         del quiet
 
+    def test_trending_falls_back_to_most_upvoted_in_the_last_30_days_when_the_week_is_empty(self):
+        from community.services import trending_posts
+        old_quiet = self.post(title='Old quiet')
+        old_popular = self.post(title='Old popular')
+        for post, votes in ((old_quiet, 0), (old_popular, 3)):
+            Post.objects.filter(pk=post.pk).update(created_at=timezone.now() - timedelta(days=20), upvotes=votes)
+        titles = [p.title for p in trending_posts(self.alice)]
+        self.assertEqual(titles, ['Old popular', 'Old quiet'])
+
+    def test_trending_falls_back_to_latest_when_nothing_is_within_30_days_either(self):
+        from community.services import trending_posts
+        ancient = self.post(title='Ancient thread')
+        Post.objects.filter(pk=ancient.pk).update(created_at=timezone.now() - timedelta(days=200))
+        self.assertEqual([p.title for p in trending_posts(self.alice)], ['Ancient thread'])
+
+    def test_trending_is_empty_only_when_there_are_truly_no_posts(self):
+        from community.services import trending_posts
+        self.assertEqual(list(trending_posts(self.alice)), [])
+
     def test_profile_tabs_show_comment_history(self):
         post = self.post(user=self.bob, title='Bob post')
         Comment.objects.create(post=post, user=self.alice, body='alice wrote this')

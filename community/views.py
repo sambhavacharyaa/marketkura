@@ -102,7 +102,7 @@ def home(request):
         followed_categories = CategoryFollow.objects.filter(user=request.user).values('category_id')
         posts = posts.filter(Q(user_id__in=followed_users) | Q(category_id__in=followed_categories))
     elif tab == 'trending':
-        posts = services.trending_posts(request.user, days=30)
+        posts = services.trending_posts(request.user)
     else:
         tab = 'latest'
     query = request.GET.get('q', '').strip()
