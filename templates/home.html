@@ -9,7 +9,7 @@
     {% for company in trending_companies %}<li><a href="{{ company.get_absolute_url }}" title="{{ company.display_name }}"><span class="ticker">${{ company.ticker|default:company.name }}</span><span class="num">{{ company.recent_posts }}</span></a></li>
     {% empty %}<li class="muted">{% trans "No company discussions yet. Mention a ticker in a post to start one." %}</li>{% endfor %}
   </ul>
-  <span class="strip-slot" data-slot="marketaux-prices" title="{% trans 'Live prices will be added later.' %}">{% trans "Live prices · coming soon" %}</span>
+  {% if show_coming_soon_widgets %}<span class="strip-slot" data-slot="marketaux-prices" title="{% trans 'Live prices will be added later.' %}">{% trans "Live prices · coming soon" %}</span>{% endif %}
 </section>
 
 <div class="home-grid">
@@ -108,10 +108,10 @@
       <p class="rail-note">{% trans "Split of self-reported theses. Community opinion, not a signal or recommendation." %}</p>
     </section>
 
-    <section class="card rail-card soon-card" data-slot="marketaux-news" aria-labelledby="news-title">
+    {% if show_coming_soon_widgets %}<section class="card rail-card soon-card" data-slot="marketaux-news" aria-labelledby="news-title">
       <h2 id="news-title" class="rail-title">{% include 'partials/icon.html' with name='news' %}{% trans "Market news" %} <span class="soon-tag">{% trans "Coming soon" %}</span></h2>
       <p class="rail-note">{% trans "Headlines with sentiment for the companies discussed here will appear in this space." %}</p>
-    </section>
+    </section>{% endif %}
   </aside>
 </div>
 {% endblock %}

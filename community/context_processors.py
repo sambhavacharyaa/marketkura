@@ -8,6 +8,7 @@ def site(request):
     return {
         'SITE_NAME': settings.SITE_NAME, 'google_login_enabled': settings.GOOGLE_LOGIN_ENABLED,
         'turnstile_site_key': settings.TURNSTILE_SITE_KEY,
+        'show_coming_soon_widgets': settings.SHOW_COMING_SOON_WIDGETS,
         # rich-editor.js's toolbar is pure JS (no server round-trip per keystroke), so its button
         # labels can't go through {% trans %} directly - passed in instead via json_script in
         # base.html, read back out in rich-editor.js. Keyed to match static/js/rich-editor.js's

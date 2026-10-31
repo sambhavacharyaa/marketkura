@@ -1106,6 +1106,49 @@ class FilterPanelTests(BaseCase):
         self.assertEqual(self.client.get('/', {'position': ''}).status_code, 200)
 
 
+class EmptyStateTests(BaseCase):
+    def test_coming_soon_widgets_are_hidden_by_default(self):
+        response = self.client.get(reverse('home'))
+        self.assertNotContains(response, 'Live prices')
+        self.assertNotContains(response, 'data-slot="marketaux-news"')
+
+    @override_settings(SHOW_COMING_SOON_WIDGETS=True)
+    def test_coming_soon_widgets_show_when_the_flag_is_on(self):
+        response = self.client.get(reverse('home'))
+        self.assertContains(response, 'Live prices')
+        self.assertContains(response, 'data-slot="marketaux-news"')
+
+    def test_companies_empty_state_offers_login_to_post_when_anonymous(self):
+        self.asset.delete()
+        response = self.client.get(reverse('companies'))
+        self.assertContains(response, 'No companies yet')
+        self.assertContains(response, f'{reverse("login")}?next={reverse("create_post")}')
+
+    def test_companies_empty_state_offers_create_post_when_logged_in(self):
+        self.asset.delete()
+        self.login(self.alice)
+        response = self.client.get(reverse('companies'))
+        self.assertContains(response, f'href="{reverse("create_post")}"')
+
+    def test_startups_empty_state_offers_login_to_list_when_anonymous(self):
+        response = self.client.get(reverse('startups'))
+        self.assertContains(response, 'No startups listed yet')
+        self.assertContains(response, f'{reverse("login")}?next={reverse("startup_create")}')
+
+    def test_startups_empty_state_offers_create_when_logged_in(self):
+        self.login(self.alice)
+        response = self.client.get(reverse('startups'))
+        self.assertContains(response, f'href="{reverse("startup_create")}"')
+
+    def test_news_empty_state_offers_post_news_to_staff_and_feed_link_to_others(self):
+        anon = self.client.get(reverse('news_list'))
+        self.assertContains(anon, 'No news yet')
+        self.assertContains(anon, f'href="{reverse("home")}"')
+        self.login(self.staff)
+        staff_view = self.client.get(reverse('news_list'))
+        self.assertContains(staff_view, f'href="{reverse("news_create")}"')
+
+
 class LocalisationTests(BaseCase):
     def test_language_can_be_switched_to_nepali(self):
         response = self.client.post(reverse('set_language'), {'language': 'ne', 'next': '/'}, follow=True)
@@ -1373,7 +1416,6 @@ class HomePageTests(BaseCase):
         self.post(user=make_user('ghost', is_shadow_banned=True), asset=ghost_asset, title='Hidden')
         names = [c.ticker for c in self.home().context['trending_companies']]
         self.assertEqual(names, ['NABIL'])
-        self.assertContains(self.home(), 'Live prices · coming soon')
 
     def test_thesis_split_needs_enough_theses_and_computes_percentages(self):
         def thesis(position):
@@ -1418,7 +1460,10 @@ class HomePageTests(BaseCase):
             self.assertContains(page, f'data-tz="{tz}"')
         self.assertContains(page, 'Holidays are not reflected')
 
+    @override_settings(SHOW_COMING_SOON_WIDGETS=True)
     def test_marketaux_placeholder_slots_exist_without_fake_data(self):
+        # Gated behind SHOW_COMING_SOON_WIDGETS (see EmptyStateTests for the default-off case) —
+        # a permanently-empty placeholder doesn't earn its space until there's a real data source.
         page = self.home()
         self.assertContains(page, 'data-slot="marketaux-news"')
         self.assertContains(page, 'data-slot="marketaux-prices"')

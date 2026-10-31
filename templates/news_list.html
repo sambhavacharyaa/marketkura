@@ -7,7 +7,7 @@
   {% for article in articles %}<a class="news-card" href="{{ article.get_absolute_url }}" style="background-image:url('{{ article.image.url }}')">
     <span class="news-card-scrim" aria-hidden="true"></span>
     <span class="news-card-title">{{ article.title }}</span>
-  </a>{% empty %}<div class="panel"><p class="muted">{% trans "No news yet." %}</p></div>{% endfor %}
+  </a>{% empty %}<div class="panel"><p class="muted">{% trans "No news yet." %}</p>{% if user.is_staff %}<a class="btn" href="{% url 'news_create' %}">{% trans "Post news" %}</a>{% else %}<a class="btn" href="{% url 'home' %}">{% trans "Browse the feed" %}</a>{% endif %}</div>{% endfor %}
 </div>
 {% include 'partials/pagination.html' with page=articles %}
 {% endblock %}

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MarketKuraa\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-31 02:47+0000\n"
+"POT-Creation-Date: 2026-10-31 03:02+0000\n"
 "PO-Revision-Date: 2026-09-20 00:00+0000\n"
 "Last-Translator: MarketKuraa\n"
 "Language-Team: Nepali\n"
@@ -797,6 +797,9 @@ msgstr[1] "%(n)s पोस्टहरू"
 msgid "No companies yet. Mention a ticker in a post to create its page."
 msgstr "अहिलेसम्म कुनै कम्पनी छैन। पोस्टमा टिकर उल्लेख गरेर यसको पृष्ठ बनाउनुहोस्।"
 
+msgid "Log in to post"
+msgstr "पोस्ट गर्न लग इन गर्नुहोस्"
+
 msgid "Discussions, Theses & Community Insights"
 msgstr "छलफल, थेसिस र सामुदायिक अन्तर्दृष्टि"
 
@@ -1139,6 +1142,9 @@ msgstr "बजार न्युज र MarketKuraa का घोषणाह�
 
 msgid "No news yet."
 msgstr "अहिलेसम्म कुनै न्युज छैन।"
+
+msgid "Browse the feed"
+msgstr "फिड हेर्नुहोस्"
 
 msgid "Mark all as read"
 msgstr "सबै पढिसकेको चिन्ह लगाउनुहोस्"
@@ -2033,6 +2039,9 @@ msgstr "फिल्टर"
 
 msgid "No startups listed yet."
 msgstr "अहिलेसम्म कुनै स्टार्टअप सूचीबद्ध छैन।"
+
+msgid "Log in to list your startup"
+msgstr "आफ्नो स्टार्टअप सूचीबद्ध गर्न लग इन गर्नुहोस्"
 
 msgid ""
 "Analysts, finance professionals and fund managers can apply. Staff review "

@@ -176,4 +176,9 @@ USE_X_FORWARDED_FOR = env_bool('USE_X_FORWARDED_FOR', False)
 TURNSTILE_SITE_KEY = os.getenv('TURNSTILE_SITE_KEY', '')
 TURNSTILE_SECRET_KEY = os.getenv('TURNSTILE_SECRET_KEY', '')
 
+# Shows the "Live prices" and "Market news" placeholder widgets on the home feed. Off by default —
+# a permanently-empty "coming soon" widget doesn't earn its space; turn it on once there's a real
+# data source (e.g. Marketaux) wired up behind it.
+SHOW_COMING_SOON_WIDGETS = env_bool('SHOW_COMING_SOON_WIDGETS', False)
+
 SITE_NAME = 'MarketKuraa'
