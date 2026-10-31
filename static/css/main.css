@@ -518,7 +518,16 @@ p:has(> .md-editor) { margin: 0 0 8px; }
 .hero-stats strong { font-family: var(--font-mono); color: var(--text); font-size: 1.05rem; margin-right: 5px; }
 .feed-controls { display: flex; gap: var(--s3); align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: var(--s3); }
 .feed-search { flex: 1 1 180px; max-width: 260px; } .feed-search input { height: 36px; min-height: 36px; }
-.chips-row { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; margin-bottom: var(--s3); scrollbar-width: thin; }
+.chips-row-wrap { position: relative; margin-bottom: var(--s3); }
+/* A subtle fade over the last bit of the row, not a scrollbar, hints there's more to scroll to —
+   lives on this non-scrolling wrapper so it stays pinned to the visible edge instead of scrolling
+   away with the chips themselves. */
+.chips-row-wrap::after {
+  content: ''; position: absolute; top: 0; right: 0; bottom: 6px; width: 28px;
+  background: linear-gradient(to right, transparent, var(--bg)); pointer-events: none;
+}
+.chips-row { display: flex; gap: 6px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 0; scrollbar-width: none; }
+.chips-row::-webkit-scrollbar { display: none; }
 .chip-filter { white-space: nowrap; padding: 6px 14px; min-height: 34px; display: inline-flex; align-items: center; border-radius: 999px; background: var(--surface); border: 1px solid var(--line); color: var(--text); font-size: .88rem; transition: background-color var(--dur) var(--ease), border-color var(--dur) var(--ease), color var(--dur) var(--ease), transform var(--dur-fast) var(--ease); }
 .chip-filter:hover { border-color: var(--brand); text-decoration: none; } .chip-filter.active { background: var(--brand-soft); border-color: var(--brand); color: var(--brand-dark); font-weight: 600; }
 .chip-filter:active { transform: scale(.95); }
