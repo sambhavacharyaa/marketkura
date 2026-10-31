@@ -543,10 +543,20 @@ p:has(> .md-editor) { margin: 0 0 8px; }
    show_coming_soon_widgets) ticker-card row, a row of real category links, and two CTAs. Centered
    card rather than the old left-aligned .join-card layout it replaces — this has much more
    content stacked vertically, so centering reads calmer than a left rag at this height. */
+/* bg.jpg sits under a heavy near-opaque gradient on purpose — at full strength it's an
+   identifiable photo of a specific Kathmandu temple, which would push the hero back toward the
+   Nepal-first framing the copy above was deliberately written to avoid. Faded this far it reads
+   as ambient warm/mountain texture rather than a specific place. */
 .hero {
   text-align: center; padding: var(--s5) var(--s4); background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
   box-shadow: var(--shadow); margin-bottom: var(--s4); animation: fade-up var(--dur-slow) var(--ease) both;
-  background-image: radial-gradient(520px 260px at 50% 0%, rgba(4, 120, 87, .06), transparent 70%);
+  background-image:
+    radial-gradient(520px 260px at 50% 0%, rgba(4, 120, 87, .06), transparent 70%),
+    linear-gradient(180deg, rgba(248, 250, 252, .55) 0%, rgba(248, 250, 252, .8) 45%, var(--surface) 88%),
+    url('../img/bg.jpg');
+  background-size: auto, auto, cover;
+  background-position: center, center, center 35%;
+  background-repeat: no-repeat;
 }
 .hero-badge { display: inline-block; background: var(--brand-soft); color: var(--brand-dark); font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; padding: 5px 14px; border-radius: 999px; margin-bottom: var(--s3); }
 .hero-title { font-size: 2.1rem; line-height: 1.15; margin: 0 0 var(--s3); }
@@ -556,8 +566,15 @@ p:has(> .md-editor) { margin: 0 0 8px; }
 .hero-search .icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--muted); width: 18px; height: 18px; }
 .hero-search input { height: 48px; padding-left: 44px; border-radius: 999px; }
 .hero-tickers { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: var(--s3); max-width: 720px; margin: 0 auto var(--s4); }
-.hero-ticker-card { display: flex; flex-direction: column; align-items: center; gap: 4px; padding: var(--s3); background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-sm); }
-.hero-ticker-icon { color: var(--brand); } .hero-ticker-icon .icon { width: 20px; height: 20px; }
+.hero-ticker-card { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: var(--s3); background: var(--bg); border: 1px solid var(--line); border-radius: var(--radius-sm); }
+/* Each card gets its own brand color rather than one flat tint, same color-per-asset convention
+   the reference design used (NEPSE/USD green, gold amber, Bitcoin its own recognizable orange —
+   not a token elsewhere in the palette, so it's a one-off literal here rather than a new :root var). */
+.hero-ticker-icon { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; color: #fff; }
+.hero-ticker-icon .icon { width: 18px; height: 18px; stroke-width: 2.2; }
+.hero-ticker-icon--nepse, .hero-ticker-icon--usd { background: var(--brand); }
+.hero-ticker-icon--gold { background: var(--gold); }
+.hero-ticker-icon--btc { background: #f7931a; }
 .hero-ticker-label { font-weight: 600; font-size: .88rem; }
 .hero-ticker-soon { font-size: .72rem; color: var(--muted); }
 .hero-categories { display: flex; flex-wrap: wrap; justify-content: center; gap: var(--s3); max-width: 640px; margin: 0 auto var(--s4); }

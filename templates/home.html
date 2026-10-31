@@ -50,10 +50,10 @@
       </form>
       {% if show_coming_soon_widgets %}
       <div class="hero-tickers">
-        <div class="hero-ticker-card"><span class="hero-ticker-icon">{% include 'partials/icon.html' with name='chart' %}</span><span class="hero-ticker-label">NEPSE</span><span class="hero-ticker-soon">{% trans "Coming soon" %}</span></div>
-        <div class="hero-ticker-card"><span class="hero-ticker-icon">{% include 'partials/icon.html' with name='wallet' %}</span><span class="hero-ticker-label">{% trans "Gold" %} <span class="muted">(USD/oz)</span></span><span class="hero-ticker-soon">{% trans "Coming soon" %}</span></div>
-        <div class="hero-ticker-card"><span class="hero-ticker-icon">{% include 'partials/icon.html' with name='target' %}</span><span class="hero-ticker-label">Bitcoin <span class="muted">(BTC)</span></span><span class="hero-ticker-soon">{% trans "Coming soon" %}</span></div>
-        <div class="hero-ticker-card"><span class="hero-ticker-icon">{% include 'partials/icon.html' with name='globe' %}</span><span class="hero-ticker-label">USD/NPR</span><span class="hero-ticker-soon">{% trans "Coming soon" %}</span></div>
+        <div class="hero-ticker-card"><span class="hero-ticker-icon hero-ticker-icon--nepse">{% include 'partials/icon.html' with name='chart' %}</span><span class="hero-ticker-label">NEPSE</span><span class="hero-ticker-soon">{% trans "Coming soon" %}</span></div>
+        <div class="hero-ticker-card"><span class="hero-ticker-icon hero-ticker-icon--gold">{% include 'partials/icon.html' with name='wallet' %}</span><span class="hero-ticker-label">{% trans "Gold" %} <span class="muted">(USD/oz)</span></span><span class="hero-ticker-soon">{% trans "Coming soon" %}</span></div>
+        <div class="hero-ticker-card"><span class="hero-ticker-icon hero-ticker-icon--btc">{% include 'partials/icon.html' with name='target' %}</span><span class="hero-ticker-label">Bitcoin <span class="muted">(BTC)</span></span><span class="hero-ticker-soon">{% trans "Coming soon" %}</span></div>
+        <div class="hero-ticker-card"><span class="hero-ticker-icon hero-ticker-icon--usd">{% include 'partials/icon.html' with name='globe' %}</span><span class="hero-ticker-label">USD/NPR</span><span class="hero-ticker-soon">{% trans "Coming soon" %}</span></div>
       </div>
       {% endif %}
       <div class="hero-categories">
