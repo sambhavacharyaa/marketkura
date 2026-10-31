@@ -1,6 +1,7 @@
 {% extends 'base.html' %}{% load i18n %}
 {% block title %}{{ asset.ticker|default:asset.name }}{% if asset.company_name %} ({{ asset.company_name }}){% endif %} — {% trans "Discussions, Theses & Community Insights" %} | {{ SITE_NAME }}{% endblock %}
 {% block meta_description %}{% blocktrans with name=asset.display_name %}Explore community discussions, investment theses and insights about {{ name }} on MarketKuraa.{% endblocktrans %}{% endblock %}
+{% block og_description %}{% blocktrans with name=asset.display_name %}Explore community discussions, investment theses and insights about {{ name }} on MarketKuraa.{% endblocktrans %}{% endblock %}
 {% block og_title %}{{ asset.display_name }} — {{ SITE_NAME }}{% endblock %}
 {% block canonical %}{{ canonical_url }}{% endblock %}
 {% block content %}

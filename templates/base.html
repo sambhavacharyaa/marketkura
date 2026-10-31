@@ -13,7 +13,14 @@
     <meta property="og:site_name" content="{{ SITE_NAME }}">
     <meta property="og:type" content="website">
     <meta property="og:title" content="{% block og_title %}{{ SITE_NAME }}{% endblock %}">
+    <meta property="og:description" content="{% block og_description %}{% trans "MarketKuraa is a public investor community: market discussions from around the world, self-reported theses and company pages." %}{% endblock %}">
+    <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'img/og-default.png' %}{% endblock %}">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="{% if LANGUAGE_CODE == 'ne' %}ne_NP{% else %}en_US{% endif %}">
     <meta property="og:url" content="{{ request.scheme }}://{{ request.get_host }}{{ request.path }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="theme-color" content="#047857">
     <link rel="preload" href="{% static 'fonts/inter-latin.woff2' %}" as="font" type="font/woff2" crossorigin>
     {% if LANGUAGE_CODE == 'ne' %}<link rel="preload" href="{% static 'fonts/noto-sans-devanagari.woff2' %}" as="font" type="font/woff2" crossorigin>{% endif %}
     <link rel="stylesheet" href="{% static_v 'css/main.css' %}">

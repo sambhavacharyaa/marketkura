@@ -1,6 +1,7 @@
 {% extends 'base.html' %}{% load i18n %}
 {% block title %}{% trans "Companies" %} — {% trans "Discussions and theses" %} | {{ SITE_NAME }}{% endblock %}
 {% block meta_description %}{% trans "Browse companies and tickers discussed by the MarketKuraa community, with all related posts and theses on one page." %}{% endblock %}
+{% block og_description %}{% trans "Browse companies and tickers discussed by the MarketKuraa community, with all related posts and theses on one page." %}{% endblock %}
 {% block content %}{% url 'create_post' as create_post_url %}<h1>{% trans "Companies" %}</h1>
 <form class="search" role="search"><input name="q" value="{{ query }}" placeholder="{% trans 'Search company or ticker' %}" aria-label="{% trans 'Search company or ticker' %}"><button class="btn">{% trans "Search" %}</button></form>
 <div class="grid">{% for asset in assets %}<article class="card"><h2><a href="{{ asset.get_absolute_url }}">{{ asset.ticker|default:asset.name }}</a></h2><p class="muted">{{ asset.company_name|default:asset.name }}</p><p class="meta">{% blocktrans count n=asset.post_count %}{{ n }} post{% plural %}{{ n }} posts{% endblocktrans %}</p></article>

@@ -1,6 +1,7 @@
 {% extends 'base.html' %}{% load i18n %}
 {% block title %}{% trans "Contact us" %} — {{ SITE_NAME }}{% endblock %}
 {% block meta_description %}{% trans "Get in touch with the MarketKuraa team." %}{% endblock %}
+{% block og_description %}{% trans "Get in touch with the MarketKuraa team." %}{% endblock %}
 {% block content %}<section class="panel form-panel"><h1>{% trans "Contact us" %}</h1><p class="muted">{% trans "Questions, feedback or a problem to report? Send us a message and we'll get back to you." %}</p>
 <form method="post">{% csrf_token %}{% for error in form.non_field_errors %}<p class="field-errors">{{ error }}</p>{% endfor %}{% include 'partials/form_fields.html' %}{% if turnstile_site_key %}<div class="cf-turnstile" data-sitekey="{{ turnstile_site_key }}"></div>{% endif %}<button class="btn" type="submit">{% trans "Send message" %}</button></form></section>
 {% if turnstile_site_key %}<script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>{% endif %}

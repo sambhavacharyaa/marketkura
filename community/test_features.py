@@ -437,6 +437,27 @@ class UrlTests(BaseCase):
         self.assertIn('og:title', company)
         self.assertIn('Discussions, Theses', company)
 
+    def test_og_and_twitter_meta_tags_present_with_default_image(self):
+        post = self.post(title='SEO check', body='Some useful body text for the preview.')
+        html = self.client.get(post.get_absolute_url()).content.decode()
+        self.assertIn('property="og:description" content="Some useful body text', html)
+        self.assertIn('http://testserver/static/img/og-default.png', html)
+        self.assertIn('og:image:width" content="1200"', html)
+        self.assertIn('og:locale" content="en_US"', html)
+        self.assertIn('name="twitter:card" content="summary_large_image"', html)
+        self.assertIn('name="theme-color"', html)
+
+    def test_og_locale_switches_to_nepali(self):
+        self.client.post(reverse('set_language'), {'language': 'ne', 'next': '/'})
+        html = self.client.get('/').content.decode()
+        self.assertIn('og:locale" content="ne_NP"', html)
+
+    def test_post_with_an_image_overrides_the_default_og_image(self):
+        post = self.post(title='Has an image', image=make_test_image())
+        html = self.client.get(post.get_absolute_url()).content.decode()
+        self.assertIn(f'property="og:image" content="http://testserver{post.image.url}"', html)
+        self.assertNotIn('og-default.png', html)
+
     def test_sitemap_and_robots(self):
         post = self.post(title='Indexed post', asset=self.asset)
         hidden = self.post(title='Removed post', is_removed=True)

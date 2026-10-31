@@ -1,6 +1,7 @@
 {% extends 'base.html' %}{% load i18n community_extras %}
 {% block title %}{{ profile_user.username }} — {{ SITE_NAME }}{% endblock %}
 {% block meta_description %}{{ profile_user.bio|default:profile_user.username|excerpt:25 }}{% endblock %}
+{% block og_description %}{{ profile_user.bio|default:profile_user.username|excerpt:25 }}{% endblock %}
 {% block seo %}{% if profile_user.is_shadow_banned %}<meta name="robots" content="noindex">{% endif %}{% endblock %}
 {% block content %}
 <section class="panel">

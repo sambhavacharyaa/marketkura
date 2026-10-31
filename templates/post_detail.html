@@ -1,7 +1,9 @@
 {% extends 'base.html' %}{% load i18n community_extras %}
 {% block title %}{{ post.title }} — {{ post.category.display_name }} | {{ SITE_NAME }}{% endblock %}
 {% block meta_description %}{{ post.body|excerpt:30 }}{% endblock %}
+{% block og_description %}{{ post.body|excerpt:30 }}{% endblock %}
 {% block og_title %}{{ post.title }}{% endblock %}
+{% block og_image %}{% if post.image %}{{ request.scheme }}://{{ request.get_host }}{{ post.image.url }}{% else %}{{ block.super }}{% endif %}{% endblock %}
 {% block canonical %}{{ canonical_url }}{% endblock %}
 {% block seo %}<meta property="og:type" content="article"><script type="application/ld+json">{{ json_ld|safe }}</script>{% if post.user.is_shadow_banned or post.is_removed %}<meta name="robots" content="noindex">{% endif %}{% endblock %}
 {% block content %}

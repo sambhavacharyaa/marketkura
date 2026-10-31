@@ -1,6 +1,7 @@
 {% extends 'base.html' %}{% load i18n community_extras %}
 {% block title %}{{ startup.name }} — {{ startup.tagline }} | {{ SITE_NAME }}{% endblock %}
 {% block meta_description %}{{ startup.tagline }}{% endblock %}
+{% block og_description %}{{ startup.tagline }}{% endblock %}
 {% block canonical %}{{ canonical_url }}{% endblock %}
 {% block seo %}{% if not startup.is_approved %}<meta name="robots" content="noindex">{% endif %}{% endblock %}
 {% block content %}{% if not startup.is_approved %}<div class="panel warn">{% trans "Awaiting moderator approval. Only you and staff can see this page." %}</div>{% endif %}

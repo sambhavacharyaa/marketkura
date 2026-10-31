@@ -1,6 +1,7 @@
 {% extends 'base.html' %}{% load i18n community_extras %}
 {% block title %}{{ article.title }} — {{ SITE_NAME }}{% endblock %}
 {% block meta_description %}{{ article.summary|default:article.body|excerpt:30 }}{% endblock %}
+{% block og_description %}{{ article.summary|default:article.body|excerpt:30 }}{% endblock %}
 {% block og_title %}{{ article.title }}{% endblock %}
 {% block content %}
 <article class="panel news-article">
