@@ -313,6 +313,22 @@
     }
   }
 
+  // Post share button: on a device/browser with the native Web Share API, skip our own
+  // Copy link/WhatsApp/Facebook dropdown entirely and hand off to the OS's own share sheet
+  // instead. preventDefault() on the summary's click stops <details> from opening at all, so the
+  // "toggle" listener above (scrim, closing other menus) never even sees this interaction.
+  // Browsers without navigator.share (desktop Firefox, old browsers, no JS at all) get the
+  // dropdown exactly as before — this is a progressive enhancement, not a replacement.
+  document.addEventListener('click', function (event) {
+    var summary = event.target.closest && event.target.closest('.share-menu > summary');
+    if (!summary || !navigator.share) return;
+    event.preventDefault();
+    navigator.share({ title: summary.dataset.shareTitle, url: summary.dataset.shareUrl }).catch(function () {
+      // AbortError (user dismissed the sheet) or any other failure: nothing to do, same as
+      // closing our own dropdown without picking an option.
+    });
+  });
+
   // Post share menu's "Copy link" button. Delegated to document (not bound per-button) since the
   // share menu is inside #main and gets replaced wholesale on every htmx navigation.
   document.addEventListener('click', function (event) {

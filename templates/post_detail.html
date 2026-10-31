@@ -44,7 +44,7 @@
     {% else %}<a class="vote-btn" href="{% url 'login' %}?next={{ request.path|urlencode }}">{% include 'partials/icon.html' with name='up' cls='icon-solid vote-glyph' %} {% trans "Log in to vote" %} · {{ post.upvotes }}</a>{% endif %}
     <a class="action-link" href="#discussion">{% include 'partials/icon.html' with name='message' %} {{ comment_count }}</a>
     <details class="menu menu-no-scrim share-menu">
-      <summary class="action-link" aria-label="{% trans 'Share' %}">{% include 'partials/icon.html' with name='share' %} {% trans "Share" %}</summary>
+      <summary class="action-link" aria-label="{% trans 'Share' %}" data-share-url="{{ canonical_url }}" data-share-title="{{ post.title }}">{% include 'partials/icon.html' with name='share' %} {% trans "Share" %}</summary>
       <div class="menu-panel">
         <button type="button" class="menu-item share-copy" data-share-url="{{ canonical_url }}" data-copied-label="{% trans 'Copied!' %}">{% include 'partials/icon.html' with name='link' %}<span>{% trans "Copy link" %}</span></button>
         <a class="menu-item" href="https://wa.me/?text={{ post.title|urlencode }}%20{{ canonical_url|urlencode }}" target="_blank" rel="noopener">{% include 'partials/icon.html' with name='message' %}<span>WhatsApp</span></a>

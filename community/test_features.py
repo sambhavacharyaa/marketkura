@@ -737,6 +737,15 @@ class PostDetailPageTests(BaseCase):
         self.assertContains(response, 'wa.me')
         self.assertContains(response, 'facebook.com/sharer')
 
+    def test_share_button_carries_the_data_the_native_share_sheet_needs(self):
+        # app.js reads these off the <summary> itself to call navigator.share({title, url}) on a
+        # device that has it, bypassing our own dropdown entirely - see test above for that
+        # dropdown, which stays as the fallback for browsers without the Web Share API.
+        post = self.post(title='Shareable post title')
+        response = self.client.get(post.get_absolute_url())
+        absolute_url = response.context['canonical_url']
+        self.assertContains(response, f'data-share-url="{absolute_url}" data-share-title="Shareable post title"')
+
     def test_share_menu_opts_out_of_the_page_dimming_scrim(self):
         # The scrim behind notif/user/lang menus is meant for those account-level menus — opening
         # the much smaller, local share dropdown shouldn't wash out the entire page behind it.
