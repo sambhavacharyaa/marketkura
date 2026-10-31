@@ -470,6 +470,19 @@ class UrlTests(BaseCase):
         self.assertContains(robots, 'Sitemap: http://testserver/sitemap.xml')
         self.assertContains(robots, 'Disallow: /moderation/')
 
+    def test_sitemap_includes_static_pages_with_lastmod(self):
+        xml = self.client.get(reverse('sitemap')).content.decode()
+        for path in ('/disclaimer/', '/privacy/', '/terms/'):
+            self.assertIn(f'<loc>http://testserver{path}</loc>', xml)
+        # /posts/ is a permanent redirect to home (see UrlTests), not its own indexable page.
+        self.assertNotIn('<loc>http://testserver/posts/</loc>', xml)
+        self.assertIn('<lastmod>', xml)
+
+    def test_favicon_ico_redirects_to_the_static_icon(self):
+        response = self.client.get('/favicon.ico')
+        self.assertEqual(response.status_code, 301)
+        self.assertIn('/static/img/favicon.ico', response.url)
+
     def test_public_read_access_needs_no_login(self):
         post = self.post()
         for url in ('/', self.category.get_absolute_url(), post.get_absolute_url(), '/companies/', '/startups/',

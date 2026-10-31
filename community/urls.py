@@ -1,5 +1,7 @@
 from django.contrib.sitemaps.views import sitemap
+from django.templatetags.static import static
 from django.urls import path
+from django.views.generic.base import RedirectView
 
 from . import api, moderation, views
 from .sitemaps import SITEMAPS
@@ -88,4 +90,7 @@ urlpatterns = [
     path('contact/', views.contact, name='contact'),
     path('robots.txt', views.robots_txt, name='robots'),
     path('sitemap.xml', sitemap, {'sitemaps': SITEMAPS}, name='sitemap'),
+    # Browsers and crawlers request /favicon.ico directly, ignoring the <link rel="icon"> in
+    # base.html's <head> — redirect to the same icon already served from static instead of 404ing.
+    path('favicon.ico', RedirectView.as_view(url=static('img/favicon.ico'), permanent=True)),
 ]

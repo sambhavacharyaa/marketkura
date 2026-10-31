@@ -1,7 +1,20 @@
+import os
+from datetime import datetime, timezone as dt_timezone
+
 from django.contrib.sitemaps import Sitemap
+from django.template import loader
 from django.urls import reverse
 
 from .models import Category, NewsPost, Post, StartupProfile, Tag
+
+# Static pages have no database row to read an update time from, so lastmod falls back to the
+# page's own template file's mtime on disk — a genuine "last changed" signal, not a fabricated one.
+STATIC_TEMPLATES = {
+    'home': 'home.html', 'companies': 'companies.html', 'startups': 'startups.html',
+    'news_list': 'news_list.html', 'guidelines': 'pages/guidelines.html', 'disclaimer': 'pages/disclaimer.html',
+    'privacy': 'pages/privacy.html', 'terms': 'pages/terms.html', 'about': 'pages/about.html',
+    'contact': 'pages/contact.html',
+}
 
 
 class StaticSitemap(Sitemap):
@@ -9,10 +22,17 @@ class StaticSitemap(Sitemap):
     priority = 0.6
 
     def items(self):
-        return ['home', 'companies', 'startups', 'news_list', 'guidelines', 'privacy', 'terms', 'about', 'contact']
+        return list(STATIC_TEMPLATES)
 
     def location(self, name):
         return reverse(name)
+
+    def lastmod(self, name):
+        template = loader.get_template(STATIC_TEMPLATES[name])
+        try:
+            return datetime.fromtimestamp(os.path.getmtime(template.origin.name), tz=dt_timezone.utc)
+        except OSError:
+            return None
 
 
 class CategorySitemap(Sitemap):
