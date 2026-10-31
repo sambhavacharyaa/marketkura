@@ -39,18 +39,43 @@
       </div>
     </form>
     {% else %}
-    <div class="card join-card">
-      <div>
-        <h1>{% trans "Where investors talk shop" %}</h1>
-        <p class="muted">{% trans "Read everything openly. Join to post, vote, follow companies and build a reputation." %}</p>
-        {% if stats %}<div class="hero-stats num">
-          <span><strong>{{ stats.posts }}</strong> {% trans "posts" %}</span>
-          <span><strong>{{ stats.members }}</strong> {% trans "members" %}</span>
-          <span><strong>{{ stats.companies }}</strong> {% trans "companies tracked" %}</span>
-        </div>{% endif %}
+    {% url 'create_post' as create_post_url %}
+    <section class="hero">
+      <span class="hero-badge">{% trans "Global investor community" %}</span>
+      <h1 class="hero-title">{% trans "Learn, Invest" %}<br>{% trans "and" %} <span class="hero-accent">{% trans "Grow Together" %}</span></h1>
+      <p class="hero-subtitle">{% trans "Get market news, in-depth analysis and join a growing community of investors." %}</p>
+      <form class="hero-search" method="get" action="{% url 'search' %}" role="search">
+        {% include 'partials/icon.html' with name='search' %}
+        <input type="search" name="q" placeholder="{% trans 'Search tickers, companies, posts, people…' %}" aria-label="{% trans 'Search' %}">
+      </form>
+      {% if show_coming_soon_widgets %}
+      <div class="hero-tickers">
+        <div class="hero-ticker-card"><span class="hero-ticker-icon">{% include 'partials/icon.html' with name='chart' %}</span><span class="hero-ticker-label">NEPSE</span><span class="hero-ticker-soon">{% trans "Coming soon" %}</span></div>
+        <div class="hero-ticker-card"><span class="hero-ticker-icon">{% include 'partials/icon.html' with name='wallet' %}</span><span class="hero-ticker-label">{% trans "Gold" %} <span class="muted">(USD/oz)</span></span><span class="hero-ticker-soon">{% trans "Coming soon" %}</span></div>
+        <div class="hero-ticker-card"><span class="hero-ticker-icon">{% include 'partials/icon.html' with name='target' %}</span><span class="hero-ticker-label">Bitcoin <span class="muted">(BTC)</span></span><span class="hero-ticker-soon">{% trans "Coming soon" %}</span></div>
+        <div class="hero-ticker-card"><span class="hero-ticker-icon">{% include 'partials/icon.html' with name='globe' %}</span><span class="hero-ticker-label">USD/NPR</span><span class="hero-ticker-soon">{% trans "Coming soon" %}</span></div>
       </div>
-      <div class="actions"><a class="btn" href="{% url 'signup' %}">{% trans "Join the discussion" %}</a><a class="btn secondary" href="{% url 'login' %}">{% trans "Log in" %}</a></div>
-    </div>
+      {% endif %}
+      <div class="hero-categories">
+        {% for category in categories_all %}<a class="hero-category" href="{{ category.get_absolute_url }}">
+          <span class="hero-category-icon">{% include 'partials/icon.html' with name=category|category_icon %}</span>
+          <span>{{ category.display_name }}</span>
+        </a>{% endfor %}
+      </div>
+      <div class="hero-cta">
+        <a class="btn hero-cta-btn" href="{% url 'signup' %}">{% trans "Join the Community" %} <span aria-hidden="true">→</span></a>
+        <a class="btn secondary hero-cta-btn" href="{% url 'companies' %}">{% trans "Explore Markets" %} <span aria-hidden="true">→</span></a>
+      </div>
+      {% if stats %}<div class="hero-stats num">
+        <span><strong>{{ stats.posts }}</strong> {% trans "posts" %}</span>
+        <span><strong>{{ stats.members }}</strong> {% trans "members" %}</span>
+        <span><strong>{{ stats.companies }}</strong> {% trans "companies tracked" %}</span>
+      </div>{% endif %}
+    </section>
+    <a class="card composer-prompt" href="{% url 'login' %}?next={{ create_post_url|urlencode }}">
+      <span class="composer-avatar" aria-hidden="true">{% include 'partials/icon.html' with name='edit' %}</span>
+      <span class="composer-prompt-text">{% trans "Share an insight, idea or question…" %}</span>
+    </a>
     {% endif %}
 
     <div id="feed-results">

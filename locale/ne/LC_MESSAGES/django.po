@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MarketKuraa\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-31 07:36+0000\n"
+"POT-Creation-Date: 2026-10-31 10:51+0000\n"
 "PO-Revision-Date: 2026-09-20 00:00+0000\n"
 "Last-Translator: MarketKuraa\n"
 "Language-Team: Nepali\n"
@@ -919,15 +919,33 @@ msgstr "प्रकाशित गर्नुहोस्"
 msgid "Posts are opinion, not investment advice."
 msgstr "पोस्टहरू राय हुन्, लगानी सल्लाह होइनन्।"
 
-msgid "Where investors talk shop"
-msgstr "जहाँ लगानीकर्ताहरू आफ्ना कुरा गर्छन्"
+msgid "Global investor community"
+msgstr "विश्वव्यापी लगानीकर्ता समुदाय"
+
+msgid "Learn, Invest"
+msgstr "सिक्नुहोस्, लगानी गर्नुहोस्"
+
+msgid "Grow Together"
+msgstr "सँगै बढ्नुहोस्"
 
 msgid ""
-"Read everything openly. Join to post, vote, follow companies and build a "
-"reputation."
-msgstr ""
-"सबै कुरा खुलेर पढ्नुहोस्। पोस्ट गर्न, भोट दिन, कम्पनी फलो गर्न र प्रतिष्ठा बनाउन सामेल "
-"हुनुहोस्।"
+"Get market news, in-depth analysis and join a growing community of investors."
+msgstr "बजार समाचार, गहिरो विश्लेषण पाउनुहोस् र बढ्दो लगानीकर्ता समुदायमा सामेल हुनुहोस्।"
+
+msgid "Search tickers, companies, posts, people…"
+msgstr "टिकर, कम्पनी, पोस्ट, मानिस खोज्नुहोस्…"
+
+msgid "Coming soon"
+msgstr "छिट्टै आउँदैछ"
+
+msgid "Gold"
+msgstr "सुन"
+
+msgid "Join the Community"
+msgstr "समुदायमा सामेल हुनुहोस्"
+
+msgid "Explore Markets"
+msgstr "बजारहरू हेर्नुहोस्"
 
 msgid "members"
 msgstr "सदस्यहरू"
@@ -1025,9 +1043,6 @@ msgstr ""
 
 msgid "Market news"
 msgstr "बजार समाचार"
-
-msgid "Coming soon"
-msgstr "छिट्टै आउँदैछ"
 
 msgid ""
 "Headlines with sentiment for the companies discussed here will appear in "
@@ -2180,6 +2195,16 @@ msgstr[1] "%(n)s कम्पनीहरू"
 
 msgid "No watchlists yet."
 msgstr "अहिलेसम्म कुनै वाचलिस्ट छैन।"
+
+#~ msgid "Where investors talk shop"
+#~ msgstr "जहाँ लगानीकर्ताहरू आफ्ना कुरा गर्छन्"
+
+#~ msgid ""
+#~ "Read everything openly. Join to post, vote, follow companies and build a "
+#~ "reputation."
+#~ msgstr ""
+#~ "सबै कुरा खुलेर पढ्नुहोस्। पोस्ट गर्न, भोट दिन, कम्पनी फलो गर्न र प्रतिष्ठा बनाउन सामेल "
+#~ "हुनुहोस्।"
 
 #~ msgid "Menu"
 #~ msgstr "मेनू"

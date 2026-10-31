@@ -1456,6 +1456,47 @@ class HomePageTests(BaseCase):
         self.assertNotContains(page, 'id="c-title"')
         self.assertContains(page, 'aria-label="Log in to vote"')  # anonymous vote arrows lead to login
 
+    def test_anonymous_hero_is_globally_framed_not_nepal_first(self):
+        page = self.home()
+        self.assertContains(page, 'Global investor community')
+        self.assertNotContains(page, 'Nepal')
+
+    def test_anonymous_hero_has_working_search_and_cta_links(self):
+        page = self.home()
+        self.assertContains(page, f'action="{reverse("search")}"')
+        self.assertContains(page, f'href="{reverse("signup")}"')
+        self.assertContains(page, f'href="{reverse("companies")}"')
+
+    def test_anonymous_hero_category_links_point_at_real_categories(self):
+        page = self.home()
+        self.assertContains(page, f'class="hero-category" href="{self.category.get_absolute_url()}"')
+        self.assertContains(page, self.category.display_name)
+
+    def test_anonymous_hero_ticker_cards_hidden_without_fake_numbers_by_default(self):
+        page = self.home()
+        self.assertNotContains(page, 'hero-ticker-card')
+        self.assertNotContains(page, 'hero-ticker-label')
+
+    @override_settings(SHOW_COMING_SOON_WIDGETS=True)
+    def test_anonymous_hero_ticker_cards_show_as_placeholders_when_flag_is_on(self):
+        page = self.home()
+        self.assertContains(page, 'hero-ticker-card')
+        self.assertContains(page, 'Bitcoin')
+        # No fabricated price or chart — just a label and a "coming soon" tag.
+        self.assertNotContains(page, '67,890')
+        self.assertNotContains(page, '2,612.35')
+
+    def test_anonymous_composer_prompt_links_to_login_not_a_real_composer(self):
+        page = self.home()
+        self.assertContains(page, 'class="card composer-prompt"')
+        self.assertContains(page, f'{reverse("login")}?next={reverse("create_post")}')
+
+    def test_logged_in_user_does_not_see_the_anonymous_hero(self):
+        self.login(self.alice)
+        page = self.home()
+        self.assertNotContains(page, 'class="hero"')
+        self.assertNotContains(page, 'composer-prompt')
+
     def test_member_sees_working_composer(self):
         self.login(self.alice)
         page = self.home()
@@ -1648,7 +1689,7 @@ class SidebarTests(BaseCase):
         page = self.client.get(reverse('home')).content.decode()
         self.assertNotIn('<h2 class="sidebar-heading">', page)
         self.assertIn('<p class="sidebar-heading">', page)
-        self.assertLess(page.index('<p class="sidebar-heading">'), page.index('<h1>'))
+        self.assertLess(page.index('<p class="sidebar-heading">'), page.index('<h1'))
 
     def test_sidebar_category_links_point_at_the_real_pages(self):
         page = self.client.get(reverse('home'))
