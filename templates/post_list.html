@@ -1,4 +1,4 @@
-{% load i18n %}<div class="thread-skeleton" id="thread-skeleton" aria-hidden="true">
+{% load i18n community_extras %}<div class="thread-skeleton" id="thread-skeleton" aria-hidden="true">
   <div class="skeleton-card"></div>
   <div class="skeleton-card"></div>
   <div class="skeleton-card"></div>
@@ -6,6 +6,6 @@
 </div>
 <div id="thread-list">
 {% for post in posts %}{% include 'partials/post_card.html' %}
-{% empty %}<div class="panel"><p class="muted">{% trans "No posts match this view yet." %}</p></div>{% endfor %}
+{% empty %}<div class="panel"><p class="muted">{% trans "No posts match this view yet." %}{% if request.GET.type or request.GET.asset or request.GET.verified or request.GET.position or request.GET.horizon or request.GET.date or request.GET.sort or request.GET.q %} <a href="?{% query_string type='' asset='' verified='' position='' horizon='' date='' sort='' q='' page='' %}">{% trans "Clear filters" %}</a>{% endif %}</p></div>{% endfor %}
 {% include 'partials/pagination.html' with page=posts %}
 </div>

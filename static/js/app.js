@@ -225,6 +225,17 @@
     }
   });
 
+  // The "More filters" form is a plain GET form — without this, an unchanged "All"/empty select
+  // still submits as e.g. &type= and litters the URL. Disabling a field removes it from the
+  // submitted query string; nothing to undo afterwards since the page navigates away anyway.
+  document.addEventListener('submit', function (event) {
+    var form = event.target;
+    if (!(form instanceof HTMLFormElement) || !form.matches('.filter-form')) return;
+    Array.prototype.forEach.call(form.elements, function (field) {
+      if (field.name && !field.value) field.disabled = true;
+    });
+  });
+
   // Briefly highlight a vote control right after the member's own click toggles it (not on
   // every ordinary page load, so an already-voted feed doesn't animate on every visit).
   // The vote forms target their own id (outerHTML swap), so `detail.elt` — the element that

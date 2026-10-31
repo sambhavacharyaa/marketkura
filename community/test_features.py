@@ -1043,6 +1043,50 @@ class FeedTests(BaseCase):
         self.assertNotContains(self.client.get(self.category.get_absolute_url(), {'q': 'zzz'}), 'Category thread')
 
 
+class FilterPanelTests(BaseCase):
+    def test_asset_dropdown_is_hidden_when_no_company_has_a_post(self):
+        response = self.client.get('/')
+        self.assertNotContains(response, 'id="f-asset"')
+
+    def test_asset_dropdown_only_lists_companies_with_posts(self):
+        unposted = Tag.objects.create(name='Unused Co', slug='unused-co', ticker='UNUSED', is_company=True)
+        self.post(asset=self.asset)
+        response = self.client.get('/')
+        self.assertContains(response, 'id="f-asset"')
+        self.assertContains(response, '>NABIL<')
+        self.assertNotContains(response, '>UNUSED<')
+        del unposted
+
+    def test_date_filter_supports_week_month_and_year(self):
+        old = self.post(title='Old post')
+        Post.objects.filter(pk=old.pk).update(created_at=timezone.now() - timedelta(days=100))
+        recent = self.post(title='Recent post')
+        self.assertNotContains(self.client.get('/', {'date': 'month'}), 'Old post')
+        self.assertContains(self.client.get('/', {'date': 'month'}), 'Recent post')
+        self.assertContains(self.client.get('/', {'date': 'year'}), 'Old post')
+
+    def test_clear_filters_link_appears_only_when_a_filter_is_active(self):
+        self.assertNotContains(self.client.get('/'), 'Clear filters')
+        response = self.client.get('/', {'position': 'long'})
+        self.assertContains(response, 'Clear filters')
+
+    def test_clear_filters_link_resets_the_more_filters_fields_but_keeps_the_search_query(self):
+        response = self.client.get('/', {'position': 'long', 'horizon': 'short', 'q': 'nabil'})
+        self.assertContains(response, 'href="?q=nabil"')
+
+    def test_empty_results_message_includes_a_working_clear_filters_link(self):
+        self.post(title='Discussion thread', type='discussion')
+        response = self.client.get('/', {'type': 'ama'})
+        self.assertContains(response, 'No posts match this view yet')
+        self.assertContains(response, 'Clear filters')
+
+    def test_filter_page_renders_with_an_explicitly_empty_query_param(self):
+        # request.GET.asset is absent from most requests; this exercises the branch where it's
+        # present but blank, which is how an unchanged <select> would arrive without the
+        # filter-form's JS stripping it first.
+        self.assertEqual(self.client.get('/', {'position': ''}).status_code, 200)
+
+
 class LocalisationTests(BaseCase):
     def test_language_can_be_switched_to_nepali(self):
         response = self.client.post(reverse('set_language'), {'language': 'ne', 'next': '/'}, follow=True)

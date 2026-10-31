@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MarketKuraa\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-31 02:37+0000\n"
+"POT-Creation-Date: 2026-10-31 02:47+0000\n"
 "PO-Revision-Date: 2026-09-20 00:00+0000\n"
 "Last-Translator: MarketKuraa\n"
 "Language-Team: Nepali\n"
@@ -1683,6 +1683,12 @@ msgstr "जुनसुकै समय"
 msgid "Past week"
 msgstr "गत हप्ता"
 
+msgid "Past month"
+msgstr "गत महिना"
+
+msgid "Past year"
+msgstr "गत वर्ष"
+
 msgid "Sort"
 msgstr "क्रमबद्ध"
 
@@ -1691,6 +1697,9 @@ msgstr "प्रमाणित सदस्य मात्र"
 
 msgid "Apply"
 msgstr "लागू गर्नुहोस्"
+
+msgid "Clear filters"
+msgstr "फिल्टरहरू हटाउनुहोस्"
 
 msgid "Upvoted"
 msgstr "अपभोट गरियो"
@@ -1719,8 +1728,7 @@ msgstr "स्वयं-रिपोर्ट गरिएको थेसिस
 msgid ""
 "Published %(d)s. Timestamped so it can be cited later. Not financial advice."
 msgstr ""
-"%(d)s मा प्रकाशित। पछि उल्लेख गर्न सकिने गरी समय-छाप लगाइएको। वित्तीय सल्लाह "
-"होइन।"
+"%(d)s मा प्रकाशित। पछि उल्लेख गर्न सकिने गरी समय-छाप लगाइएको। वित्तीय सल्लाह होइन।"
 
 msgid "AMA with"
 msgstr "AMA — होस्ट:"

@@ -354,6 +354,8 @@ a.badge:active { transform: translateY(0) scale(.95); }
 .tabs a.active { background: var(--brand); border-color: var(--brand); color: #fff; }
 .pagination { display: flex; gap: 12px; align-items: center; margin: 18px 0; }
 .filters { display: flex; gap: 12px; flex-wrap: wrap; align-items: end; } .filters label { margin: 0 0 4px; font-size: .85rem; } .filters > div { min-width: 130px; flex: 1; }
+.filter-form-actions { display: flex; align-items: center; gap: 14px; flex: 0 0 auto; min-width: 0; }
+.filter-form-actions a { font-size: .9rem; }
 .search { display: flex; gap: 8px; margin-bottom: 18px; } .search input { flex: 1; }
 .prose p:first-child { margin-top: 0; } .prose pre { background: #f1f3f7; padding: 10px; border-radius: 6px; overflow-x: auto; }
 .prose blockquote { border-left: 3px solid var(--line); margin-left: 0; padding-left: 12px; color: var(--muted); }

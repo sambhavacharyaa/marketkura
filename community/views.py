@@ -59,6 +59,9 @@ def query_without_page(request):
     return query.urlencode()
 
 
+DATE_RANGE_DAYS = {'week': 7, 'month': 30, 'year': 365}
+
+
 def apply_post_filters(request, posts):
     query = request.GET.get('q', '').strip()
     if query:
@@ -75,15 +78,18 @@ def apply_post_filters(request, posts):
         posts = posts.filter(position_type=request.GET['position'])
     if request.GET.get('horizon') in ('short', 'medium', 'long'):
         posts = posts.filter(time_horizon=request.GET['horizon'])
-    if request.GET.get('date') == 'week':
-        posts = posts.filter(created_at__gte=timezone.now() - timedelta(days=7))
+    date_range = request.GET.get('date')
+    if date_range in DATE_RANGE_DAYS:
+        posts = posts.filter(created_at__gte=timezone.now() - timedelta(days=DATE_RANGE_DAYS[date_range]))
     if request.GET.get('sort') == 'discussed':
         posts = posts.order_by('-comment_count', '-upvotes', '-created_at')
     return posts
 
 
 def asset_choices():
-    return Tag.objects.filter(is_company=True).order_by('ticker', 'name')
+    """Companies offered in the Asset filter — restricted to ones with at least one post, so the
+    dropdown never lists a ticker whose filter would always come back empty."""
+    return Tag.objects.filter(is_company=True, asset_posts__isnull=False).distinct().order_by('ticker', 'name')
 
 
 # --- Forum ----------------------------------------------------------------------------
