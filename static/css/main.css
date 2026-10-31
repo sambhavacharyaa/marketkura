@@ -642,7 +642,12 @@ a.chip-cat:hover { background: var(--brand-soft); color: var(--brand-dark); text
      above sets gets re-set here so nothing carries over by accident. */
   .lang-menu .menu-panel { position: absolute; left: auto; right: 0; top: 46px; width: 180px; max-width: calc(100vw - 24px); }
   .composer-row .btn:last-child { margin-left: 0; flex: 1 1 100%; }
-  input, select, textarea { font-size: 16px; }
+  /* 16px keeps iOS Safari from auto-zooming on focus; 44px (up from the 40px default) matches
+     Apple's and Android's own minimum recommended touch target and brings .feed-search's input —
+     hardcoded to a shorter 36px for its compact desktop layout — in line with the plain filter
+     selects next to it instead of sitting visibly shorter than them. */
+  input, select, textarea { font-size: 16px; min-height: 44px; }
+  .feed-search input { height: 44px; min-height: 44px; }
 }
 
 /* ---- Bottom navigation (phones only — tablets and up keep the header + off-canvas sidebar) ---- */
