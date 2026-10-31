@@ -581,6 +581,15 @@ p:has(> .md-editor) { margin: 0 0 8px; }
 .hero-category { display: flex; flex-direction: column; align-items: center; gap: 6px; width: 92px; padding: var(--s3) var(--s2); background: var(--bg); border-radius: var(--radius-sm); color: var(--text); font-size: .82rem; font-weight: 500; transition: background-color var(--dur) var(--ease), transform var(--dur-fast) var(--ease); }
 .hero-category:hover { background: var(--brand-soft); color: var(--brand-dark); text-decoration: none; transform: translateY(-2px); }
 .hero-category-icon { display: inline-flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; background: var(--surface); color: var(--brand-dark); box-shadow: var(--shadow); }
+/* One color per category, same per-item convention as the ticker icons above, instead of every
+   button sharing one flat tint. Falls back to the plain .hero-category-icon look above for any
+   category outside the six seeded ones (matches CATEGORY_ICONS' own slug-keyed fallback). */
+.hero-category-icon--global-markets { background: var(--info); color: #fff; }
+.hero-category-icon--market-news { background: var(--gold); color: #fff; }
+.hero-category-icon--nepse { background: var(--brand); color: #fff; }
+.hero-category-icon--personal-finance { background: var(--purple); color: #fff; }
+.hero-category-icon--startups-founders { background: #f7931a; color: #fff; }
+.hero-category-icon--trading-strategy { background: var(--danger); color: #fff; }
 .hero-cta { display: flex; justify-content: center; gap: var(--s3); flex-wrap: wrap; margin-bottom: var(--s3); }
 .hero-cta-btn { min-width: 200px; justify-content: center; }
 .hero-cta-btn:not(.secondary) { animation: cta-glow 2.6s ease-in-out infinite; }

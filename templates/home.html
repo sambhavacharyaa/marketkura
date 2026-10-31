@@ -58,7 +58,7 @@
       {% endif %}
       <div class="hero-categories">
         {% for category in categories_all %}<a class="hero-category" href="{{ category.get_absolute_url }}">
-          <span class="hero-category-icon">{% include 'partials/icon.html' with name=category|category_icon %}</span>
+          <span class="hero-category-icon hero-category-icon--{{ category.slug }}">{% include 'partials/icon.html' with name=category|category_icon %}</span>
           <span>{{ category.display_name }}</span>
         </a>{% endfor %}
       </div>
