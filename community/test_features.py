@@ -724,6 +724,13 @@ class PostDetailPageTests(BaseCase):
         self.assertContains(response, 'wa.me')
         self.assertContains(response, 'facebook.com/sharer')
 
+    def test_share_menu_opts_out_of_the_page_dimming_scrim(self):
+        # The scrim behind notif/user/lang menus is meant for those account-level menus — opening
+        # the much smaller, local share dropdown shouldn't wash out the entire page behind it.
+        post = self.post()
+        response = self.client.get(post.get_absolute_url())
+        self.assertContains(response, 'class="menu menu-no-scrim share-menu"')
+
 
 class ReportTests(BaseCase):
     def test_report_post_and_comment_once_each(self):

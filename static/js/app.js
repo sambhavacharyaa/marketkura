@@ -113,7 +113,10 @@
     if (!(menu instanceof HTMLElement) || !menu.matches('.menu')) return;
     if (menu.open) {
       openMenus().forEach(function (other) { if (other !== menu) other.removeAttribute('open'); });
-      getScrim().classList.add('show');
+      // .menu-no-scrim opts a small, local menu (e.g. the post share dropdown) out of the
+      // page-wide dimming backdrop — that treatment belongs to the account-level menus
+      // (notifications/user/language) it was designed for, not a lightweight inline action.
+      if (!menu.matches('.menu-no-scrim')) getScrim().classList.add('show');
     } else if (!openMenus().length && scrim) {
       scrim.classList.remove('show');
     }
