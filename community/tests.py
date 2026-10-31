@@ -107,6 +107,7 @@ class PhaseTwoTests(TestCase):
         self.assertContains(self.client.post(reverse('create_post'), self.post_data(title='Bad', entry_price='-1')), 'Entry price must be positive')
         self.assertContains(self.client.post(reverse('create_post'), self.post_data(title='Bad target', target_price='0')), 'Target price must be positive')
         self.assertContains(self.client.post(reverse('create_post'), self.post_data(title='No body', body='')), 'A thesis body is required')
+        self.assertContains(self.client.post(reverse('create_post'), self.post_data(title='No asset', asset='')), 'Choose the company or ticker')
         self.client.force_login(self.other)
         self.assertEqual(self.client.get(reverse('edit_post', args=[thesis.pk])).status_code, 403)
         self.client.force_login(self.user)

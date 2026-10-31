@@ -150,6 +150,8 @@ class PostForm(forms.ModelForm):
         if post_type == Post.TYPE_THESIS:
             if not (cleaned.get('body') or '').strip():
                 self.add_error('body', _('A thesis body is required.'))
+            if not cleaned.get('asset'):
+                self.add_error('asset', _('Choose the company or ticker this thesis is about.'))
             if not cleaned.get('position_type'):
                 self.add_error('position_type', _('Choose a position type.'))
             if not cleaned.get('entry_price'):

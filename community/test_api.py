@@ -71,7 +71,7 @@ class ApiTests(TestCase):
 
     def test_create_thesis_and_validation_errors(self):
         self.as_user(self.alice)
-        good = self.api.post('/api/posts/', {'category': 'nepse', 'type': 'thesis', 'title': 'Thesis', 'body': 'Why', 'asset_tag': 'NABIL',
+        good = self.api.post('/api/posts/', {'category': 'nepse', 'type': 'thesis', 'title': 'Thesis', 'body': 'Why', 'asset': self.asset.pk,
                                              'position_type': 'long', 'entry_price': '500', 'time_horizon': 'long', 'tags': ['banking', 'ipo']}, format='json')
         self.assertEqual(good.status_code, 201, good.content)
         data = good.json()

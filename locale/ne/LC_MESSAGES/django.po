@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MarketKuraa\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-31 02:24+0000\n"
+"POT-Creation-Date: 2026-10-31 02:28+0000\n"
 "PO-Revision-Date: 2026-09-20 00:00+0000\n"
 "Last-Translator: MarketKuraa\n"
 "Language-Team: Nepali\n"
@@ -176,6 +176,9 @@ msgstr "बन्द"
 
 msgid "A thesis body is required."
 msgstr "थेसिसको विवरण आवश्यक छ।"
+
+msgid "Choose the company or ticker this thesis is about."
+msgstr "यो थेसिस कुन कम्पनी वा टिकरको बारेमा हो, छान्नुहोस्।"
 
 msgid "Choose a position type."
 msgstr "पोजिसनको प्रकार छान्नुहोस्।"
