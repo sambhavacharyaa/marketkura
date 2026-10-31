@@ -130,7 +130,10 @@ button.sidebar-close { display: none; }
    nav/grid link just to hint "this leads somewhere else", matching the reference's row style. */
 .sidebar-nav a::after { content: ''; width: 6px; height: 6px; margin-left: auto; flex: none; border-top: 1.6px solid currentColor; border-right: 1.6px solid currentColor; transform: rotate(45deg); opacity: .3; }
 .sidebar-flame { display: inline-flex; color: var(--gold); margin-left: -2px; }
-.sidebar-flame .icon { width: 14px; height: 14px; }
+/* .sidebar-nav .icon sets color: var(--muted) directly on every icon in this nav (same selector
+   specificity as this rule, so without re-asserting color here, that one wins by source order
+   instead of the gold tint inherited from .sidebar-flame above actually reaching the SVG). */
+.sidebar-flame .icon { width: 7px; height: 14px; color: var(--gold); }
 .sidebar-section { padding: 0 2px; margin-bottom: var(--s4); }
 .sidebar-heading { display: flex; align-items: center; gap: 9px; font-size: .75rem; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); margin-bottom: 10px; }
 .sidebar-heading .icon { width: 15px; height: 15px; padding: 6px; box-sizing: content-box; background: var(--brand-soft); color: var(--brand-dark); border-radius: 8px; }
