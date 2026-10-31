@@ -1775,7 +1775,7 @@ class ThreadListHtmxNavigationTests(BaseCase):
         self.assertIn(f'hx-get="{reverse("companies")}" hx-target="#app-shell"', primary_nav)
         self.assertIn(f'hx-get="{reverse("news_list")}" hx-target="#app-shell"', primary_nav)
         bottom_nav = page[page.index('id="bottom-nav"'):]
-        self.assertIn(f'hx-get="{reverse("home")}?tab=trending" hx-target="#app-shell"', bottom_nav)
+        self.assertIn(f'hx-get="{reverse("home")}" hx-target="#app-shell"', bottom_nav)
 
     def test_no_section_nav_link_relies_on_multi_id_oob_swaps(self):
         # hx-select-oob with several comma-separated ids is the thing that broke active-state
@@ -1818,25 +1818,31 @@ class ThreadListHtmxNavigationTests(BaseCase):
 
     def test_app_shell_swap_response_shows_every_nav_in_sync(self):
         # Since the sidebar, top nav and bottom nav are swapped together with #main as one unit,
-        # a Home page response must independently show Home active in primary-nav and the
-        # sidebar — not just on the triggering link, but in the actual markup that lands in each
-        # nav. The bottom nav has no plain Home entry (replaced by Trending), so it's checked
-        # separately below on the trending tab instead.
+        # a Home page response must independently show Home active in all three — not just on the
+        # triggering link, but in the actual markup that lands in each nav.
         page = self.client.get(reverse('home')).content.decode()
         self.assertIn('id="app-shell"', page)
         primary_nav = page[page.index('id="primary-nav"'):page.index('</nav>', page.index('id="primary-nav"'))]
         # Scoped to class="sidebar-nav", not the whole #site-sidebar — the sidebar also has a
         # brand/logo link to home earlier in the markup that never carries aria-current.
         sidebar = page[page.index('class="sidebar-nav"'):page.index('</nav>', page.index('class="sidebar-nav"'))]
-        for fragment, label in [(primary_nav, 'primary-nav'), (sidebar, 'sidebar')]:
+        bottom_nav = page[page.index('id="bottom-nav"'):]
+        for fragment, label in [(primary_nav, 'primary-nav'), (sidebar, 'sidebar'), (bottom_nav, 'bottom-nav')]:
             home_link = fragment[fragment.index(f'href="{reverse("home")}"'):]
             self.assertIn('aria-current="page"', home_link[:200], f'{label} did not mark Home active')
 
-    def test_bottom_nav_trending_entry_marks_itself_active_on_the_trending_tab(self):
-        page = self.client.get(reverse('home'), {'tab': 'trending'}).content.decode()
+    def test_bottom_nav_watchlists_entry_marks_itself_active_for_members(self):
+        self.login(self.alice)
+        page = self.client.get(reverse('watchlists')).content.decode()
         bottom_nav = page[page.index('id="bottom-nav"'):]
-        trending_link = bottom_nav[bottom_nav.index(f'href="{reverse("home")}?tab=trending"'):]
-        self.assertIn('aria-current="page"', trending_link[:200])
+        watchlists_link = bottom_nav[bottom_nav.index(f'href="{reverse("watchlists")}"'):]
+        self.assertIn('aria-current="page"', watchlists_link[:200])
+
+    def test_bottom_nav_shows_companies_not_watchlists_when_logged_out(self):
+        page = self.client.get(reverse('home')).content.decode()
+        bottom_nav = page[page.index('id="bottom-nav"'):]
+        self.assertIn(f'href="{reverse("companies")}"', bottom_nav)
+        self.assertNotIn(f'href="{reverse("watchlists")}"', bottom_nav)
 
     def test_home_tab_click_response_includes_a_correctly_updated_sidebar_fragment(self):
         # End-to-end: the response to an htmx navigation must contain an out-of-band #site-sidebar
