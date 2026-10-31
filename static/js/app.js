@@ -132,43 +132,43 @@
   // Off-canvas sidebar (mobile/tablet only — on wide screens it's always visible in the layout).
   // Two separate buttons can open it on narrow phones: the header hamburger and the bottom
   // navigation bar's "Menu" item, so this tracks all `.sidebar-toggle` elements rather than one id.
-  var sidebarToggles = Array.prototype.slice.call(document.querySelectorAll('.sidebar-toggle'));
-  var sidebarScrim = document.getElementById('sidebar-scrim');
-  if (document.getElementById('site-sidebar') && sidebarToggles.length) {
-    // #site-sidebar is replaced wholesale — not patched in place — by every htmx navigation (its
-    // hx-select-oob swap keeps the active-state links in sync with the page you land on). Caching
-    // the element once here would silently start operating on a detached node after the first
-    // swap: the scrim (which is never replaced) would still show, but the drawer itself would
-    // never visibly open or close again — exactly the "hamburger gets stuck" bug this replaced.
-    // Looking it up fresh inside every handler, and delegating rather than binding listeners
-    // directly to it or to #sidebar-close (also replaced), sidesteps the staleness entirely.
+  if (document.getElementById('site-sidebar') && document.querySelector('.sidebar-toggle')) {
+    // #site-sidebar, #sidebar-scrim and every .sidebar-toggle button all live inside #app-shell,
+    // which every htmx navigation replaces wholesale (outerHTML, not patched in place). Caching
+    // any of them once here would silently start operating on a detached node after the first
+    // swap — exactly the "hamburger sometimes does nothing" bug this fixes. Looking each one up
+    // fresh inside every handler, and delegating clicks on `document` rather than binding
+    // listeners directly to elements that get replaced, sidesteps the staleness entirely.
     var getSidebar = function () { return document.getElementById('site-sidebar'); };
+    var getScrim = function () { return document.getElementById('sidebar-scrim'); };
+    var getToggles = function () { return Array.prototype.slice.call(document.querySelectorAll('.sidebar-toggle')); };
     var openSidebar = function () {
       getSidebar().classList.add('is-open');
-      sidebarScrim.hidden = false;
-      sidebarToggles.forEach(function (btn) { btn.setAttribute('aria-expanded', 'true'); });
+      getScrim().hidden = false;
+      getToggles().forEach(function (btn) { btn.setAttribute('aria-expanded', 'true'); });
       document.body.classList.add('sidebar-lock');
       var closeBtn = document.getElementById('sidebar-close');
       if (closeBtn) closeBtn.focus();
     };
     var closeSidebar = function (opts) {
       getSidebar().classList.remove('is-open');
-      sidebarScrim.hidden = true;
-      sidebarToggles.forEach(function (btn) { btn.setAttribute('aria-expanded', 'false'); });
+      getScrim().hidden = true;
+      getToggles().forEach(function (btn) { btn.setAttribute('aria-expanded', 'false'); });
       document.body.classList.remove('sidebar-lock');
-      if (opts && opts.returnFocus) sidebarToggles[0].focus();
+      if (opts && opts.returnFocus) { var toggles = getToggles(); if (toggles[0]) toggles[0].focus(); }
     };
-    sidebarToggles.forEach(function (btn) { btn.addEventListener('click', openSidebar); });
-    sidebarScrim.addEventListener('click', function () { closeSidebar(); });
     document.addEventListener('keydown', function (event) {
       if (event.key === 'Escape' && getSidebar().classList.contains('is-open')) closeSidebar({ returnFocus: true });
     });
     window.addEventListener('pageshow', function () { closeSidebar(); });
-    // Covers both the close button and sidebar links that fetch their destination via htmx (see
-    // the feed/category swap below) and so stay on the same document — the drawer must be closed
-    // explicitly rather than relying on a full navigation to dismiss it.
+    // Covers the hamburger toggles, the scrim, the close button, and sidebar links that fetch
+    // their destination via htmx (see the feed/category swap below) and so stay on the same
+    // document — all delegated through one listener so none of it depends on a specific element
+    // still being attached by the time it's clicked.
     document.body.addEventListener('click', function (event) {
+      if (event.target.closest('.sidebar-toggle')) { openSidebar(); return; }
       if (event.target.closest('#sidebar-close')) { closeSidebar({ returnFocus: true }); return; }
+      if (event.target.closest('#sidebar-scrim')) { closeSidebar(); return; }
       if (getSidebar().contains(event.target) && event.target.closest('a')) closeSidebar();
     });
     // Resizing past the off-canvas breakpoint while open should still reset state so it doesn't
