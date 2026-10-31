@@ -568,6 +568,44 @@ class VoteAndKarmaTests(BaseCase):
         self.assertContains(response, 'Upvoted')
 
 
+class PostDetailPageTests(BaseCase):
+    def test_anonymous_visitor_sees_a_log_in_to_upvote_link_not_a_dead_button(self):
+        post = self.post()
+        response = self.client.get(post.get_absolute_url())
+        self.assertContains(response, 'Log in to upvote')
+        self.assertContains(response, f'{reverse("login")}?next={post.get_absolute_url()}')
+
+    def test_post_author_sees_a_non_interactive_vote_count_not_a_login_link(self):
+        post = self.post()
+        self.login(self.alice)
+        response = self.client.get(post.get_absolute_url())
+        self.assertNotContains(response, 'Log in to upvote')
+        self.assertContains(response, 'cannot upvote your own post')
+
+    def test_other_logged_in_users_still_get_the_real_vote_button(self):
+        post = self.post()
+        self.login(self.bob)
+        response = self.client.get(post.get_absolute_url())
+        self.assertNotContains(response, 'Log in to upvote')
+        self.assertContains(response, 'id="post-vote"')
+
+    def test_breadcrumb_shows_home_category_and_post_title(self):
+        post = self.post()
+        response = self.client.get(post.get_absolute_url())
+        self.assertContains(response, 'class="breadcrumb"')
+        self.assertContains(response, self.category.get_absolute_url())
+        self.assertContains(response, post.title)
+
+    def test_share_menu_offers_copy_link_whatsapp_and_facebook(self):
+        post = self.post()
+        response = self.client.get(post.get_absolute_url())
+        absolute_url = response.context['canonical_url']
+        self.assertContains(response, 'share-copy')
+        self.assertContains(response, f'data-share-url="{absolute_url}"')
+        self.assertContains(response, 'wa.me')
+        self.assertContains(response, 'facebook.com/sharer')
+
+
 class ReportTests(BaseCase):
     def test_report_post_and_comment_once_each(self):
         post = self.post()

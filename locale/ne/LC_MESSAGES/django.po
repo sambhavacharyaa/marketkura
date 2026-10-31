@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MarketKuraa\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-31 02:02+0000\n"
+"POT-Creation-Date: 2026-10-31 02:24+0000\n"
 "PO-Revision-Date: 2026-09-20 00:00+0000\n"
 "Last-Translator: MarketKuraa\n"
 "Language-Team: Nepali\n"
@@ -1703,6 +1703,9 @@ msgstr "यो पोस्ट हटाइएको छ। मोडरेट�
 msgid "The author is shadow-banned. Only they and staff can see this post."
 msgstr "लेखक शेडो-ब्यान गरिएका छन्। उनीहरू र स्टाफले मात्र यो पोस्ट हेर्न सक्छन्।"
 
+msgid "Breadcrumb"
+msgstr "ब्रेडक्रम्ब मार्ग"
+
 msgid "Posted by"
 msgstr "पोस्ट गर्ने"
 
@@ -1723,6 +1726,15 @@ msgstr "AMA — होस्ट:"
 #, python-format
 msgid "%(n)s unanswered question(s)"
 msgstr "%(n)s अनुत्तरित प्रश्न"
+
+msgid "Share"
+msgstr "सेयर गर्नुहोस्"
+
+msgid "Copied!"
+msgstr "कपी भयो!"
+
+msgid "Copy link"
+msgstr "लिंक कपी गर्नुहोस्"
 
 msgid "Moderator"
 msgstr "मोडरेटर"

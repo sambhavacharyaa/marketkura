@@ -298,4 +298,34 @@
       });
     }
   }
+
+  // Post share menu's "Copy link" button. Delegated to document (not bound per-button) since the
+  // share menu is inside #main and gets replaced wholesale on every htmx navigation.
+  document.addEventListener('click', function (event) {
+    var button = event.target.closest && event.target.closest('.share-copy');
+    if (!button) return;
+    event.preventDefault();
+    var url = button.getAttribute('data-share-url');
+    var label = button.querySelector('span');
+    var restore = label ? label.textContent : null;
+    var showCopied = function () {
+      if (!label) return;
+      label.textContent = button.dataset.copiedLabel || restore;
+      button.classList.add('copied');
+      setTimeout(function () { label.textContent = restore; button.classList.remove('copied'); }, 1500);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(url).then(showCopied, showCopied);
+    } else {
+      var temp = document.createElement('textarea');
+      temp.value = url;
+      temp.style.position = 'fixed';
+      temp.style.opacity = '0';
+      document.body.appendChild(temp);
+      temp.select();
+      try { document.execCommand('copy'); } catch (e) { /* nothing more we can do */ }
+      document.body.removeChild(temp);
+      showCopied();
+    }
+  });
 })();

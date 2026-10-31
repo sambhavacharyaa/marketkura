@@ -7,6 +7,7 @@
 {% block content %}
 {% if post.is_removed %}<div class="panel warn">{% trans "This post was removed. Only moderators can see it." %}</div>{% endif %}
 {% if post.user.is_shadow_banned and user.is_staff %}<div class="panel warn">{% trans "The author is shadow-banned. Only they and staff can see this post." %}</div>{% endif %}
+<nav class="breadcrumb" aria-label="{% trans 'Breadcrumb' %}"><a href="{% url 'home' %}">{% trans "Home" %}</a><span class="breadcrumb-sep" aria-hidden="true">/</span><a href="{{ post.category.get_absolute_url }}">{{ post.category.display_name }}</a><span class="breadcrumb-sep" aria-hidden="true">/</span><span class="breadcrumb-current" aria-current="page">{{ post.title }}</span></nav>
 <article class="panel">
   <div class="chips"><a class="badge" href="{{ post.category.get_absolute_url }}">{{ post.category.display_name }}</a><span class="badge type-{{ post.type }}">{{ post.get_type_display }}</span>{% if post.is_locked %}<span class="badge locked">🔒 {% trans "Locked" %}</span>{% endif %}{% for tag in tags %}<a class="badge" href="{{ tag.get_absolute_url }}">#{{ tag.name }}</a>{% endfor %}</div>
   <h1>{{ post.title }}</h1>
@@ -36,8 +37,18 @@
   {% if post.image %}<img class="post-image" src="{{ post.image.url }}" alt="">{% endif %}
   <div class="prose">{{ post.body|markdown_safe }}</div>
   <div class="actions" style="margin-top:16px">
-    {% if user.is_authenticated and user != post.user %}{% include 'partials/post_vote.html' %}{% else %}<span class="vote-btn">{% include 'partials/icon.html' with name='up' cls='vote-glyph' %} {{ post.upvotes }}</span>{% endif %}
+    {% if user.is_authenticated and user != post.user %}{% include 'partials/post_vote.html' %}
+    {% elif user.is_authenticated %}<span class="vote-btn" title="{% trans 'You cannot upvote your own post.' %}">{% include 'partials/icon.html' with name='up' cls='vote-glyph' %} {{ post.upvotes }}</span>
+    {% else %}<a class="vote-btn" href="{% url 'login' %}?next={{ request.path|urlencode }}">{% include 'partials/icon.html' with name='up' cls='vote-glyph' %} {% trans "Log in to upvote" %} · {{ post.upvotes }}</a>{% endif %}
     <a class="action-link" href="#discussion">{% include 'partials/icon.html' with name='message' %} {{ comment_count }}</a>
+    <details class="menu share-menu">
+      <summary class="action-link" aria-label="{% trans 'Share' %}">{% include 'partials/icon.html' with name='share' %} {% trans "Share" %}</summary>
+      <div class="menu-panel">
+        <button type="button" class="menu-item share-copy" data-share-url="{{ canonical_url }}" data-copied-label="{% trans 'Copied!' %}">{% include 'partials/icon.html' with name='link' %}<span>{% trans "Copy link" %}</span></button>
+        <a class="menu-item" href="https://wa.me/?text={{ post.title|urlencode }}%20{{ canonical_url|urlencode }}" target="_blank" rel="noopener">{% include 'partials/icon.html' with name='message' %}<span>WhatsApp</span></a>
+        <a class="menu-item" href="https://www.facebook.com/sharer/sharer.php?u={{ canonical_url|urlencode }}" target="_blank" rel="noopener">{% include 'partials/icon.html' with name='globe' %}<span>Facebook</span></a>
+      </div>
+    </details>
     {% if user == post.user %}<a class="action-link" href="{% url 'edit_post' post.pk %}">{% include 'partials/icon.html' with name='edit' %} {% trans "Edit" %}</a><a class="action-link is-danger" href="{% url 'delete_post' post.pk %}">{% include 'partials/icon.html' with name='trash' %} {% trans "Delete" %}</a>
     {% elif user.is_authenticated %}<a class="action-link" href="{% url 'report_post' post.pk %}">{% include 'partials/icon.html' with name='flag' %} {% trans "Report" %}</a>{% endif %}
   </div>

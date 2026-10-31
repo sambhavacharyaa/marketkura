@@ -295,6 +295,20 @@ button.linklike { background: none; border: 0; cursor: pointer; font: inherit; p
 /* Page title with a CTA stacked underneath it, rather than squeezed onto the same row. */
 .page-head { margin-bottom: 16px; }
 .page-head h1 { margin-bottom: 10px; }
+.breadcrumb { display: flex; align-items: center; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; font-size: .85rem; color: var(--muted); }
+.breadcrumb a { color: var(--muted); }
+.breadcrumb a:hover { color: var(--brand-dark); }
+.breadcrumb-sep { color: var(--line); }
+.breadcrumb-current { color: var(--text); max-width: 420px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.share-menu > summary.action-link { list-style: none; }
+.share-menu .menu-panel { width: 200px; right: 0; }
+.share-menu .menu-item { display: flex; align-items: center; gap: 8px; }
+.share-menu .menu-item.copied { color: var(--brand-dark); }
+/* The post actions row's own .panel ancestor and the Discussion .panel below it are each their
+   own stacking context (the fade-up entrance animation triggers one), so the open share dropdown
+   would otherwise render underneath the next panel down regardless of its own z-index. Lifting
+   the whole article above its siblings while the menu is open fixes that. */
+article.panel:has(.share-menu[open]) { position: relative; z-index: 1; }
 /* Icon-button toolbar for a post/comment's secondary actions (Edit, Delete, Report, Reply) —
    these used to be plain underlined text links with nothing to tell them apart from body copy or
    group them with the vote control sitting right next to them. */
