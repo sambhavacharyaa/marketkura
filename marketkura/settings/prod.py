@@ -54,6 +54,11 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 X_FRAME_OPTIONS = 'DENY'
 SECURE_REFERRER_POLICY = 'same-origin'
 
+# Report-only CSP first (logs violations in the browser console, blocks nothing) — a deliberate
+# first step before ever switching to an enforcing Content-Security-Policy header. Dev doesn't get
+# this: a noisy console on every local page load isn't worth it before the policy is proven safe.
+MIDDLEWARE = MIDDLEWARE + ['community.middleware.ContentSecurityPolicyReportOnlyMiddleware']  # noqa: F405
+
 # Behind nginx/another TLS-terminating proxy, trust its forwarded-proto header.
 if get_bool_setting('BEHIND_PROXY', False):
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')

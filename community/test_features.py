@@ -4,6 +4,7 @@ import time
 from datetime import timedelta
 from unittest import mock, skipUnless
 
+from django.conf import settings
 from django.core import mail
 from django.core.cache import cache
 from django.core.files.uploadedfile import SimpleUploadedFile
@@ -1166,6 +1167,21 @@ class FilterPanelTests(BaseCase):
         # present but blank, which is how an unchanged <select> would arrive without the
         # filter-form's JS stripping it first.
         self.assertEqual(self.client.get('/', {'position': ''}).status_code, 200)
+
+
+class SecurityHeaderTests(BaseCase):
+    @override_settings(MIDDLEWARE=settings.MIDDLEWARE + ['community.middleware.ContentSecurityPolicyReportOnlyMiddleware'])
+    def test_csp_report_only_middleware_sets_the_header(self):
+        response = self.client.get(reverse('home'))
+        header = response.headers.get('Content-Security-Policy-Report-Only')
+        self.assertIsNotNone(header)
+        self.assertIn("default-src 'self'", header)
+        self.assertIn('challenges.cloudflare.com', header)
+        self.assertNotIn('Content-Security-Policy', response.headers)  # report-only, not enforcing
+
+    def test_csp_middleware_is_not_active_under_dev_settings(self):
+        response = self.client.get(reverse('home'))
+        self.assertNotIn('Content-Security-Policy-Report-Only', response.headers)
 
 
 class EmptyStateTests(BaseCase):
