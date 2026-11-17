@@ -363,6 +363,36 @@ class ComposeFullscreenTests(BaseCase):
         self.assertIn(f'href="{reverse("home")}"', topbar)
 
 
+class PostFormFieldGroupingTests(BaseCase):
+    """The always-visible "Type" field must never pick up data-show-for itself — "type" is a
+    substring of "position_type", so a naive Django `in` check on the raw thesis_fields string
+    wrongly matched it, hiding the Type dropdown for every post type except thesis (see
+    has_field in community_extras.py)."""
+
+    def test_type_field_itself_has_no_data_show_for(self):
+        self.login(self.alice)
+        page = self.client.get(reverse('create_post')).content.decode()
+        type_field = page[page.index('data-field="type"'):page.index('>', page.index('data-field="type"'))]
+        self.assertNotIn('data-show-for', type_field)
+
+    def test_thesis_only_fields_still_get_data_show_for_thesis(self):
+        self.login(self.alice)
+        page = self.client.get(reverse('create_post')).content.decode()
+        for field_name in ('position_type', 'entry_price', 'target_price', 'stop_loss', 'time_horizon', 'thesis_risk', 'disclosure'):
+            field = page[page.index(f'data-field="{field_name}"'):page.index('>', page.index(f'data-field="{field_name}"'))]
+            self.assertIn('data-show-for="thesis"', field, f'{field_name} missing data-show-for="thesis"')
+
+    def test_ama_only_fields_still_get_data_show_for_ama(self):
+        # The AMA fields only exist on the form for verified members.
+        self.alice.is_verified = True
+        self.alice.save()
+        self.login(self.alice)
+        page = self.client.get(reverse('create_post')).content.decode()
+        for field_name in ('ama_starts_at', 'ama_ends_at'):
+            field = page[page.index(f'data-field="{field_name}"'):page.index('>', page.index(f'data-field="{field_name}"'))]
+            self.assertIn('data-show-for="ama"', field, f'{field_name} missing data-show-for="ama"')
+
+
 @override_settings(MEDIA_ROOT=tempfile.mkdtemp())
 class PostImageTests(BaseCase):
     def payload(self, **overrides):

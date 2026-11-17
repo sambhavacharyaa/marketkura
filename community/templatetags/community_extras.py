@@ -125,6 +125,18 @@ def markdown_safe(text):
 
 
 @register.filter
+def has_field(names, field_name):
+    """True if field_name is one of the space-separated words in names.
+
+    form_fields.html uses this to flag a field as thesis-only/AMA-only. A plain Django template
+    `in` on the raw string would do a substring test instead of a word match — "type" is a
+    substring of "position_type", so the always-visible Type field itself was wrongly getting
+    data-show-for="thesis" and hiding itself for every other post type.
+    """
+    return field_name in (names or '').split()
+
+
+@register.filter
 def excerpt(text, words=30):
     """Plain-text preview of a Markdown body for list pages and meta descriptions."""
     plain = strip_tags(markdown.markdown(text or ''))

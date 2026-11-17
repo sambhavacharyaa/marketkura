@@ -12,6 +12,6 @@
   {% for error in form.non_field_errors %}<p class="field-errors">{{ error }}</p>{% endfor %}
   {% include 'partials/form_fields.html' with thesis_fields='position_type entry_price target_price stop_loss time_horizon thesis_risk disclosure' ama_fields='ama_starts_at ama_ends_at' %}
   {% if editing and post.image %}<p class="help">{% trans "Choose a new file above to replace the current image." %}</p>{% endif %}
-  <p class="compose-submit-row" style="margin-top:16px"><button class="btn" type="submit">{% if editing %}{% trans "Save changes" %}{% else %}{% trans "Publish post" %}{% endif %}</button></p>
+  <p class="compose-submit-row form-submit-row"><button class="btn" type="submit">{% if editing %}{% trans "Save changes" %}{% else %}{% trans "Publish post" %}{% endif %}</button></p>
 </form></section>
 {% endblock %}

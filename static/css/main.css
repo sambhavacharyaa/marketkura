@@ -251,9 +251,17 @@ details[open] > .menu-panel { animation: menu-in .2s var(--ease) both; }
 .flag-icon { width: 18px; height: 14px; flex: none; border-radius: 2px; box-shadow: inset 0 0 0 1px rgba(15, 23, 42, .15); }
 
 /* ---- Base elements ---- */
-label { display: block; font-weight: 600; margin: 14px 0 6px; }
-input, select, textarea { width: 100%; padding: 10px 12px; min-height: 40px; border: 1px solid var(--line-strong); border-radius: var(--radius-sm); font: inherit; background: #fff; color: var(--text); transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease); }
-input:focus, select:focus, textarea:focus { border-color: var(--brand); outline: 2px solid var(--brand-line); outline-offset: 0; }
+label { display: block; font-weight: 600; margin: 16px 0 6px; font-size: .93rem; }
+.label-required { color: var(--danger); margin-left: 2px; }
+/* Filled-until-focus is already how .hdr-search/.composer-main/.ticker-input style their own
+   inputs — this just makes it the default everywhere instead of a one-off per component. */
+input, select, textarea {
+  width: 100%; padding: 11px 14px; min-height: 44px; border: 1px solid var(--line); border-radius: var(--radius);
+  font: inherit; background: var(--bg); color: var(--text);
+  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease), background-color var(--dur) var(--ease);
+}
+input:hover, select:hover, textarea:hover { border-color: var(--line-strong); }
+input:focus, select:focus, textarea:focus { border-color: var(--brand); outline: none; box-shadow: 0 0 0 3px var(--brand-line); background: #fff; }
 input[type=checkbox] { width: auto; min-height: 0; }
 .password-field { position: relative; display: flex; }
 .password-field input { padding-right: 56px; }
@@ -270,6 +278,15 @@ input[type=file]::file-selector-button, input[type=file]::-webkit-file-upload-bu
 input[type=file]:hover::file-selector-button, input[type=file]:hover::-webkit-file-upload-button { background: var(--brand-line); }
 .helptext, .help { color: var(--muted); font-size: .85rem; display: block; margin: 4px 0 0; }
 .field-errors, .errorlist { color: var(--danger); margin: 4px 0; padding: 0; list-style: none; font-size: .9rem; }
+/* Fields only shown for a specific post type (thesis/AMA, see [data-show-for] in app.js) get a
+   tinted, bordered callout instead of sitting flush with the always-visible fields above them —
+   several in a row read as one cohesive "extra details for this post type" group. */
+.form-field[data-show-for] {
+  background: var(--brand-soft); border: 1px solid var(--brand-line); border-radius: var(--radius-sm);
+  padding: var(--s3) var(--s3) var(--s2); margin-bottom: var(--s2);
+}
+.form-field[data-show-for] label { margin-top: 0; }
+.form-submit-row { margin-top: var(--s4); padding-top: var(--s4); border-top: 1px solid var(--line); }
 .btn, button.btn {
   --btn-fg: #fff;
   position: relative; overflow: hidden; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
@@ -535,7 +552,8 @@ a.ticker:hover { opacity: .72; text-decoration: none; }
    generically, by structure, so this covers every current and future `.as_p`-rendered body field
    without needing a page-specific override each time. */
 p:has(> .md-editor) { margin: 0 0 8px; }
-.md-editor { border: 1px solid var(--line-strong); border-radius: var(--radius-sm); background: #fff; overflow: hidden; margin-bottom: 8px; transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease); }
+.md-editor { border: 1px solid var(--line); border-radius: var(--radius); background: #fff; overflow: hidden; margin-bottom: 8px; transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease); }
+.md-editor:hover { border-color: var(--line-strong); }
 .md-editor:focus-within { border-color: var(--brand); box-shadow: 0 0 0 2px var(--brand-line); }
 .md-editor textarea { display: block; border: 0; border-radius: 0; }
 .md-editor textarea:focus { outline: none; box-shadow: none; background: #fff; }
