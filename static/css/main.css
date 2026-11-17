@@ -376,7 +376,7 @@ a.badge:active { transform: translateY(0) scale(.95); }
 .company-price strong { font-size: 1.3rem; font-family: var(--font-mono); }
 .company-price-inline { margin: 4px 0; font-size: .92rem; } .company-price-inline strong { font-family: var(--font-mono); }
 .company-news-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
-.company-news-list li { display: flex; flex-direction: column; gap: 2px; }
+.company-news-list li { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; } .grid .card { margin: 0; }
 
 /* ---- News (magazine-style image tiles) ---- */
