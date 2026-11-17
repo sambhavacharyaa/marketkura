@@ -16,6 +16,7 @@ from django.utils import timezone
 from .models import (Category, CategoryFollow, Comment, CommentVote, ContactMessage, NewsPost, Notification, Post,
                      PostTag, PostVote, Report, StartupProfile, Tag, User, VerificationRequest)
 from .services import pump_watch, recalculate_karma
+from .templatetags.community_extras import markdown_safe
 
 
 def make_user(username, days_old=30, **extra):
@@ -752,6 +753,49 @@ class PostDetailPageTests(BaseCase):
         post = self.post()
         response = self.client.get(post.get_absolute_url())
         self.assertContains(response, 'class="menu menu-no-scrim share-menu"')
+
+
+class InlineTagLinkingTests(BaseCase):
+    """#hashtag and $CASHTAG mentions inside a post/comment body, rendered by markdown_safe."""
+
+    def test_cashtag_links_to_the_existing_company(self):
+        html = markdown_safe('Watching $NABIL closely today.')
+        self.assertIn(f'<a href="{self.asset.get_absolute_url()}">$NABIL</a>', html)
+
+    def test_cashtag_is_case_insensitive(self):
+        html = markdown_safe('bullish on $nabil')
+        self.assertIn(f'<a href="{self.asset.get_absolute_url()}">$nabil</a>', html)
+
+    def test_unknown_cashtag_is_left_as_plain_text_and_creates_no_tag(self):
+        html = markdown_safe('what about $ZZZZZZ')
+        self.assertIn('$ZZZZZZ', html)
+        self.assertNotIn('<a', html)
+        self.assertFalse(Tag.objects.filter(ticker__iexact='ZZZZZZ').exists())
+
+    def test_hashtag_links_to_an_existing_tag(self):
+        topic = Tag.objects.create(name='Banking Sector', slug='banking-sector', is_company=False)
+        html = markdown_safe('Big moves in #banking-sector today')
+        self.assertIn(f'<a href="{topic.get_absolute_url()}">#banking-sector</a>', html)
+
+    def test_unknown_hashtag_is_left_as_plain_text_and_creates_no_tag(self):
+        html = markdown_safe('just my own #randomthought')
+        self.assertIn('#randomthought', html)
+        self.assertNotIn('<a', html)
+        self.assertFalse(Tag.objects.filter(slug='randomthought').exists())
+
+    def test_cashtag_inside_a_code_span_is_left_alone(self):
+        html = markdown_safe('`echo $NABIL`')
+        self.assertNotIn('<a', html)
+
+    def test_cashtag_inside_an_existing_link_is_not_double_linked(self):
+        html = markdown_safe('[$NABIL quote](https://example.com)')
+        self.assertEqual(html.count('<a '), 1)
+
+    def test_hashtag_in_a_post_body_renders_as_a_link_on_the_post_page(self):
+        topic = Tag.objects.create(name='IPO', slug='ipo', is_company=False)
+        post = self.post(body='Thoughts on the next #ipo season.')
+        response = self.client.get(post.get_absolute_url())
+        self.assertContains(response, f'<a href="{topic.get_absolute_url()}">#ipo</a>')
 
 
 class ReportTests(BaseCase):

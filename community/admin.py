@@ -2,9 +2,9 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 from django.utils import timezone
 
-from .models import (Category, CategoryFollow, Comment, CommentVote, ContactMessage, Follow, NewsPost, Notification,
-                     Post, PostTag, PostVote, Report, StartupProfile, Tag, User, VerificationRequest, Watchlist,
-                     WatchlistItem)
+from .models import (Category, CategoryFollow, Comment, CommentVote, CompanyNews, ContactMessage, Follow, NewsPost,
+                     Notification, Post, PostTag, PostVote, Report, StartupProfile, Tag, User, VerificationRequest,
+                     Watchlist, WatchlistItem)
 
 
 @admin.register(User)
@@ -35,10 +35,17 @@ class CategoryAdmin(admin.ModelAdmin):
 
 @admin.register(Tag)
 class TagAdmin(admin.ModelAdmin):
-    list_display = ('name', 'ticker', 'company_name', 'is_company')
+    list_display = ('name', 'ticker', 'company_name', 'is_company', 'last_price', 'price_updated_at')
     list_filter = ('is_company',)
     search_fields = ('name', 'ticker', 'company_name')
     prepopulated_fields = {'slug': ('name',)}
+
+
+@admin.register(CompanyNews)
+class CompanyNewsAdmin(admin.ModelAdmin):
+    list_display = ('headline', 'tag', 'source', 'published_at')
+    list_filter = ('source',)
+    search_fields = ('headline', 'tag__name', 'tag__ticker')
 
 
 @admin.register(Post)

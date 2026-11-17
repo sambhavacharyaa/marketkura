@@ -112,6 +112,13 @@ class Tag(models.Model):
     company_name = models.CharField(max_length=255, blank=True)
     description = models.TextField(blank=True)
     is_company = models.BooleanField(default=True)
+    # Last price fetched for this ticker (Finnhub for global companies, the NEPSE client for
+    # Nepali ones) — null until a fetch job has actually run, so templates can tell "no data yet"
+    # apart from "price is zero" and show an honest placeholder instead of a fabricated number.
+    last_price = models.DecimalField(max_digits=14, decimal_places=2, null=True, blank=True)
+    price_change = models.DecimalField(max_digits=14, decimal_places=2, null=True, blank=True)
+    price_change_percent = models.DecimalField(max_digits=8, decimal_places=2, null=True, blank=True)
+    price_updated_at = models.DateTimeField(null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -122,6 +129,24 @@ class Tag(models.Model):
 
     def get_absolute_url(self):
         return reverse('company_detail', args=[self.slug])
+
+
+class CompanyNews(models.Model):
+    """A headline fetched for a company Tag, from Finnhub or the NEPSE client."""
+
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name='news')
+    headline = models.CharField(max_length=500)
+    url = models.URLField(max_length=1000)
+    source = models.CharField(max_length=120, blank=True)
+    published_at = models.DateTimeField()
+    fetched_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['-published_at']
+        indexes = [models.Index(fields=['tag', '-published_at'])]
+
+    def __str__(self):
+        return self.headline
 
 
 class Post(models.Model):

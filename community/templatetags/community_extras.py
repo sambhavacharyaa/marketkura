@@ -1,5 +1,7 @@
 import os
+import re
 import zoneinfo
+from html.parser import HTMLParser
 
 import markdown
 import nh3
@@ -9,9 +11,11 @@ from django.templatetags.static import static
 from django.utils import timezone
 from django.utils.html import strip_tags
 from django.utils.safestring import mark_safe
-from django.utils.text import Truncator
+from django.utils.text import Truncator, slugify
 from django.utils.translation import get_language
 from django.utils.translation import gettext as _
+
+from ..models import Tag
 
 register = template.Library()
 
@@ -20,6 +24,88 @@ ALLOWED_TAGS = {
     'a', 'h3', 'h4', 'h5', 'h6', 'table', 'thead', 'tbody', 'tr', 'th', 'td',
 }
 
+# #hashtag links to any existing topic/company Tag by slug; $CASHTAG only links to an existing
+# *company* Tag by ticker — typing an unrecognized $TICKER is not a request to create a company
+# page, so it's left as plain text until that company is actually added (e.g. via the bulk import
+# command). Neither pattern ever creates a Tag; this filter only renders, it never writes.
+HASHTAG_RE = re.compile(r'(?<![\w#])#([A-Za-z][A-Za-z0-9_-]{0,49})(?!\w)')
+CASHTAG_RE = re.compile(r'(?<![\w$])\$([A-Za-z]{1,6}(?:\.[A-Za-z]{1,2})?)(?!\w)')
+_SKIP_LINK_TAGS = {'a', 'code', 'pre'}
+
+
+class _InlineTagLinker(HTMLParser):
+    """Rewrites #hashtag/$CASHTAG mentions in text nodes into links to their Tag page.
+
+    Walks the already-sanitized HTML (not the raw Markdown source) so it never touches text
+    inside an existing link or a code block — a snippet showing `$1` or `#define` shouldn't turn
+    into a company link — and never needs to re-escape anything nh3 already made safe.
+    """
+
+    def __init__(self, hashtag_tags, cashtag_tags):
+        super().__init__(convert_charrefs=False)
+        self.hashtag_tags = hashtag_tags
+        self.cashtag_tags = cashtag_tags
+        self.skip_depth = 0
+        self.out = []
+
+    def handle_starttag(self, tag, attrs):
+        self.out.append(self.get_starttag_text())
+        if tag in _SKIP_LINK_TAGS:
+            self.skip_depth += 1
+
+    def handle_startendtag(self, tag, attrs):
+        self.out.append(self.get_starttag_text())
+
+    def handle_endtag(self, tag):
+        if tag in _SKIP_LINK_TAGS and self.skip_depth:
+            self.skip_depth -= 1
+        self.out.append(f'</{tag}>')
+
+    def handle_data(self, data):
+        self.out.append(data if self.skip_depth else self._linkify(data))
+
+    def handle_entityref(self, name):
+        self.out.append(f'&{name};')
+
+    def handle_charref(self, name):
+        self.out.append(f'&#{name};')
+
+    def handle_comment(self, data):
+        self.out.append(f'<!--{data}-->')
+
+    def _linkify(self, text):
+        def cashtag_sub(match):
+            tag = self.cashtag_tags.get(match.group(1).upper())
+            return f'<a href="{tag.get_absolute_url()}">${match.group(1)}</a>' if tag else match.group(0)
+
+        def hashtag_sub(match):
+            tag = self.hashtag_tags.get(slugify(match.group(1), allow_unicode=True))
+            return f'<a href="{tag.get_absolute_url()}">#{match.group(1)}</a>' if tag else match.group(0)
+
+        return HASHTAG_RE.sub(hashtag_sub, CASHTAG_RE.sub(cashtag_sub, text))
+
+    def get_result(self):
+        return ''.join(self.out)
+
+
+def linkify_tags(html):
+    """Turn #hashtag and $CASHTAG mentions in already-sanitized HTML into links.
+
+    Candidates are scanned with a cheap regex pass over the raw HTML first (matches inside tags
+    we'll later skip are harmless here — they just fetch an unused Tag) so the lookups are two
+    queries total regardless of how many mentions a post has, not one query per mention.
+    """
+    cashtag_tickers = {m.upper() for m in CASHTAG_RE.findall(html)}
+    hashtag_slugs = {slugify(m, allow_unicode=True) for m in HASHTAG_RE.findall(html)}
+    cashtag_tags = {t.ticker.upper(): t for t in Tag.objects.filter(is_company=True, ticker__in=cashtag_tickers)} if cashtag_tickers else {}
+    hashtag_tags = {t.slug: t for t in Tag.objects.filter(slug__in=hashtag_slugs)} if hashtag_slugs else {}
+    if not cashtag_tags and not hashtag_tags:
+        return html
+    linker = _InlineTagLinker(hashtag_tags, cashtag_tags)
+    linker.feed(html)
+    linker.close()
+    return linker.get_result()
+
 
 @register.filter
 def markdown_safe(text):
@@ -27,13 +113,15 @@ def markdown_safe(text):
 
     Markdown may contain raw HTML, so the rendered result is always run through nh3 with an
     allow-list: no images, scripts, styles or event handlers, and only http(s)/mailto links.
+    #hashtag and $CASHTAG mentions are linkified last, after sanitizing, so the new links are
+    never themselves subject to being stripped or re-escaped by nh3.
     """
     html = markdown.markdown(text or '', extensions=['nl2br', 'fenced_code', 'tables'])
     clean = nh3.clean(
         html, tags=ALLOWED_TAGS, attributes={'a': {'href', 'title'}},
         url_schemes={'http', 'https', 'mailto'}, link_rel='nofollow ugc noopener noreferrer',
     )
-    return mark_safe(clean)
+    return mark_safe(linkify_tags(clean))
 
 
 @register.filter
