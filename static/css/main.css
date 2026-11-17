@@ -615,6 +615,16 @@ p:has(> .md-editor) { margin: 0 0 8px; }
 .composer-prompt { display: flex; align-items: center; gap: var(--s3); color: var(--muted); }
 .composer-prompt:hover { color: var(--muted); text-decoration: none; border-color: var(--line-strong); }
 .composer-prompt-text { flex: 1; }
+/* Logged-in members get the full composer on desktop, but on phones it's replaced by this same
+   lightweight prompt anonymous visitors see — tapping it opens the full-screen composer (see
+   post_form.html's body.compose-fullscreen) instead of fighting a multi-field form for space
+   above the feed. Same dual-render/CSS-toggle pattern as the most-discussed strip reorder, at the
+   same breakpoint the FAB/full-screen composer themselves switch on at. */
+.composer-prompt-mobile { display: none; }
+@media (max-width: 640px) {
+  .composer-prompt-mobile { display: flex; }
+  .composer-desktop { display: none; }
+}
 .feed-controls { display: flex; gap: var(--s3); align-items: center; justify-content: space-between; flex-wrap: wrap; margin-bottom: var(--s3); }
 .feed-search { flex: 1 1 180px; max-width: 260px; } .feed-search input { height: 36px; min-height: 36px; }
 .chips-row-wrap { position: relative; margin-bottom: var(--s3); }

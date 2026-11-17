@@ -1626,7 +1626,10 @@ class HomePageTests(BaseCase):
         self.login(self.alice)
         page = self.home()
         self.assertNotContains(page, 'class="hero"')
-        self.assertNotContains(page, 'composer-prompt')
+        # The plain, login-linked prompt anonymous visitors see — not the same as the mobile-only
+        # composer-prompt-mobile members get (see test_member_gets_a_lightweight_prompt_on_mobile),
+        # whose href points at create_post, not login.
+        self.assertNotContains(page, 'class="card composer-prompt"')
 
     def test_member_sees_working_composer(self):
         self.login(self.alice)
@@ -1639,6 +1642,18 @@ class HomePageTests(BaseCase):
         post = Post.objects.get(title='Composer post')
         self.assertEqual(post.asset, self.asset)  # ticker typed in any case resolves to the company
         self.assertContains(self.home(), 'Composer post')
+
+    def test_member_gets_a_lightweight_prompt_on_mobile_that_opens_the_real_composer(self):
+        # CSS (not shown to a test client) toggles which of these two is visible at a given
+        # width — both are always in the markup, same dual-render pattern as the most-discussed
+        # strip reorder. The mobile one must open the real create_post page, not login.
+        self.login(self.alice)
+        response = self.home()
+        self.assertContains(response, 'class="card composer-prompt composer-prompt-mobile"')
+        page = response.content.decode()
+        prompt = page[page.index('composer-prompt-mobile'):]
+        self.assertIn(f'href="{reverse("create_post")}"', prompt[:200])
+        self.assertNotIn(reverse('login'), prompt[:200])
 
     def test_thesis_link_preselects_thesis_type(self):
         self.login(self.alice)

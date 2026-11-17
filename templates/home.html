@@ -8,7 +8,11 @@
 <div class="home-grid">
   <section class="feed" aria-label="{% trans 'Community feed' %}">
     {% if user.is_authenticated %}
-    <form class="card composer" method="post" action="{% url 'create_post' %}" enctype="multipart/form-data">{% csrf_token %}
+    <a class="card composer-prompt composer-prompt-mobile" href="{% url 'create_post' %}" hx-get="{% url 'create_post' %}" hx-target="#app-shell" hx-select="#app-shell" hx-swap="outerHTML show:window:top" hx-push-url="true">
+      <span class="composer-avatar" aria-hidden="true">{% include 'partials/icon.html' with name='edit' %}</span>
+      <span class="composer-prompt-text">{% trans "Share an insight, idea or question…" %}</span>
+    </a>
+    <form class="card composer composer-desktop" method="post" action="{% url 'create_post' %}" enctype="multipart/form-data">{% csrf_token %}
       <input type="hidden" name="type" value="discussion">
       <div class="composer-row-outer">
         <span class="composer-avatar" aria-hidden="true">{% if user.avatar %}<img src="{{ user.avatar.url }}" alt="">{% else %}{{ user.username|slice:':1'|upper }}{% endif %}</span>
