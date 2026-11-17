@@ -683,6 +683,15 @@ def search(request):
     categories_found = Category.objects.none()
     results = Post.objects.none()
     if query:
+        # $ADBE jumps straight to Adobe's own page (price/news/posts together); #adbe does the
+        # same for any tag, company or topic. Neither is a dead end if nothing matches — it just
+        # falls back to a normal text search on the word with the symbol stripped.
+        tag = services.resolve_inline_tag_query(query)
+        if tag:
+            return redirect(tag.get_absolute_url())
+        if query[0] in '$#':
+            query = query[1:].strip()
+    if query:
         companies_found = services.search_tags(query)
         categories_found = services.search_categories(query)
         users = User.objects.filter(username__icontains=query, is_shadow_banned=False).order_by('username')

@@ -432,6 +432,23 @@ def search_tags(query):
     return Tag.objects.filter(Q(ticker__icontains=query) | Q(name__icontains=query) | Q(company_name__icontains=query)).order_by('ticker', 'name')
 
 
+def resolve_inline_tag_query(query):
+    """A leading $ or # in a search box is a direct jump to that Tag's page, not a text search —
+    same matching rule as inline $CASHTAG/#hashtag linking in markdown_safe (see
+    community_extras.linkify_tags): $ only resolves to an existing *company*, by ticker; # resolves
+    to any existing Tag, by slug. Returns None (not a 404) when nothing matches, so the caller can
+    fall back to a normal text search on the bare word instead of a dead end.
+    """
+    if len(query) < 2 or query[0] not in '$#':
+        return None
+    word = query[1:].strip()
+    if not word:
+        return None
+    if query[0] == '$':
+        return Tag.objects.filter(is_company=True, ticker__iexact=word).first()
+    return Tag.objects.filter(slug=slugify(word, allow_unicode=True)).first()
+
+
 def search_categories(query):
     return Category.objects.filter(Q(name__icontains=query) | Q(slug__icontains=query)).order_by('name')
 

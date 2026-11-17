@@ -1502,6 +1502,35 @@ class SearchTests(BaseCase):
         self.assertEqual(self.titles('NEPSE'), ['NEPSE outlook'])
         self.assertEqual(self.titles('NePsE'), ['NEPSE outlook'])
 
+    def test_cashtag_search_jumps_straight_to_the_companys_own_page(self):
+        response = self.client.get(reverse('search'), {'q': '$NABIL'})
+        self.assertRedirects(response, self.asset.get_absolute_url())
+
+    def test_cashtag_search_is_case_insensitive(self):
+        response = self.client.get(reverse('search'), {'q': '$nabil'})
+        self.assertRedirects(response, self.asset.get_absolute_url())
+
+    def test_hashtag_search_jumps_to_the_tags_own_page(self):
+        topic = Tag.objects.create(name='IPO', slug='ipo-hashtag-search', is_company=False)
+        response = self.client.get(reverse('search'), {'q': '#ipo-hashtag-search'})
+        self.assertRedirects(response, topic.get_absolute_url())
+
+    def test_unmatched_cashtag_falls_back_to_a_normal_search_on_the_bare_word(self):
+        self.post(title='Untitled', body='no mention', asset=self.asset)
+        self.assertEqual(self.titles('$NAB'), ['Untitled'])
+
+    def test_unmatched_hashtag_falls_back_to_a_normal_search_on_the_bare_word(self):
+        # No Tag with slug "ipo" exists, so #ipo can't jump anywhere — it should fall back to a
+        # plain text search on "ipo" instead of a dead end.
+        self.post(title='Discussing ipo season', body='no special tag here')
+        self.assertEqual(self.titles('#ipo'), ['Discussing ipo season'])
+
+    def test_a_lone_dollar_or_hash_does_not_match_every_company(self):
+        response = self.client.get(reverse('search'), {'q': '$'})
+        self.assertEqual(list(response.context['companies']), [])
+        response = self.client.get(reverse('search'), {'q': '#'})
+        self.assertEqual(list(response.context['companies']), [])
+
     @skipUnless(connection.vendor == 'postgresql', 'Full-text ranking needs PostgreSQL')
     def test_postgres_full_text_ranks_title_matches_first(self):
         body_only = self.post(title='Weekly thread', body='People keep asking about dividends here.')
