@@ -28,7 +28,7 @@
     <link rel="stylesheet" href="{% static_v 'css/main.css' %}">
     {% block seo %}{% endblock %}
   </head>
-  <body class="{% block body_class %}{% endblock %}" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' data-markdown-preview-url="{% url 'markdown_preview' %}">
+  <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' data-markdown-preview-url="{% url 'markdown_preview' %}">
     {{ md_toolbar_labels|json_script:"md-toolbar-labels" }}
     {% include 'partials/icons.html' %}
     <a class="skip-link" href="#main">{% trans "Skip to main content" %}</a>
@@ -40,7 +40,7 @@
       </div>
     </div>
     {% endif %}
-    <div id="app-shell">
+    <div id="app-shell" class="{% block app_shell_class %}{% endblock %}">
     <header class="site-header">
       {% with current=request.resolver_match.url_name %}
       <div class="container hdr">

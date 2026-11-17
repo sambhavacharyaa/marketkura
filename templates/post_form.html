@@ -1,5 +1,5 @@
 {% extends 'base.html' %}{% load i18n %}
-{% block body_class %}compose-fullscreen{% endblock %}
+{% block app_shell_class %}compose-fullscreen{% endblock %}
 {% block title %}{% if editing %}{% trans "Edit post" %}{% else %}{% trans "Create post" %}{% endif %} | {{ SITE_NAME }}{% endblock %}
 {% block content %}
 <div class="compose-topbar">

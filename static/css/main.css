@@ -634,7 +634,7 @@ p:has(> .md-editor) { margin: 0 0 8px; }
 .composer-prompt-text { flex: 1; }
 /* Logged-in members get the full composer on desktop, but on phones it's replaced by this same
    lightweight prompt anonymous visitors see — tapping it opens the full-screen composer (see
-   post_form.html's body.compose-fullscreen) instead of fighting a multi-field form for space
+   post_form.html's #app-shell.compose-fullscreen) instead of fighting a multi-field form for space
    above the feed. Same dual-render/CSS-toggle pattern as the most-discussed strip reorder, at the
    same breakpoint the FAB/full-screen composer themselves switch on at. */
 .composer-prompt-mobile { display: none; }
@@ -881,21 +881,25 @@ a.chip-cat:hover { background: var(--brand-soft); color: var(--brand-dark); text
 .compose-cancel { color: var(--text); font-weight: 500; }
 .compose-cancel:hover { color: var(--muted); text-decoration: none; }
 @media (max-width: 640px) {
-  body.compose-fullscreen .site-header, body.compose-fullscreen .site-sidebar,
-  body.compose-fullscreen .sidebar-scrim, body.compose-fullscreen .bottom-nav,
-  body.compose-fullscreen .fab-compose, body.compose-fullscreen .promo-banner,
-  body.compose-fullscreen .messages, body.compose-fullscreen footer.disclaimer,
-  body.compose-fullscreen .form-panel > h1, body.compose-fullscreen .form-panel > p.muted,
-  body.compose-fullscreen .compose-submit-row {
+  /* The class lives on #app-shell, not <body> — every htmx navigation replaces #app-shell
+     wholesale (same staleness trap as the sidebar/hamburger fixes earlier), so scoping it there
+     means leaving the composer always lands on a correctly-chromed page. A class on <body>
+     itself would never get cleared by an hx-swap that only targets #app-shell, leaving every
+     page after the composer permanently missing its header/sidebar/bottom-nav. */
+  #app-shell.compose-fullscreen .site-header, #app-shell.compose-fullscreen .site-sidebar,
+  #app-shell.compose-fullscreen .sidebar-scrim, #app-shell.compose-fullscreen .bottom-nav,
+  #app-shell.compose-fullscreen .fab-compose, #app-shell.compose-fullscreen .messages,
+  #app-shell.compose-fullscreen footer.disclaimer, #app-shell.compose-fullscreen .form-panel > h1,
+  #app-shell.compose-fullscreen .form-panel > p.muted, #app-shell.compose-fullscreen .compose-submit-row {
     display: none;
   }
-  body.compose-fullscreen { padding-bottom: 0; }
-  body.compose-fullscreen .compose-topbar {
+  body:has(#app-shell.compose-fullscreen) { padding-bottom: 0; }
+  #app-shell.compose-fullscreen .compose-topbar {
     display: flex; align-items: center; justify-content: space-between;
     position: sticky; top: 0; z-index: 20; margin: -20px -20px 16px; padding: 14px 16px;
     background: var(--surface); border-bottom: 1px solid var(--line);
   }
-  body.compose-fullscreen .form-panel { border: 0; box-shadow: none; background: none; padding: 0; margin-bottom: 0; }
+  #app-shell.compose-fullscreen .form-panel { border: 0; box-shadow: none; background: none; padding: 0; margin-bottom: 0; }
 }
 
 /* ---- Auth pages (log in / sign up / password reset): a dedicated minimal shell, not the full

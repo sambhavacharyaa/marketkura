@@ -336,9 +336,12 @@ class PostingRuleTests(BaseCase):
 class ComposeFullscreenTests(BaseCase):
     """post_form.html (create and edit) renders a mobile-only full-screen composer: CSS strips
     the site chrome below the bottom-nav breakpoint and shows a sticky Cancel/Post bar instead —
-    see static/css/main.css's body.compose-fullscreen rules. Desktop keeps today's page as-is."""
+    see static/css/main.css's #app-shell.compose-fullscreen rules. Desktop keeps today's page as-is.
+    The class lives on #app-shell rather than <body> specifically so every htmx navigation (which
+    replaces #app-shell wholesale but never touches <body>) clears or re-applies it correctly —
+    see PostFormFullscreenHtmxTests below for the regression this was fixed from."""
 
-    def test_create_post_page_has_the_compose_fullscreen_body_class(self):
+    def test_create_post_page_has_the_compose_fullscreen_class(self):
         self.login(self.alice)
         self.assertContains(self.client.get(reverse('create_post')), 'class="compose-fullscreen"')
 
@@ -347,7 +350,7 @@ class ComposeFullscreenTests(BaseCase):
         self.login(self.alice)
         self.assertContains(self.client.get(reverse('edit_post', args=[post.pk])), 'class="compose-fullscreen"')
 
-    def test_other_pages_do_not_get_the_compose_fullscreen_body_class(self):
+    def test_other_pages_do_not_get_the_compose_fullscreen_class(self):
         self.assertNotContains(self.client.get(reverse('home')), 'compose-fullscreen')
 
     def test_topbar_post_button_submits_the_same_form_the_page_button_does(self):
@@ -361,6 +364,19 @@ class ComposeFullscreenTests(BaseCase):
         page = self.client.get(reverse('create_post')).content.decode()
         topbar = page[page.index('class="compose-topbar"'):page.index('</div>', page.index('class="compose-topbar"'))]
         self.assertIn(f'href="{reverse("home")}"', topbar)
+
+    def test_compose_fullscreen_class_is_on_app_shell_not_body(self):
+        # Regression: it was on <body>, which Cancel (and every other nav link — all of them use
+        # hx-select="#app-shell" hx-swap="outerHTML") never touches. #app-shell gets replaced
+        # wholesale on every htmx navigation, so the class self-clears there; left on <body> it
+        # stayed stuck forever after the first visit to the composer, hiding the header/sidebar/
+        # bottom-nav on every page after that.
+        self.login(self.alice)
+        page = self.client.get(reverse('create_post')).content.decode()
+        app_shell = page[page.index('id="app-shell"'):page.index('>', page.index('id="app-shell"'))]
+        self.assertIn('compose-fullscreen', app_shell)
+        body_tag = page[page.index('<body'):page.index('>', page.index('<body'))]
+        self.assertNotIn('compose-fullscreen', body_tag)
 
 
 class PostFormFieldGroupingTests(BaseCase):
