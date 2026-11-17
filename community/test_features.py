@@ -392,6 +392,21 @@ class PostFormFieldGroupingTests(BaseCase):
             field = page[page.index(f'data-field="{field_name}"'):page.index('>', page.index(f'data-field="{field_name}"'))]
             self.assertIn('data-show-for="ama"', field, f'{field_name} missing data-show-for="ama"')
 
+    def test_thesis_details_heading_appears_once_not_once_per_field(self):
+        # The 7 thesis-only fields are a contiguous run, and form_fields.html uses {% ifchanged %}
+        # to print the heading only on entering that run — not 7 copies of the same label.
+        self.login(self.alice)
+        page = self.client.get(reverse('create_post')).content.decode()
+        self.assertEqual(page.count('Thesis details'), 1)
+
+    def test_ama_details_heading_appears_once_and_only_for_verified_members(self):
+        self.login(self.alice)
+        self.assertNotIn('AMA details', self.client.get(reverse('create_post')).content.decode())
+        self.alice.is_verified = True
+        self.alice.save()
+        page = self.client.get(reverse('create_post')).content.decode()
+        self.assertEqual(page.count('AMA details'), 1)
+
 
 @override_settings(MEDIA_ROOT=tempfile.mkdtemp())
 class PostImageTests(BaseCase):

@@ -1,8 +1,11 @@
 {% load i18n community_extras %}{% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
-{% for field in form.visible_fields %}<div class="form-field" data-field="{{ field.name }}"{% if thesis_fields|has_field:field.name %} data-show-for="thesis"{% elif ama_fields|has_field:field.name %} data-show-for="ama"{% endif %}>
+{% for field in form.visible_fields %}{% with is_thesis=thesis_fields|has_field:field.name is_ama=ama_fields|has_field:field.name %}
+{% ifchanged is_thesis is_ama %}{% if is_thesis %}<p class="form-group-heading" data-show-for="thesis">{% trans "Thesis details" %}</p>{% elif is_ama %}<p class="form-group-heading" data-show-for="ama">{% trans "AMA details" %}</p>{% endif %}{% endifchanged %}
+<div class="form-field" data-field="{{ field.name }}"{% if is_thesis %} data-show-for="thesis"{% elif is_ama %} data-show-for="ama"{% endif %}>
   {% if field.field.widget.input_type == 'checkbox' %}<label><input type="checkbox" name="{{ field.html_name }}" id="{{ field.id_for_label }}"{% if field.value %} checked{% endif %}{% if field.field.required %} required{% endif %}> {{ field.label }}{% if field.field.required %}<span class="label-required" aria-hidden="true"> *</span>{% endif %}</label>
   {% elif show_password_toggle and field.field.widget.input_type == 'password' %}<label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}<span class="label-required" aria-hidden="true"> *</span>{% endif %}</label><div class="password-field">{{ field }}<button type="button" class="password-toggle" data-shown-label="{% trans 'Hide' %}" aria-pressed="false">{% trans "Show" %}</button></div>
   {% else %}<label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}<span class="label-required" aria-hidden="true"> *</span>{% endif %}</label>{{ field }}{% endif %}
   {% if field.help_text and not field.errors %}<span class="help">{{ field.help_text }}</span>{% endif %}
   {% for error in field.errors %}<p class="field-errors">{{ error }}</p>{% endfor %}
-</div>{% endfor %}
+</div>
+{% endwith %}{% endfor %}

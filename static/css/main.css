@@ -279,13 +279,12 @@ input[type=file]:hover::file-selector-button, input[type=file]:hover::-webkit-fi
 .helptext, .help { color: var(--muted); font-size: .85rem; display: block; margin: 4px 0 0; }
 .field-errors, .errorlist { color: var(--danger); margin: 4px 0; padding: 0; list-style: none; font-size: .9rem; }
 /* Fields only shown for a specific post type (thesis/AMA, see [data-show-for] in app.js) get a
-   tinted, bordered callout instead of sitting flush with the always-visible fields above them —
-   several in a row read as one cohesive "extra details for this post type" group. */
-.form-field[data-show-for] {
-  background: var(--brand-soft); border: 1px solid var(--brand-line); border-radius: var(--radius-sm);
-  padding: var(--s3) var(--s3) var(--s2); margin-bottom: var(--s2);
-}
-.form-field[data-show-for] label { margin-top: 0; }
+   one-time label (form_fields.html uses {% ifchanged %} to print it once per contiguous run,
+   not once per field) and a thin left accent instead of a solid tinted box per field — a wall of
+   identically-colored boxes read as noisy repetition rather than one cohesive group. */
+.form-group-heading { margin: 20px 0 2px; padding-left: 12px; border-left: 3px solid var(--brand); font-size: .75rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em; color: var(--muted); }
+.form-field[data-show-for] { padding-left: 12px; border-left: 3px solid var(--brand-line); }
+.form-field[data-show-for] label { margin-top: 12px; }
 .form-submit-row { margin-top: var(--s4); padding-top: var(--s4); border-top: 1px solid var(--line); }
 .btn, button.btn {
   --btn-fg: #fff;
