@@ -1,12 +1,17 @@
 {% extends 'base.html' %}{% load i18n %}
+{% block body_class %}compose-fullscreen{% endblock %}
 {% block title %}{% if editing %}{% trans "Edit post" %}{% else %}{% trans "Create post" %}{% endif %} | {{ SITE_NAME }}{% endblock %}
 {% block content %}
+<div class="compose-topbar">
+  <a class="compose-cancel" href="{% url 'home' %}" hx-get="{% url 'home' %}" hx-target="#app-shell" hx-select="#app-shell" hx-swap="outerHTML show:window:top" hx-push-url="true">{% trans "Cancel" %}</a>
+  <button class="btn small" type="submit" form="post-form">{% if editing %}{% trans "Save" %}{% else %}{% trans "Post" %}{% endif %}</button>
+</div>
 <section class="panel form-panel"><h1>{% if editing %}{% trans "Edit post" %}{% else %}{% trans "Create a post" %}{% endif %}</h1>
 <p class="muted">{% trans "MarketKuraa posts are user-generated. A thesis is self-reported opinion, not financial advice. Do not promote or hype thinly traded stocks." %} <a href="{% url 'guidelines' %}">{% trans "Community guidelines" %}</a></p>
-<form method="post" enctype="multipart/form-data" novalidate>{% csrf_token %}
+<form id="post-form" method="post" enctype="multipart/form-data" novalidate>{% csrf_token %}
   {% for error in form.non_field_errors %}<p class="field-errors">{{ error }}</p>{% endfor %}
   {% include 'partials/form_fields.html' with thesis_fields='position_type entry_price target_price stop_loss time_horizon thesis_risk disclosure' ama_fields='ama_starts_at ama_ends_at' %}
   {% if editing and post.image %}<p class="help">{% trans "Choose a new file above to replace the current image." %}</p>{% endif %}
-  <p style="margin-top:16px"><button class="btn" type="submit">{% if editing %}{% trans "Save changes" %}{% else %}{% trans "Publish post" %}{% endif %}</button></p>
+  <p class="compose-submit-row" style="margin-top:16px"><button class="btn" type="submit">{% if editing %}{% trans "Save changes" %}{% else %}{% trans "Publish post" %}{% endif %}</button></p>
 </form></section>
 {% endblock %}

@@ -232,13 +232,12 @@ class AuthTests(BaseCase):
     def test_google_login_url_is_wired(self):
         self.assertEqual(reverse('google_login'), '/auth/google/login/')
 
-    def test_mobile_bottom_nav_plus_button_sends_anonymous_users_to_login_with_next(self):
+    def test_mobile_compose_fab_sends_anonymous_users_to_login_with_next(self):
         page = self.client.get(reverse('home')).content.decode()
-        bottom_nav = page[page.index('id="bottom-nav"'):]
-        plus_link = bottom_nav[bottom_nav.index('bottom-nav-new'):bottom_nav.index('</a>', bottom_nav.index('bottom-nav-new'))]
-        self.assertIn(f'href="{reverse("login")}?next={reverse("create_post")}"', plus_link)
-        self.assertIn('aria-label="Create post"', plus_link)
-        self.assertNotIn('aria-label="Log in"', plus_link)
+        fab = page[page.index('fab-compose'):page.index('</a>', page.index('fab-compose'))]
+        self.assertIn(f'href="{reverse("login")}?next={reverse("create_post")}"', fab)
+        self.assertIn('aria-label="Create post"', fab)
+        self.assertNotIn('aria-label="Log in"', fab)
 
     def test_login_page_shows_a_create_post_specific_message_when_that_is_the_destination(self):
         response = self.client.get(reverse('login'), {'next': reverse('create_post')})
@@ -249,7 +248,7 @@ class AuthTests(BaseCase):
 
     def test_login_link_is_present_for_anonymous_mobile_users(self):
         # The header's "Log in" link must exist in the markup (CSS alone decides whether it's
-        # visible at a given width) and is distinct from the bottom-nav "+" button.
+        # visible at a given width) and is distinct from the floating compose button.
         page = self.client.get(reverse('home')).content.decode()
         self.assertIn('class="hdr-auth-links"', page)
         self.assertIn(f'class="hdr-link" href="{reverse("login")}"', page)
@@ -332,6 +331,36 @@ class PostingRuleTests(BaseCase):
         Tag.objects.create(name='ipo', slug='ipo', is_company=False)
         self.assertNotContains(self.client.get(reverse('companies')), '/company/ipo/')
         self.assertContains(self.client.get(reverse('companies')), 'Nabil Bank Limited')
+
+
+class ComposeFullscreenTests(BaseCase):
+    """post_form.html (create and edit) renders a mobile-only full-screen composer: CSS strips
+    the site chrome below the bottom-nav breakpoint and shows a sticky Cancel/Post bar instead —
+    see static/css/main.css's body.compose-fullscreen rules. Desktop keeps today's page as-is."""
+
+    def test_create_post_page_has_the_compose_fullscreen_body_class(self):
+        self.login(self.alice)
+        self.assertContains(self.client.get(reverse('create_post')), 'class="compose-fullscreen"')
+
+    def test_edit_post_page_also_gets_the_compose_fullscreen_treatment(self):
+        post = self.post()
+        self.login(self.alice)
+        self.assertContains(self.client.get(reverse('edit_post', args=[post.pk])), 'class="compose-fullscreen"')
+
+    def test_other_pages_do_not_get_the_compose_fullscreen_body_class(self):
+        self.assertNotContains(self.client.get(reverse('home')), 'compose-fullscreen')
+
+    def test_topbar_post_button_submits_the_same_form_the_page_button_does(self):
+        self.login(self.alice)
+        page = self.client.get(reverse('create_post')).content.decode()
+        self.assertIn('id="post-form"', page)
+        self.assertIn('<button class="btn small" type="submit" form="post-form">', page)
+
+    def test_topbar_cancel_link_goes_home(self):
+        self.login(self.alice)
+        page = self.client.get(reverse('create_post')).content.decode()
+        topbar = page[page.index('class="compose-topbar"'):page.index('</div>', page.index('class="compose-topbar"'))]
+        self.assertIn(f'href="{reverse("home")}"', topbar)
 
 
 @override_settings(MEDIA_ROOT=tempfile.mkdtemp())
@@ -2053,6 +2082,28 @@ class ThreadListHtmxNavigationTests(BaseCase):
         bottom_nav = page[page.index('id="bottom-nav"'):]
         self.assertIn(f'href="{reverse("companies")}"', bottom_nav)
         self.assertNotIn(f'href="{reverse("watchlists")}"', bottom_nav)
+
+    def test_bottom_nav_has_a_trending_tab_that_marks_itself_active(self):
+        # The "+" used to sit in this slot, before it became its own floating button (see the
+        # fab-compose tests) — Trending took the freed slot rather than dropping to 4 tabs.
+        page = self.client.get(reverse('home'), {'tab': 'trending'}).content.decode()
+        nav_start = page.index('id="bottom-nav"')
+        bottom_nav = page[nav_start:page.index('</nav>', nav_start)]
+        trending_link = bottom_nav[bottom_nav.index('tab=trending'):]
+        self.assertIn('aria-current="page"', trending_link[:250])
+
+    def test_bottom_nav_trending_tab_present_when_logged_out_too(self):
+        page = self.client.get(reverse('home')).content.decode()
+        nav_start = page.index('id="bottom-nav"')
+        bottom_nav = page[nav_start:page.index('</nav>', nav_start)]
+        self.assertIn('tab=trending', bottom_nav)
+
+    def test_fab_compose_present_and_targets_app_shell_for_logged_in_users(self):
+        self.login(self.alice)
+        page = self.client.get(reverse('home')).content.decode()
+        fab = page[page.index('fab-compose'):page.index('</a>', page.index('fab-compose'))]
+        self.assertIn(f'href="{reverse("create_post")}"', fab)
+        self.assertIn(f'hx-get="{reverse("create_post")}" hx-target="#app-shell"', fab)
 
     def test_home_tab_click_response_includes_a_correctly_updated_sidebar_fragment(self):
         # End-to-end: the response to an htmx navigation must contain an out-of-band #site-sidebar

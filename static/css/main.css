@@ -795,14 +795,10 @@ a.chip-cat:hover { background: var(--brand-soft); color: var(--brand-dark); text
    inside a flex item, which defaults to min-width:auto). */
 .bottom-nav-item span:last-child { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .bottom-nav-icon-wrap { position: relative; display: inline-flex; }
-/* The "new post" / "log in" action is lifted above the bar as a filled circular button — same
-   raised-FAB treatment every app with a bottom tab bar uses to mark its one primary action. */
-.bottom-nav-new {
-  flex: none; width: 46px; height: 46px; margin-top: -20px; border-radius: 50%;
-  background: linear-gradient(135deg, var(--brand), var(--brand-dark)); box-shadow: var(--shadow-md); color: #fff;
-}
-.bottom-nav-new:hover { color: #fff; background: linear-gradient(135deg, var(--brand-dark), #054431); }
-.bottom-nav-new .icon { width: 24px; height: 24px; }
+/* The "new post" / "log in" action floats on its own above the bar's right end, independent of
+   the 5 tab slots in it — the same raised circular FAB placement every app with a bottom tab bar
+   uses to mark its one primary action, sitting over the bar rather than taking one of its slots. */
+.fab-compose { display: none; }
 @media (max-width: 640px) {
   /* z-index 30 matches .site-header: both are persistent chrome that should stay above the
      sidebar-scrim (25) rather than get dimmed by it when the off-canvas drawer opens — only the
@@ -817,23 +813,62 @@ a.chip-cat:hover { background: var(--brand-soft); color: var(--brand-dark); text
   /* Leaves room so the bar never covers the last bit of page content (composer buttons, footer
      links) — matches the bar's own height plus its safe-area inset. */
   body { padding-bottom: calc(58px + env(safe-area-inset-bottom)); }
+  /* Floats clear of the bar itself (58px + its safe-area inset) with its own margin above that,
+     at the bottom-right corner — same z-index as the bar so it stays visible, not dimmed, behind
+     the off-canvas sidebar's scrim too. */
+  .fab-compose {
+    display: flex; align-items: center; justify-content: center;
+    position: fixed; right: 16px; bottom: calc(58px + env(safe-area-inset-bottom) + 14px); z-index: 30;
+    width: 52px; height: 52px; border-radius: 50%;
+    background: linear-gradient(135deg, var(--brand), var(--brand-dark)); box-shadow: var(--shadow-md); color: #fff;
+  }
+  .fab-compose:hover, .fab-compose:active { color: #fff; background: linear-gradient(135deg, var(--brand-dark), #054431); text-decoration: none; }
+  .fab-compose:active { transform: scale(.94); }
+  .fab-compose .icon { width: 26px; height: 26px; }
   /* The signed-out header crammed a hamburger, logo, "Log in", a "Sign up" button and the language
      switcher into one row with nothing to spare, wrapping into a cramped, uneven mess on true phone
      widths. Sign up stays one tap away via the bottom nav's own Sign up tab, so dropping the
      button here just removes that duplication. "Log in" itself stays as a plain text link though —
-     the bottom nav's "+" also leads there when signed out, but nothing marks it as a login
+     the floating compose button also leads there when signed out, but nothing marks it as a login
      shortcut (it just looks like "new post"), so without this there was no visible, obvious way
      to log in on mobile at all. */
   .hdr-auth-links .btn { display: none; }
   /* Signed in, the same crowding showed up one row down: New Post, the notification bell, the
      avatar and the language switcher all squeezed together — and New Post/Notifications are now
-     exact duplicates of the bottom nav's "+" and Alerts tabs, not just tight for space. */
+     exact duplicates of the floating compose button and the bottom nav's Alerts tab, not just
+     tight for space. */
   .hdr-dup-actions { display: none; }
   /* The header's own search box sits directly above the bottom nav's own Search tab, repeating
      the same destination twice on the same screen and costing a whole row of height. (The nav
      row below it — Home/Posts/Companies/Startups/News — is already gone from 1099px down; the
      Menu drawer covers those, same as it does here.) */
   .hdr-search { display: none; }
+}
+
+/* ---- Full-screen composer on phones (post_form.html's body gets .compose-fullscreen) ----
+   Desktop/tablet render this page like any other, with the header/sidebar/bottom-nav and the
+   normal in-form "Publish"/"Save" button at the bottom. Below the bottom-nav breakpoint, it
+   strips all of that chrome down to a single sticky Cancel/Post bar, matching a native app's
+   dedicated compose screen instead of a page with a form on it. */
+.compose-topbar { display: none; }
+.compose-cancel { color: var(--text); font-weight: 500; }
+.compose-cancel:hover { color: var(--muted); text-decoration: none; }
+@media (max-width: 640px) {
+  body.compose-fullscreen .site-header, body.compose-fullscreen .site-sidebar,
+  body.compose-fullscreen .sidebar-scrim, body.compose-fullscreen .bottom-nav,
+  body.compose-fullscreen .fab-compose, body.compose-fullscreen .promo-banner,
+  body.compose-fullscreen .messages, body.compose-fullscreen footer.disclaimer,
+  body.compose-fullscreen .form-panel > h1, body.compose-fullscreen .form-panel > p.muted,
+  body.compose-fullscreen .compose-submit-row {
+    display: none;
+  }
+  body.compose-fullscreen { padding-bottom: 0; }
+  body.compose-fullscreen .compose-topbar {
+    display: flex; align-items: center; justify-content: space-between;
+    position: sticky; top: 0; z-index: 20; margin: -20px -20px 16px; padding: 14px 16px;
+    background: var(--surface); border-bottom: 1px solid var(--line);
+  }
+  body.compose-fullscreen .form-panel { border: 0; box-shadow: none; background: none; padding: 0; margin-bottom: 0; }
 }
 
 /* ---- Auth pages (log in / sign up / password reset): a dedicated minimal shell, not the full

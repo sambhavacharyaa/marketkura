@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MarketKuraa\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-31 13:14+0000\n"
+"POT-Creation-Date: 2026-11-17 16:44+0000\n"
 "PO-Revision-Date: 2026-09-20 00:00+0000\n"
 "Last-Translator: MarketKuraa\n"
 "Language-Team: Nepali\n"
@@ -253,8 +253,8 @@ msgid ""
 "Shown as the background of the news tile. A wide, high-contrast photo reads "
 "best once a title is overlaid on it."
 msgstr ""
-"न्युज टाइलको पृष्ठभूमिमा देखाइन्छ। शीर्षक माथि राखिंदा चौडा, उच्च-कन्ट्रास्ट तस्बिर "
-"सबैभन्दा राम्रो देखिन्छ।"
+"न्युज टाइलको पृष्ठभूमिमा देखाइन्छ। शीर्षक माथि राखिंदा चौडा, उच्च-कन्ट्रास्ट तस्बिर सबैभन्दा "
+"राम्रो देखिन्छ।"
 
 msgid ""
 "Optional. Shown in listings and search results; falls back to the start of "
@@ -826,6 +826,10 @@ msgid ""
 msgstr ""
 "MarketKuraa मा %(name)s बारेका सामुदायिक छलफल, लगानी थेसिस र अन्तर्दृष्टि हेर्नुहोस्।"
 
+#, python-format
+msgid "Updated %(t)s"
+msgstr "%(t)s मा अद्यावधिक गरियो"
+
 msgid ""
 "Community-generated page. It collects every discussion and self-reported "
 "thesis about this company."
@@ -854,8 +858,18 @@ msgstr "वाचलिस्टमा थप्नुहोस्"
 msgid "Write about this"
 msgstr "यसबारे लेख्नुहोस्"
 
-msgid "Community opinion only. No live prices, ratings or recommendations."
-msgstr "सामुदायिक राय मात्र। कुनै लाइभ मूल्य, रेटिङ वा सिफारिस छैन।"
+msgid ""
+"Price and news shown for information only, from Finnhub or NEPSE where "
+"available. Not investment advice or a recommendation."
+msgstr ""
+"मूल्य र समाचार जानकारीको लागि मात्र देखाइएको हो, उपलब्ध भएमा Finnhub वा NEPSE "
+"बाट। लगानी सल्लाह वा सिफारिस होइन।"
+
+msgid "Latest news"
+msgstr "पछिल्लो समाचार"
+
+msgid "No news fetched for this company yet."
+msgstr "यस कम्पनीका लागि अहिलेसम्म कुनै समाचार ल्याइएको छैन।"
 
 msgid "Recent"
 msgstr "हालैका"
@@ -1831,6 +1845,12 @@ msgstr "टिप्पणी, भोट वा रिपोर्ट गर्�
 msgid "Edit post"
 msgstr "पोस्ट सम्पादन गर्नुहोस्"
 
+msgid "Save"
+msgstr "सुरक्षित गर्नुहोस्"
+
+msgid "Post"
+msgstr "पोस्ट गर्नुहोस्"
+
 msgid ""
 "MarketKuraa posts are user-generated. A thesis is self-reported opinion, not "
 "financial advice. Do not promote or hype thinly traded stocks."
@@ -2051,9 +2071,6 @@ msgstr "स्टार्टअप प्रोफाइल सम्पाद�
 msgid "A moderator reviews each profile before it appears in the directory."
 msgstr "निर्देशिकामा देखिनुअघि मोडरेटरले हरेक प्रोफाइल समीक्षा गर्छन्।"
 
-msgid "Save"
-msgstr "सुरक्षित गर्नुहोस्"
-
 msgid "Startups and founders"
 msgstr "स्टार्टअप र संस्थापकहरू"
 
@@ -2195,6 +2212,9 @@ msgstr[1] "%(n)s कम्पनीहरू"
 
 msgid "No watchlists yet."
 msgstr "अहिलेसम्म कुनै वाचलिस्ट छैन।"
+
+#~ msgid "Community opinion only. No live prices, ratings or recommendations."
+#~ msgstr "सामुदायिक राय मात्र। कुनै लाइभ मूल्य, रेटिङ वा सिफारिस छैन।"
 
 #~ msgid "Where investors talk shop"
 #~ msgstr "जहाँ लगानीकर्ताहरू आफ्ना कुरा गर्छन्"
