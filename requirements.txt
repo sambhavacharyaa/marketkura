@@ -9,4 +9,5 @@ python-dotenv>=1.2.0
 pillow>=10.0.0
 markdown>=3.6
 nh3>=0.2.18
+requests>=2.32.0
 gunicorn>=22.0

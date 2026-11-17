@@ -110,6 +110,16 @@ POST /api/reports/               (post or comment, category, reason)
 
 `python manage.py check --deploy --settings=marketkura.settings.prod` reports no issues.
 
+### Company price/news refresh
+
+Set `FINNHUB_API_KEY` (free tier at [finnhub.io](https://finnhub.io)) and schedule `python manage.py refresh_market_data` every few minutes, e.g. via cron:
+
+```cron
+*/5 * * * * cd /path/to/marketkura.com && .venv/bin/python manage.py refresh_market_data >> /path/to/logs/refresh_market_data.log 2>&1
+```
+
+Without the key set, the command is a no-op and the Companies section just keeps showing "no data yet" — nothing breaks. It covers global (non-NEPSE) tickers only; NEPSE-listed companies are refreshed by a separate command.
+
 ## Before public launch
 
 These need people, not code:

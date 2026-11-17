@@ -1,4 +1,4 @@
-{% extends 'base.html' %}{% load i18n %}
+{% extends 'base.html' %}{% load i18n community_extras %}
 {% block title %}{{ asset.ticker|default:asset.name }}{% if asset.company_name %} ({{ asset.company_name }}){% endif %} | {% trans "Discussions, Theses & Community Insights" %} | {{ SITE_NAME }}{% endblock %}
 {% block meta_description %}{% blocktrans with name=asset.display_name %}Explore community discussions, investment theses and insights about {{ name }} on MarketKuraa.{% endblocktrans %}{% endblock %}
 {% block og_description %}{% blocktrans with name=asset.display_name %}Explore community discussions, investment theses and insights about {{ name }} on MarketKuraa.{% endblocktrans %}{% endblock %}
@@ -7,14 +7,31 @@
 {% block content %}
 <section class="panel">
   <h1>{{ asset.ticker|default:asset.name }}{% if asset.company_name %} <span class="muted">· {{ asset.company_name }}</span>{% endif %}</h1>
+  {% if asset.last_price is not None %}
+  <p class="company-price">
+    <strong>{{ asset.last_price }}</strong>
+    <span class="{% if asset.price_change >= 0 %}price-up{% else %}price-down{% endif %}">{% if asset.price_change >= 0 %}+{% endif %}{{ asset.price_change }} ({% if asset.price_change_percent >= 0 %}+{% endif %}{{ asset.price_change_percent }}%)</span>
+    <span class="meta">{% blocktrans with t=asset.price_updated_at|nepal_time %}Updated {{ t }}{% endblocktrans %}</span>
+  </p>
+  {% endif %}
   <p>{{ asset.description|default:_('Community-generated page. It collects every discussion and self-reported thesis about this company.') }}</p>
   <div class="stats"><div><strong>{{ stats.total }}</strong><span class="meta">{% trans "posts" %}</span></div><div><strong>{{ stats.discussions }}</strong><span class="meta">{% trans "discussions" %}</span></div><div><strong>{{ stats.theses }}</strong><span class="meta">{% trans "theses" %}</span></div><div><strong>{{ stats.verified }}</strong><span class="meta">{% trans "by verified members" %}</span></div></div>
   <div class="actions" style="margin-top:12px">
     {% if user.is_authenticated %}{% if in_watchlist %}<span class="badge">✓ {% trans "In your watchlist" %}</span>{% else %}<form class="inline" method="post" action="{% url 'add_company_to_watchlist' asset.slug %}">{% csrf_token %}<button class="btn secondary" type="submit">{% trans "Add to watchlist" %}</button></form>{% endif %}
     <a class="btn" href="{% url 'create_post' %}">{% trans "Write about this" %}</a>{% endif %}
   </div>
-  <p class="meta" style="margin-top:12px">{% trans "Community opinion only. No live prices, ratings or recommendations." %}</p>
+  <p class="meta" style="margin-top:12px">{% trans "Price and news shown for information only, from Finnhub or NEPSE where available. Not investment advice or a recommendation." %}</p>
 </section>
+{% with recent_news=asset.news.all|slice:":5" %}
+<section class="panel" style="margin-top:16px">
+  <h2>{% trans "Latest news" %}</h2>
+  {% if recent_news %}
+  <ul class="company-news-list">
+    {% for item in recent_news %}<li><a href="{{ item.url }}" target="_blank" rel="noopener noreferrer nofollow">{{ item.headline }}</a><span class="meta">{{ item.source }} · {{ item.published_at|nepal_time }}</span></li>{% endfor %}
+  </ul>
+  {% else %}<p class="muted">{% trans "No news fetched for this company yet." %}</p>{% endif %}
+</section>
+{% endwith %}
 <div class="tabs"><a href="?section=recent"{% if section == 'recent' %} class="active"{% endif %}>{% trans "Recent" %}</a><a href="?section=theses"{% if section == 'theses' %} class="active"{% endif %}>{% trans "Theses" %}</a><a href="?section=discussions"{% if section == 'discussions' %} class="active"{% endif %}>{% trans "Discussions" %}</a><a href="?section=ama"{% if section == 'ama' %} class="active"{% endif %}>{% trans "AMAs" %}</a></div>
 {% include 'post_list.html' %}
 {% endblock %}

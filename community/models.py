@@ -144,6 +144,7 @@ class CompanyNews(models.Model):
     class Meta:
         ordering = ['-published_at']
         indexes = [models.Index(fields=['tag', '-published_at'])]
+        constraints = [models.UniqueConstraint(fields=['tag', 'url'], name='unique_company_news_url_per_tag')]
 
     def __str__(self):
         return self.headline

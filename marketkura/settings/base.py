@@ -176,6 +176,12 @@ USE_X_FORWARDED_FOR = env_bool('USE_X_FORWARDED_FOR', False)
 TURNSTILE_SITE_KEY = os.getenv('TURNSTILE_SITE_KEY', '')
 TURNSTILE_SECRET_KEY = os.getenv('TURNSTILE_SECRET_KEY', '')
 
+# --- Finnhub (optional) ------------------------------------------------------
+# Powers the Companies section's live price/news for global (non-NEPSE) tickers, via the
+# refresh_market_data management command. Unset in dev by default — the command then just skips
+# every company instead of failing, so pages keep rendering off whatever's already cached.
+FINNHUB_API_KEY = os.getenv('FINNHUB_API_KEY', '')
+
 # Shows the "Live prices" and "Market news" placeholder widgets on the home feed. Off by default —
 # a permanently-empty "coming soon" widget doesn't earn its space; turn it on once there's a real
 # data source (e.g. Marketaux) wired up behind it.
