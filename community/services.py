@@ -18,7 +18,7 @@ from django.utils.http import url_has_allowed_host_and_scheme
 from django.utils.text import slugify
 from django.utils.translation import gettext as _
 
-from .models import Category, Comment, CommentVote, Notification, Post, PostTag, PostVote, Report, Tag, User
+from .models import Category, Comment, CommentVote, Notification, Post, PostTag, PostVote, PriceHistory, Report, Tag, User
 
 MAX_COMMENT_DEPTH = 5
 MAX_TAGS_PER_POST = 5
@@ -451,6 +451,41 @@ def resolve_inline_tag_query(query):
 
 def search_categories(query):
     return Category.objects.filter(Q(name__icontains=query) | Q(slug__icontains=query)).order_by('name')
+
+
+# --- Price history / chart -----------------------------------------------------------------
+
+PRICE_HISTORY_KEPT_PER_COMPANY = 500
+
+
+def record_price_history(tag, price):
+    """Append one observed price snapshot for tag, pruning old ones beyond the cap. Called by
+    every market-data refresh command (Finnhub now, NEPSE later) so the chart's data source
+    doesn't matter to it — only that a real price was actually fetched, never backfilled."""
+    PriceHistory.objects.create(tag=tag, price=price)
+    stale_ids = tag.price_history.order_by('-recorded_at').values_list('id', flat=True)[PRICE_HISTORY_KEPT_PER_COMPANY:]
+    if stale_ids:
+        PriceHistory.objects.filter(id__in=list(stale_ids)).delete()
+
+
+def price_chart_points(tag, limit=100):
+    """Up to `limit` most recent price points for tag, normalized into a 0-100 square so the
+    template can draw them straight into an SVG viewBox="0 0 100 100" polyline. None if there
+    are fewer than 2 points — nothing to draw a line between, and a single dot isn't a chart.
+    """
+    history = list(tag.price_history.order_by('-recorded_at').values_list('price', flat=True)[:limit])
+    history.reverse()
+    if len(history) < 2:
+        return None
+    prices = [float(p) for p in history]
+    lo, hi = min(prices), max(prices)
+    span = hi - lo or 1  # flat line (price hasn't moved across the window) — avoid a /0
+    n = len(prices)
+    points = [
+        {'x': round(i / (n - 1) * 100, 2), 'y': round(100 - (p - lo) / span * 100, 2)}
+        for i, p in enumerate(prices)
+    ]
+    return {'points': points, 'is_up': prices[-1] >= prices[0], 'low': round(lo, 2), 'high': round(hi, 2)}
 
 
 # --- Moderation helpers ----------------------------------------------------------------

@@ -391,6 +391,11 @@ a.badge:active { transform: translateY(0) scale(.95); }
 .company-price { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin: 4px 0 var(--s3); }
 .company-price strong { font-size: 1.3rem; font-family: var(--font-mono); }
 .company-price-inline { margin: 4px 0; font-size: .92rem; } .company-price-inline strong { font-family: var(--font-mono); }
+/* A sparkline built from our own recorded price-history points (see services.price_chart_points)
+   — never a backfilled or interpolated series, so the range caption below it is honest about how
+   little history a newly-tracked company may still have. */
+.company-chart { margin: 4px 0 var(--s3); }
+.company-chart-svg { display: block; width: 100%; height: 72px; }
 .company-news-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 10px; }
 .company-news-list li { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 16px; } .grid .card { margin: 0; }

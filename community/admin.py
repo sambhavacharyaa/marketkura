@@ -3,8 +3,8 @@ from django.contrib.auth.admin import UserAdmin as DjangoUserAdmin
 from django.utils import timezone
 
 from .models import (Category, CategoryFollow, Comment, CommentVote, CompanyNews, ContactMessage, Follow, NewsPost,
-                     Notification, Post, PostTag, PostVote, Report, StartupProfile, Tag, User, VerificationRequest,
-                     Watchlist, WatchlistItem)
+                     Notification, Post, PostTag, PostVote, PriceHistory, Report, StartupProfile, Tag, User,
+                     VerificationRequest, Watchlist, WatchlistItem)
 
 
 @admin.register(User)
@@ -46,6 +46,12 @@ class CompanyNewsAdmin(admin.ModelAdmin):
     list_display = ('headline', 'tag', 'source', 'published_at')
     list_filter = ('source',)
     search_fields = ('headline', 'tag__name', 'tag__ticker')
+
+
+@admin.register(PriceHistory)
+class PriceHistoryAdmin(admin.ModelAdmin):
+    list_display = ('tag', 'price', 'recorded_at')
+    search_fields = ('tag__name', 'tag__ticker')
 
 
 @admin.register(Post)

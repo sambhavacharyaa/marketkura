@@ -563,6 +563,7 @@ def company_detail(request, slug):
     return render(request, 'company_detail.html', {
         'asset': asset, 'posts': paginate(request, base), 'stats': stats, 'section': section, 'in_watchlist': in_watchlist,
         'canonical_url': request.build_absolute_uri(asset.get_absolute_url()),
+        'chart': services.price_chart_points(asset),
     })
 
 

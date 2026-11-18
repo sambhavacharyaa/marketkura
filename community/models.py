@@ -150,6 +150,24 @@ class CompanyNews(models.Model):
         return self.headline
 
 
+class PriceHistory(models.Model):
+    """One observed price snapshot for a company Tag, recorded by every market-data refresh
+    command (Finnhub now, NEPSE later) — never backfilled or interpolated, so a chart built from
+    these only ever shows prices the site actually fetched, not invented ones."""
+
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name='price_history')
+    price = models.DecimalField(max_digits=14, decimal_places=2)
+    recorded_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ['recorded_at']
+        indexes = [models.Index(fields=['tag', 'recorded_at'])]
+        verbose_name_plural = 'price history'
+
+    def __str__(self):
+        return f'{self.tag}: {self.price} at {self.recorded_at:%Y-%m-%d %H:%M}'
+
+
 class Post(models.Model):
     TYPE_DISCUSSION = 'discussion'
     TYPE_THESIS = 'thesis'

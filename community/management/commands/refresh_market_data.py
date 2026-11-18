@@ -1,4 +1,5 @@
-"""Refresh live price and recent news for every company Tag with a ticker, from Finnhub.
+"""Refresh live price, a price-history point, and recent news for every company Tag with a
+ticker, from Finnhub.
 
 Meant to run on a schedule (e.g. every few minutes via cron — see the deploy notes), not on every
 page render: it writes to the database, while the Companies section itself only ever reads the
@@ -19,6 +20,7 @@ from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.utils import timezone
 
+from community import services
 from community.finnhub_client import get_company_news, get_quote
 from community.models import CompanyNews, Tag
 
@@ -56,6 +58,7 @@ class Command(BaseCommand):
                 tag.price_change_percent = quote['change_percent']
                 tag.price_updated_at = timezone.now()
                 tag.save(update_fields=['last_price', 'price_change', 'price_change_percent', 'price_updated_at'])
+                services.record_price_history(tag, quote['price'])
             updated += 1
             for item in get_company_news(tag.ticker, days=NEWS_DAYS):
                 if dry_run:

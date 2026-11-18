@@ -9,8 +9,8 @@ from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.utils import timezone
 
-from . import finnhub_client
-from .models import CompanyNews, Tag
+from . import finnhub_client, services
+from .models import CompanyNews, PriceHistory, Tag
 
 
 class FinnhubClientTests(TestCase):
@@ -85,6 +85,8 @@ class RefreshMarketDataCommandTests(TestCase):
         self.assertIsNone(self.nepse_only.last_price)
         self.assertIn('update 1 compan', out)
         self.assertIn('skip 1', out)
+        self.assertEqual(PriceHistory.objects.filter(tag=self.apple).count(), 1)
+        self.assertFalse(PriceHistory.objects.filter(tag=self.nepse_only).exists())
 
     @override_settings(FINNHUB_API_KEY='test-key')
     @mock.patch('community.management.commands.refresh_market_data.get_quote', return_value=None)
@@ -95,6 +97,7 @@ class RefreshMarketDataCommandTests(TestCase):
         self.apple.refresh_from_db()
         self.assertIsNone(self.apple.last_price)
         self.assertFalse(CompanyNews.objects.exists())
+        self.assertFalse(PriceHistory.objects.exists())
 
     @override_settings(FINNHUB_API_KEY='test-key')
     @mock.patch('community.management.commands.refresh_market_data.get_quote')
@@ -126,6 +129,55 @@ class RefreshMarketDataCommandTests(TestCase):
         self.assertNotIn('https://example.com/0', kept_urls)
 
 
+class PriceHistoryServiceTests(TestCase):
+    def setUp(self):
+        self.apple = Tag.objects.create(name='Apple', slug='apple', ticker='AAPL', company_name='Apple Inc.')
+
+    def test_record_price_history_appends_a_point(self):
+        services.record_price_history(self.apple, 227.5)
+        services.record_price_history(self.apple, 228.1)
+        self.assertEqual(list(self.apple.price_history.order_by('recorded_at').values_list('price', flat=True)),
+                          [Decimal('227.5'), Decimal('228.1')])
+
+    def test_record_price_history_prunes_beyond_the_cap(self):
+        with mock.patch('community.services.PRICE_HISTORY_KEPT_PER_COMPANY', 3):
+            for price in range(5):
+                services.record_price_history(self.apple, 100 + price)
+            self.assertEqual(self.apple.price_history.count(), 3)
+            kept = list(self.apple.price_history.order_by('recorded_at').values_list('price', flat=True))
+            self.assertEqual(kept, [Decimal('102'), Decimal('103'), Decimal('104')])
+
+    def test_price_chart_points_is_none_with_fewer_than_two_points(self):
+        self.assertIsNone(services.price_chart_points(self.apple))
+        services.record_price_history(self.apple, 100)
+        self.assertIsNone(services.price_chart_points(self.apple))
+
+    def test_price_chart_points_normalizes_into_a_0_to_100_square(self):
+        for price in (100, 150, 100):
+            services.record_price_history(self.apple, price)
+        chart = services.price_chart_points(self.apple)
+        self.assertEqual(len(chart['points']), 3)
+        self.assertEqual(chart['low'], 100)
+        self.assertEqual(chart['high'], 150)
+        # Lowest price -> y=100 (bottom of the viewBox); highest -> y=0 (top).
+        ys = [p['y'] for p in chart['points']]
+        self.assertEqual(ys[0], 100)
+        self.assertEqual(ys[1], 0)
+        self.assertEqual(ys[2], 100)
+        self.assertEqual([p['x'] for p in chart['points']], [0, 50, 100])
+
+    def test_price_chart_points_is_up_reflects_first_vs_last_point(self):
+        for price in (100, 90, 110):
+            services.record_price_history(self.apple, price)
+        self.assertTrue(services.price_chart_points(self.apple)['is_up'])
+
+    def test_price_chart_points_flat_line_does_not_divide_by_zero(self):
+        for _ in range(3):
+            services.record_price_history(self.apple, 100)
+        chart = services.price_chart_points(self.apple)
+        self.assertEqual([p['y'] for p in chart['points']], [100, 100, 100])
+
+
 class CompanyPageMarketDataTests(TestCase):
     def setUp(self):
         self.apple = Tag.objects.create(name='Apple', slug='apple', ticker='AAPL', company_name='Apple Inc.')
@@ -134,6 +186,29 @@ class CompanyPageMarketDataTests(TestCase):
         response = self.client.get(self.apple.get_absolute_url())
         self.assertNotContains(response, 'class="company-price"')
         self.assertContains(response, 'Not investment advice')
+
+    def test_chart_hidden_with_fewer_than_two_history_points(self):
+        self.apple.last_price = 227.5
+        self.apple.price_change = 1.2
+        self.apple.price_change_percent = 0.53
+        self.apple.price_updated_at = timezone.now()
+        self.apple.save()
+        services.record_price_history(self.apple, 227.5)
+        response = self.client.get(self.apple.get_absolute_url())
+        self.assertNotContains(response, 'company-chart')
+
+    def test_chart_shown_once_there_is_a_real_price_history(self):
+        self.apple.last_price = 228.1
+        self.apple.price_change = 1.2
+        self.apple.price_change_percent = 0.53
+        self.apple.price_updated_at = timezone.now()
+        self.apple.save()
+        services.record_price_history(self.apple, 227.5)
+        services.record_price_history(self.apple, 228.1)
+        response = self.client.get(self.apple.get_absolute_url())
+        self.assertContains(response, 'company-chart-svg')
+        self.assertContains(response, 'price-up')
+        self.assertContains(response, '<polyline')
 
     def test_price_shows_once_fetched_with_correct_up_down_color_class(self):
         self.apple.last_price = 227.5
