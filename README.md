@@ -98,34 +98,4 @@ POST /api/reports/               (post or comment, category, reason)
 
 ## Production deployment
 
-1. Set the variables from `.env.example` (at minimum `DJANGO_SECRET_KEY`, `ALLOWED_HOSTS`, `DB_*`, `CSRF_TRUSTED_ORIGINS`; add `BEHIND_PROXY=True` and `USE_X_FORWARDED_FOR=True` behind nginx).
-2. Run:
-   ```bash
-   export DJANGO_SETTINGS_MODULE=marketkura.settings.prod
-   python manage.py migrate
-   python manage.py createcachetable    # shared cache for rate limiting; or set REDIS_URL instead
-   python manage.py collectstatic --noinput
-   ```
-3. Serve with gunicorn behind nginx. Samples are in [deploy/](deploy/).
-
-`python manage.py check --deploy --settings=marketkura.settings.prod` reports no issues.
-
-### Company price/news refresh
-
-Set `FINNHUB_API_KEY` (free tier at [finnhub.io](https://finnhub.io)) and schedule `python manage.py refresh_market_data` every few minutes, e.g. via cron:
-
-```cron
-*/5 * * * * cd /path/to/marketkura.com && .venv/bin/python manage.py refresh_market_data >> /path/to/logs/refresh_market_data.log 2>&1
-```
-
-Without the key set, the command is a no-op and the Companies section just keeps showing "no data yet" — nothing breaks. It covers global (non-NEPSE) tickers only; NEPSE-listed companies are refreshed by a separate command.
-
-## Before public launch
-
-These need people, not code:
-
-- Seed 20 to 30 real threads (blueprint §19, empty-platform risk).
-- Have a native speaker review the Nepali translations.
-- Create the Google OAuth credentials and configure email sending (password reset).
-- Decide which categories, if any, should be high-trust.
-- Run load testing on the target VPS (not done here).
+See [DEPLOYMENT.md](DEPLOYMENT.md) — covers environment variables, the cPanel auto-deploy path actually in use for marketkuraa.com, a plain VPS (gunicorn + nginx + systemd) alternative, the market-data refresh cron job, a post-deploy checklist, and rollback.
