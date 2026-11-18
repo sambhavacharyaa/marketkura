@@ -324,7 +324,7 @@ class PostingRuleTests(BaseCase):
         for n in range(3):
             Comment.objects.create(post=post, user=self.bob, body=f'c{n}')
         response = self.client.get(self.asset.get_absolute_url())
-        self.assertContains(response, '3 replies')
+        self.assertContains(response, 'aria-label="3 replies"')
         self.assertEqual(response.context['stats']['total'], 1)
 
     def test_company_topic_tags_excluded_from_company_directory(self):
@@ -1756,8 +1756,8 @@ class HomePageTests(BaseCase):
         Comment.objects.create(post=post, user=self.bob, body='c')
         page = self.home()
         self.assertContains(page, '$NABIL')
-        self.assertContains(page, '1 reply')
-        self.assertContains(page, '1 min read')
+        self.assertContains(page, 'aria-label="1 reply"')
+        self.assertContains(page, 'aria-label="1 min read"')
         self.assertContains(page, 'pos-short')
         self.assertContains(page, 'Entry 120.5')
 

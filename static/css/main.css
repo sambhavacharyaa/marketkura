@@ -657,16 +657,20 @@ p:has(> .md-editor) { margin: 0 0 8px; }
 .chip-filter:active { transform: scale(.95); }
 
 /* ---- Feed card ---- */
+/* One continuous bordered panel holding the whole page of posts, each post a divided row inside
+   it rather than its own floating card — a timeline, not a stack of cards (the "make it like
+   Twitter" layout: big avatar as its own column, no per-post box/shadow/gap). */
+.feed-stream { border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .7), var(--shadow); overflow: hidden; margin-bottom: var(--s3); }
 .feed-card {
-  position: relative; overflow: hidden;
-  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius);
-  padding: 14px 16px; margin-bottom: var(--s3);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, .7), var(--shadow);
-  transition: border-color var(--dur) var(--ease), transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+  position: relative; padding: 14px 16px; border-bottom: 1px solid var(--line);
+  transition: background-color var(--dur) var(--ease);
   animation: fade-up var(--dur-slow) var(--ease) both;
   animation-delay: min(calc(var(--i, 0) * 45ms), 320ms);
 }
-.feed-card:hover { border-color: var(--line-strong); transform: translateY(-2px); box-shadow: inset 0 1px 0 rgba(255, 255, 255, .7), var(--shadow-md); }
+.feed-card:last-child { border-bottom: 0; }
+.feed-card:hover { background: var(--bg); }
+.feed-row { display: flex; gap: 12px; align-items: flex-start; }
+.feed-main { min-width: 0; flex: 1; }
 
 /* ---- Thread list skeleton (shown only while htmx is fetching a new feed/category view) ---- */
 .thread-skeleton { display: none; }
@@ -679,9 +683,6 @@ p:has(> .md-editor) { margin: 0 0 8px; }
 }
 .skeleton-card:nth-child(2n) { height: 72px; }
 @keyframes skeleton-shimmer { from { background-position: 135% 0; } to { background-position: -135% 0; } }
-.feed-card::before { content: ""; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: transparent; }
-.feed-card:has(.chip-thesis)::before { background: var(--long); }
-.feed-card:has(.chip-ama)::before { background: var(--purple); }
 .vote-arrow { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: var(--radius-sm); border: 0; background: transparent; color: var(--muted); cursor: pointer; transition: background-color var(--dur) var(--ease), color var(--dur) var(--ease), transform var(--dur-fast) var(--ease); }
 .vote-arrow:hover { background: var(--brand-soft); color: var(--brand-dark); text-decoration: none; } .vote-arrow.voted { color: var(--brand-dark); background: var(--brand-soft); } .vote-arrow.static { cursor: default; opacity: .5; } .vote-arrow.static:hover { background: none; color: var(--muted); }
 .vote-arrow:active { transform: scale(.88); }
@@ -704,10 +705,10 @@ p:has(> .md-editor) { margin: 0 0 8px; }
 /* Same circular avatar treatment as .composer-avatar (initial-letter fallback, cropped photo),
    a size down — decorative here since the username text right next to it already links to the
    same profile; a second identical link would just be a redundant tab stop. */
-.feed-avatar { width: 32px; height: 32px; border-radius: 50%; background: var(--brand-soft); color: var(--brand-dark); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: .85rem; flex: none; overflow: hidden; }
+.feed-avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--brand-soft); color: var(--brand-dark); display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 1.05rem; flex: none; overflow: hidden; }
 .feed-avatar img { width: 100%; height: 100%; object-fit: cover; }
 .feed-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 6px; margin-bottom: 2px; color: var(--muted); font-size: .85rem; }
-.feed-meta a:not(.chip) { color: var(--text); font-weight: 600; }
+.feed-meta a:not(.chip) { color: var(--text); font-weight: 700; }
 .dot { color: var(--line-strong); }
 .chip { display: inline-flex; align-items: center; gap: 4px; font-size: .75rem; padding: 2px 9px; border-radius: 999px; background: var(--bg); color: var(--muted); font-weight: 500; }
 a.chip-cat:hover { background: var(--brand-soft); color: var(--brand-dark); text-decoration: none; }
@@ -723,9 +724,13 @@ a.chip-cat:hover { background: var(--brand-soft); color: var(--brand-dark); text
 .thesis-line { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; margin: 8px 0 0; padding: 7px 10px; background: var(--bg); border-radius: var(--radius-sm); font-size: .85rem; color: var(--muted); }
 .pos { font-weight: 700; padding: 1px 8px; border-radius: 4px; font-size: .78rem; text-transform: uppercase; letter-spacing: .03em; }
 .pos-long { color: var(--long); background: #d1fae5; } .pos-short { color: var(--short); background: #fee4e2; } .pos-watching { color: var(--info); background: var(--info-soft); } .pos-ama { color: var(--purple); background: var(--purple-soft); }
-.feed-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 18px; margin-top: 10px; color: var(--muted); font-size: .85rem; }
+/* Icons spread full-width with even gaps between them, Twitter's own action-row layout, instead
+   of clustered together at the left with a fixed gap. */
+.feed-foot { display: flex; align-items: center; justify-content: space-between; max-width: 340px; margin-top: 10px; color: var(--muted); font-size: .85rem; }
 .feed-foot a, .feed-foot span { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); min-height: 24px; } .feed-foot a:hover { color: var(--brand-dark); text-decoration: none; }
-.feed-foot .vote-group-sm { margin-right: 4px; }
+/* The vote pill keeps its bordered-button look everywhere else it appears (post detail, comments)
+   — only here, inline among plain icon-plus-number actions, it sheds the border/fill to match. */
+.feed-foot .vote-group-sm { border: 0; background: none; padding: 0; gap: 4px; }
 
 /* On desktop the sidebar sits permanently next to the header, both visible at once — showing the
    logo in both, and Posts/Companies/Startups/News in both the header nav and the sidebar, was
