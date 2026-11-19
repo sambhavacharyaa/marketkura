@@ -147,35 +147,42 @@ class PriceHistoryServiceTests(TestCase):
             kept = list(self.apple.price_history.order_by('recorded_at').values_list('price', flat=True))
             self.assertEqual(kept, [Decimal('102'), Decimal('103'), Decimal('104')])
 
-    def test_price_chart_points_is_none_with_fewer_than_two_points(self):
+    def test_price_chart_points_is_none_below_the_minimum_point_count(self):
+        # Below MIN_CHART_POINTS, a normalized chart is just one straight diagonal segment —
+        # indistinguishable between any two companies that both moved the same direction. That's
+        # literally what "every company's graph looks the same" turned out to be (every company
+        # had exactly 2 points). So nothing renders until there's enough real texture to show.
         self.assertIsNone(services.price_chart_points(self.apple))
-        services.record_price_history(self.apple, 100)
+        for price in (100, 101, 102, 103, 104):  # 5 points, one short of the default minimum (6)
+            services.record_price_history(self.apple, price)
         self.assertIsNone(services.price_chart_points(self.apple))
 
     def test_price_chart_points_normalizes_into_a_0_to_100_square(self):
-        for price in (100, 150, 100):
+        for price in (100, 120, 140, 130, 110, 150, 100):
             services.record_price_history(self.apple, price)
         chart = services.price_chart_points(self.apple)
         self.assertEqual(chart['low'], 100)
         self.assertEqual(chart['high'], 150)
         # Lowest price -> y=100 (bottom of the viewBox); highest -> y=0 (top).
-        self.assertEqual(chart['line_points'], '0.0,100.0 50.0,0.0 100.0,100.0')
+        self.assertEqual(chart['line_points'].split()[0], '0.0,100.0')
+        self.assertIn('83.33,0.0', chart['line_points'])  # the 150 point, 6th of 7 (index 5/6)
         # The end dot sits at the last point, and the area path drops to the baseline (y=100) at
         # both the first and last x before closing, so it's a filled region, not just a line.
         self.assertEqual(chart['last_x'], 100)
         self.assertEqual(chart['last_y'], 100)
-        self.assertEqual(chart['area_path'], 'M0.0,100 L0.0,100.0 L50.0,0.0 L100.0,100.0 L100.0,100 Z')
+        self.assertTrue(chart['area_path'].startswith('M0.0,100 L0.0,100.0'))
+        self.assertTrue(chart['area_path'].endswith('L100.0,100 Z'))
 
     def test_price_chart_points_is_up_reflects_first_vs_last_point(self):
-        for price in (100, 90, 110):
+        for price in (100, 95, 90, 95, 100, 110):
             services.record_price_history(self.apple, price)
         self.assertTrue(services.price_chart_points(self.apple)['is_up'])
 
     def test_price_chart_points_flat_line_does_not_divide_by_zero(self):
-        for _ in range(3):
+        for _ in range(6):
             services.record_price_history(self.apple, 100)
         chart = services.price_chart_points(self.apple)
-        self.assertEqual(chart['line_points'], '0.0,100.0 50.0,100.0 100.0,100.0')
+        self.assertEqual(set(chart['line_points'].split()[i].split(',')[1] for i in range(6)), {'100.0'})
 
 
 class CompanyPageMarketDataTests(TestCase):
@@ -187,28 +194,31 @@ class CompanyPageMarketDataTests(TestCase):
         self.assertNotContains(response, 'class="company-price"')
         self.assertContains(response, 'Not investment advice')
 
-    def test_chart_hidden_with_fewer_than_two_history_points(self):
+    def test_chart_hidden_with_too_few_history_points(self):
         self.apple.last_price = 227.5
         self.apple.price_change = 1.2
         self.apple.price_change_percent = 0.53
         self.apple.price_updated_at = timezone.now()
         self.apple.save()
-        services.record_price_history(self.apple, 227.5)
+        for price in (226, 226.5, 227):  # below MIN_CHART_POINTS
+            services.record_price_history(self.apple, price)
         response = self.client.get(self.apple.get_absolute_url())
-        self.assertNotContains(response, 'company-chart')
+        self.assertNotContains(response, 'company-chart-svg')
+        self.assertContains(response, 'Building price history')
 
-    def test_chart_shown_once_there_is_a_real_price_history(self):
+    def test_chart_shown_once_there_is_enough_real_price_history(self):
         self.apple.last_price = 228.1
         self.apple.price_change = 1.2
         self.apple.price_change_percent = 0.53
         self.apple.price_updated_at = timezone.now()
         self.apple.save()
-        services.record_price_history(self.apple, 227.5)
-        services.record_price_history(self.apple, 228.1)
+        for price in (225, 226, 227, 227.5, 227.8, 228.1):
+            services.record_price_history(self.apple, price)
         response = self.client.get(self.apple.get_absolute_url())
         self.assertContains(response, 'company-chart-svg')
         self.assertContains(response, 'price-up')
         self.assertContains(response, '<polyline')
+        self.assertNotContains(response, 'Building price history')
 
     def test_price_shows_once_fetched_with_correct_up_down_color_class(self):
         self.apple.last_price = 227.5

@@ -28,7 +28,7 @@
     </div>
     <span class="meta">{% blocktrans with low=chart.low high=chart.high %}Range {{ low }}-{{ high }} over this period{% endblocktrans %}</span>
   </div>
-  {% endif %}
+  {% else %}<p class="meta">{% trans "Building price history. Check back once a few more refreshes have run." %}</p>{% endif %}
   {% endif %}
   <p>{{ asset.description|default:_('Community-generated page. It collects every discussion and self-reported thesis about this company.') }}</p>
   <div class="stats"><div><strong>{{ stats.total }}</strong><span class="meta">{% trans "posts" %}</span></div><div><strong>{{ stats.discussions }}</strong><span class="meta">{% trans "discussions" %}</span></div><div><strong>{{ stats.theses }}</strong><span class="meta">{% trans "theses" %}</span></div><div><strong>{{ stats.verified }}</strong><span class="meta">{% trans "by verified members" %}</span></div></div>

@@ -468,15 +468,22 @@ def record_price_history(tag, price):
         PriceHistory.objects.filter(id__in=list(stale_ids)).delete()
 
 
+MIN_CHART_POINTS = 6
+
+
 def price_chart_points(tag, limit=100):
     """Up to `limit` most recent price points for tag, normalized into a 0-100 square so the
     template can draw them straight into an SVG viewBox="0 0 100 100": a filled area path, the
-    line itself, and the last point's coordinates for a highlighted end dot. None if there are
-    fewer than 2 points — nothing to draw a line between, and a single dot isn't a chart.
+    line itself, and the last point's coordinates for a highlighted end dot. None under
+    MIN_CHART_POINTS — with only 2 or 3 points, a normalized chart is just one straight diagonal
+    segment, indistinguishable between any two companies that both happened to move the same
+    direction (this is what "every company's graph looks the same" turned out to be: every
+    company had exactly 2 points at the time). A newly-tracked company just shows no chart yet
+    rather than a technically-real but visually-meaningless line.
     """
     history = list(tag.price_history.order_by('-recorded_at').values_list('price', flat=True)[:limit])
     history.reverse()
-    if len(history) < 2:
+    if len(history) < MIN_CHART_POINTS:
         return None
     prices = [float(p) for p in history]
     lo, hi = min(prices), max(prices)

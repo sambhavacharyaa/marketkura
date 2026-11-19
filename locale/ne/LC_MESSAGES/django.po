@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MarketKuraa\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-17 16:44+0000\n"
+"POT-Creation-Date: 2026-11-19 17:00+0000\n"
 "PO-Revision-Date: 2026-09-20 00:00+0000\n"
 "Last-Translator: MarketKuraa\n"
 "Language-Team: Nepali\n"
@@ -829,6 +829,13 @@ msgstr ""
 #, python-format
 msgid "Updated %(t)s"
 msgstr "%(t)s मा अद्यावधिक गरियो"
+
+#, python-format
+msgid "Range %(low)s-%(high)s over this period"
+msgstr "यस अवधिको दायरा %(low)s-%(high)s"
+
+msgid "Building price history. Check back once a few more refreshes have run."
+msgstr "मूल्य इतिहास तयार हुँदैछ। थप रिफ्रेसपछि फेरि हेर्नुहोस्।"
 
 msgid ""
 "Community-generated page. It collects every discussion and self-reported "
@@ -1680,6 +1687,12 @@ msgstr "तपाईंको जवाफ"
 
 msgid "Post reply"
 msgstr "जवाफ पोस्ट गर्नुहोस्"
+
+msgid "Thesis details"
+msgstr "थेसिस विवरण"
+
+msgid "AMA details"
+msgstr "AMA विवरण"
 
 msgid "Hide"
 msgstr "लुकाउनुहोस्"
