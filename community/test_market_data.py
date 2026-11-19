@@ -156,15 +156,15 @@ class PriceHistoryServiceTests(TestCase):
         for price in (100, 150, 100):
             services.record_price_history(self.apple, price)
         chart = services.price_chart_points(self.apple)
-        self.assertEqual(len(chart['points']), 3)
         self.assertEqual(chart['low'], 100)
         self.assertEqual(chart['high'], 150)
         # Lowest price -> y=100 (bottom of the viewBox); highest -> y=0 (top).
-        ys = [p['y'] for p in chart['points']]
-        self.assertEqual(ys[0], 100)
-        self.assertEqual(ys[1], 0)
-        self.assertEqual(ys[2], 100)
-        self.assertEqual([p['x'] for p in chart['points']], [0, 50, 100])
+        self.assertEqual(chart['line_points'], '0.0,100.0 50.0,0.0 100.0,100.0')
+        # The end dot sits at the last point, and the area path drops to the baseline (y=100) at
+        # both the first and last x before closing, so it's a filled region, not just a line.
+        self.assertEqual(chart['last_x'], 100)
+        self.assertEqual(chart['last_y'], 100)
+        self.assertEqual(chart['area_path'], 'M0.0,100 L0.0,100.0 L50.0,0.0 L100.0,100.0 L100.0,100 Z')
 
     def test_price_chart_points_is_up_reflects_first_vs_last_point(self):
         for price in (100, 90, 110):
@@ -175,7 +175,7 @@ class PriceHistoryServiceTests(TestCase):
         for _ in range(3):
             services.record_price_history(self.apple, 100)
         chart = services.price_chart_points(self.apple)
-        self.assertEqual([p['y'] for p in chart['points']], [100, 100, 100])
+        self.assertEqual(chart['line_points'], '0.0,100.0 50.0,100.0 100.0,100.0')
 
 
 class CompanyPageMarketDataTests(TestCase):

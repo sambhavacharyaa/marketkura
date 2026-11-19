@@ -470,8 +470,9 @@ def record_price_history(tag, price):
 
 def price_chart_points(tag, limit=100):
     """Up to `limit` most recent price points for tag, normalized into a 0-100 square so the
-    template can draw them straight into an SVG viewBox="0 0 100 100" polyline. None if there
-    are fewer than 2 points — nothing to draw a line between, and a single dot isn't a chart.
+    template can draw them straight into an SVG viewBox="0 0 100 100": a filled area path, the
+    line itself, and the last point's coordinates for a highlighted end dot. None if there are
+    fewer than 2 points — nothing to draw a line between, and a single dot isn't a chart.
     """
     history = list(tag.price_history.order_by('-recorded_at').values_list('price', flat=True)[:limit])
     history.reverse()
@@ -481,11 +482,19 @@ def price_chart_points(tag, limit=100):
     lo, hi = min(prices), max(prices)
     span = hi - lo or 1  # flat line (price hasn't moved across the window) — avoid a /0
     n = len(prices)
-    points = [
-        {'x': round(i / (n - 1) * 100, 2), 'y': round(100 - (p - lo) / span * 100, 2)}
+    coords = [
+        (round(i / (n - 1) * 100, 2), round(100 - (p - lo) / span * 100, 2))
         for i, p in enumerate(prices)
     ]
-    return {'points': points, 'is_up': prices[-1] >= prices[0], 'low': round(lo, 2), 'high': round(hi, 2)}
+    line_points = ' '.join(f'{x},{y}' for x, y in coords)
+    # Area path: drop straight down to the baseline at the first point, trace the line, drop
+    # straight down at the last point, close — a filled region under the line, not just a stroke.
+    area_path = 'M{},100 L{} L{},100 Z'.format(coords[0][0], ' L'.join(f'{x},{y}' for x, y in coords), coords[-1][0])
+    last_x, last_y = coords[-1]
+    return {
+        'line_points': line_points, 'area_path': area_path, 'last_x': last_x, 'last_y': last_y,
+        'is_up': prices[-1] >= prices[0], 'low': round(lo, 2), 'high': round(hi, 2),
+    }
 
 
 # --- Moderation helpers ----------------------------------------------------------------
