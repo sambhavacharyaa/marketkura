@@ -173,6 +173,20 @@ class PriceHistoryServiceTests(TestCase):
         self.assertTrue(chart['area_path'].startswith('M0.0,100 L0.0,100.0'))
         self.assertTrue(chart['area_path'].endswith('L100.0,100 Z'))
 
+    def test_price_chart_points_hover_points_carry_the_real_price_and_time(self):
+        # The hover layer (app.js's setupChartHover) needs the actual observed value at each
+        # point, not just its normalized position — that's the whole point of hovering.
+        for price in (100, 120, 140, 130, 110, 150, 100):
+            services.record_price_history(self.apple, price)
+        chart = services.price_chart_points(self.apple)
+        hover = chart['hover_points']
+        self.assertEqual(len(hover), 7)
+        self.assertEqual(hover[0]['price'], 100.0)
+        self.assertEqual(hover[0]['x'], 0.0)
+        self.assertEqual(hover[5]['price'], 150.0)
+        self.assertEqual(hover[5]['x'], 83.33)
+        self.assertTrue(hover[0]['time'])  # a real formatted timestamp, not blank
+
     def test_price_chart_points_is_up_reflects_first_vs_last_point(self):
         for price in (100, 95, 90, 95, 100, 110):
             services.record_price_history(self.apple, price)
@@ -219,6 +233,17 @@ class CompanyPageMarketDataTests(TestCase):
         self.assertContains(response, 'price-up')
         self.assertContains(response, '<polyline')
         self.assertNotContains(response, 'Building price history')
+
+    def test_chart_hover_data_is_embedded_for_the_js_layer(self):
+        self.apple.last_price = 228.1
+        self.apple.save()
+        for price in (225, 226, 227, 227.5, 227.8, 228.1):
+            services.record_price_history(self.apple, price)
+        response = self.client.get(self.apple.get_absolute_url())
+        self.assertContains(response, 'id="company-chart-data"')
+        self.assertContains(response, '"price": 228.1')
+        self.assertContains(response, 'class="company-chart-crosshair" hidden')
+        self.assertContains(response, 'class="company-chart-tooltip" hidden')
 
     def test_price_shows_once_fetched_with_correct_up_down_color_class(self):
         self.apple.last_price = 227.5

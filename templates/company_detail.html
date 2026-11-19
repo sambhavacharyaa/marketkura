@@ -15,7 +15,7 @@
   </p>
   {% if chart %}
   <div class="company-chart">
-    <div class="company-chart-wrap">
+    <div class="company-chart-wrap" data-chart-hover>
       <svg viewBox="0 0 100 100" preserveAspectRatio="none" class="company-chart-svg {% if chart.is_up %}price-up{% else %}price-down{% endif %}" aria-hidden="true">
         <defs><linearGradient id="chart-fill-{{ asset.pk }}" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0%" stop-color="currentColor" stop-opacity=".3"></stop>
@@ -25,7 +25,10 @@
         <polyline points="{{ chart.line_points }}" fill="none" stroke="currentColor" stroke-width="2" vector-effect="non-scaling-stroke" />
       </svg>
       <span class="company-chart-dot {% if chart.is_up %}price-up{% else %}price-down{% endif %}" style="left:{{ chart.last_x }}%; top:{{ chart.last_y }}%;"></span>
+      <span class="company-chart-crosshair" hidden></span>
+      <span class="company-chart-tooltip" hidden></span>
     </div>
+    {{ chart.hover_points|json_script:"company-chart-data" }}
     <span class="meta">{% blocktrans with low=chart.low high=chart.high %}Range {{ low }}-{{ high }} over this period{% endblocktrans %}</span>
   </div>
   {% else %}<p class="meta">{% trans "Building price history. Check back once a few more refreshes have run." %}</p>{% endif %}

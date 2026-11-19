@@ -75,6 +75,52 @@
   setupHours();
   document.body.addEventListener('htmx:afterSettle', setupHours);
 
+  // Interactive company price chart: hovering (or touching, on mobile) finds the nearest
+  // recorded point to the cursor and shows its real price and time — the chart itself is plain
+  // server-rendered SVG with no JS at all, this just adds exact values on top of it. Re-run after
+  // every htmx swap, same reason as setupHours above: a fresh #main can bring in a brand-new
+  // chart with nothing bound to it yet.
+  var setupChartHover = function () {
+    var wrap = document.querySelector('[data-chart-hover]');
+    var dataEl = document.getElementById('company-chart-data');
+    if (!wrap || !dataEl) return;
+    var points;
+    try { points = JSON.parse(dataEl.textContent); } catch (e) { return; }
+    if (!points || !points.length) return;
+    var dot = wrap.querySelector('.company-chart-dot');
+    var crosshair = wrap.querySelector('.company-chart-crosshair');
+    var tooltip = wrap.querySelector('.company-chart-tooltip');
+    if (!dot || !crosshair || !tooltip) return;
+    var restLeft = dot.style.left, restTop = dot.style.top;
+
+    var nearestPoint = function (clientX) {
+      var rect = wrap.getBoundingClientRect();
+      var pct = ((clientX - rect.left) / rect.width) * 100;
+      var closest = points[0];
+      points.forEach(function (p) { if (Math.abs(p.x - pct) < Math.abs(closest.x - pct)) closest = p; });
+      return closest;
+    };
+    var show = function (clientX) {
+      var p = nearestPoint(clientX);
+      dot.style.left = crosshair.style.left = tooltip.style.left = p.x + '%';
+      dot.style.top = tooltip.style.top = p.y + '%';
+      tooltip.textContent = p.price + ' · ' + p.time;
+      crosshair.hidden = tooltip.hidden = false;
+    };
+    var hide = function () {
+      crosshair.hidden = tooltip.hidden = true;
+      dot.style.left = restLeft; dot.style.top = restTop;
+    };
+
+    wrap.addEventListener('mousemove', function (e) { show(e.clientX); });
+    wrap.addEventListener('mouseleave', hide);
+    wrap.addEventListener('touchstart', function (e) { show(e.touches[0].clientX); }, { passive: true });
+    wrap.addEventListener('touchmove', function (e) { show(e.touches[0].clientX); }, { passive: true });
+    wrap.addEventListener('touchend', hide);
+  };
+  setupChartHover();
+  document.body.addEventListener('htmx:afterSettle', setupChartHover);
+
   // Sticky header gains a deeper shadow once the page has scrolled, for a sense of depth.
   var header = document.querySelector('.site-header');
   if (header) {

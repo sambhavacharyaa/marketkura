@@ -19,6 +19,7 @@ from django.utils.text import slugify
 from django.utils.translation import gettext as _
 
 from .models import Category, Comment, CommentVote, Notification, Post, PostTag, PostVote, PriceHistory, Report, Tag, User
+from .templatetags.community_extras import nepal_time
 
 MAX_COMMENT_DEPTH = 5
 MAX_TAGS_PER_POST = 5
@@ -481,11 +482,11 @@ def price_chart_points(tag, limit=100):
     company had exactly 2 points at the time). A newly-tracked company just shows no chart yet
     rather than a technically-real but visually-meaningless line.
     """
-    history = list(tag.price_history.order_by('-recorded_at').values_list('price', flat=True)[:limit])
+    history = list(tag.price_history.order_by('-recorded_at').values_list('price', 'recorded_at')[:limit])
     history.reverse()
     if len(history) < MIN_CHART_POINTS:
         return None
-    prices = [float(p) for p in history]
+    prices = [float(p) for p, _ in history]
     lo, hi = min(prices), max(prices)
     span = hi - lo or 1  # flat line (price hasn't moved across the window) — avoid a /0
     n = len(prices)
@@ -498,9 +499,18 @@ def price_chart_points(tag, limit=100):
     # straight down at the last point, close — a filled region under the line, not just a stroke.
     area_path = 'M{},100 L{} L{},100 Z'.format(coords[0][0], ' L'.join(f'{x},{y}' for x, y in coords), coords[-1][0])
     last_x, last_y = coords[-1]
+    # Raw (unrounded-to-viewBox) data for the hover layer in app.js: for each point, where it
+    # sits (x%, matching the SVG coords above) and what to actually show — the real price and
+    # time, not the normalized position, so hovering tells you something the chart shape alone
+    # can't.
+    hover_points = [
+        {'x': coords[i][0], 'y': coords[i][1], 'price': prices[i], 'time': nepal_time(recorded_at)}
+        for i, (_, recorded_at) in enumerate(history)
+    ]
     return {
         'line_points': line_points, 'area_path': area_path, 'last_x': last_x, 'last_y': last_y,
         'is_up': prices[-1] >= prices[0], 'low': round(lo, 2), 'high': round(hi, 2),
+        'hover_points': hover_points,
     }
 
 
