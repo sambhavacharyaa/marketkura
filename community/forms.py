@@ -131,10 +131,13 @@ class PostForm(forms.ModelForm):
         help_texts = {
             'body': _('Markdown is supported. Posts are opinion and discussion, not investment advice.'),
             'image': _('Optional. A chart, screenshot or other supporting image, shown at the top of the post.'),
+            'type': _('Most posts are Discussions. Choose Thesis to share a structured trade idea, or AMA to host a live Q&A.'),
+            'asset': _("Optional. Link this post to a company's page if there's an existing listing for it."),
+            'asset_tag': _('Optional. Type a ticker like AAPL if the company above is not listed yet.'),
         }
         labels = {
-            'category': _('Category'), 'type': _('Type'), 'title': _('Title'), 'body': _('Body'),
-            'image': _('Image'), 'asset': _('Asset'), 'asset_tag': _('Asset tag'),
+            'category': _('Category'), 'type': _('Post type'), 'title': _('Title'), 'body': _('Body'),
+            'image': _('Image'), 'asset': _('Company'), 'asset_tag': _('Ticker'),
             'position_type': _('Position'), 'entry_price': _('Entry'), 'target_price': _('Target'),
             'stop_loss': _('Stop / exit plan'), 'time_horizon': _('Horizon'), 'thesis_risk': _('Risks'),
             'disclosure': _('Disclosure'), 'ama_starts_at': _('Starts'), 'ama_ends_at': _('Closes'),

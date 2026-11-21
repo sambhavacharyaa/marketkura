@@ -286,6 +286,11 @@ input[type=file]:hover::file-selector-button, input[type=file]:hover::-webkit-fi
 .form-field[data-show-for] { padding-left: 12px; border-left: 3px solid var(--brand-line); }
 .form-field[data-show-for] label { margin-top: 12px; }
 .form-submit-row { margin-top: var(--s4); padding-top: var(--s4); border-top: 1px solid var(--line); }
+/* Ticker/tags/post-type tucked behind a disclosure on the post form — a lighter sub-section
+   (subtler bg, no competing shadow/fade-in) rather than another full card nested in .form-panel. */
+.form-more { box-shadow: none; animation: none; margin: var(--s4) 0; background: var(--bg); }
+.form-more summary { font-weight: 600; color: var(--brand-dark); }
+.form-more[open] summary { margin-bottom: var(--s2); }
 .btn, button.btn {
   --btn-fg: #fff;
   position: relative; overflow: hidden; display: inline-flex; align-items: center; justify-content: center; gap: 6px;

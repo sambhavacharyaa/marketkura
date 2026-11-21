@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: MarketKuraa\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-19 17:00+0000\n"
+"POT-Creation-Date: 2026-11-21 04:32+0000\n"
 "PO-Revision-Date: 2026-09-20 00:00+0000\n"
 "Last-Translator: MarketKuraa\n"
 "Language-Team: Nepali\n"
@@ -139,11 +139,27 @@ msgid ""
 "the post."
 msgstr "वैकल्पिक। चार्ट, स्क्रिनसट वा अन्य सहयोगी तस्बिर, पोस्टको माथि देखाइन्छ।"
 
+msgid ""
+"Most posts are Discussions. Choose Thesis to share a structured trade idea, "
+"or AMA to host a live Q&A."
+msgstr ""
+"धेरैजसो पोस्टहरू छलफल हुन्। संरचित ट्रेड विचार साझा गर्न थेसिस, वा लाइभ प्रश्नोत्तरका लागि AMA "
+"छान्नुहोस्।"
+
+msgid ""
+"Optional. Link this post to a company's page if there's an existing listing "
+"for it."
+msgstr "वैकल्पिक। यदि कम्पनीको पृष्ठ पहिल्यै छ भने, यो पोस्टलाई त्यससँग जोड्नुहोस्।"
+
+msgid ""
+"Optional. Type a ticker like AAPL if the company above is not listed yet."
+msgstr "वैकल्पिक। माथिको कम्पनी अझै सूचीमा नभएमा AAPL जस्तै टिकर टाइप गर्नुहोस्।"
+
 msgid "Category"
 msgstr "वर्ग"
 
-msgid "Type"
-msgstr "प्रकार"
+msgid "Post type"
+msgstr "पोस्ट प्रकार"
 
 msgid "Title"
 msgstr "शीर्षक"
@@ -154,11 +170,11 @@ msgstr "विवरण"
 msgid "Image"
 msgstr "तस्बिर"
 
-msgid "Asset"
-msgstr "सम्पत्ति"
+msgid "Company"
+msgstr "कम्पनी"
 
-msgid "Asset tag"
-msgstr "सम्पत्ति ट्याग"
+msgid "Ticker"
+msgstr "टिकर"
 
 msgid "Position"
 msgstr "पोजिसन"
@@ -1750,6 +1766,12 @@ msgstr "%(n)s मिनेट पढ्न"
 msgid "More filters"
 msgstr "थप फिल्टरहरू"
 
+msgid "Type"
+msgstr "प्रकार"
+
+msgid "Asset"
+msgstr "सम्पत्ति"
+
 msgid "Date"
 msgstr "मिति"
 
@@ -1870,6 +1892,9 @@ msgid ""
 msgstr ""
 "MarketKuraa का पोस्टहरू प्रयोगकर्ताले बनाएका हुन्। थेसिस स्वयं-रिपोर्ट गरिएको राय हो, "
 "वित्तीय सल्लाह होइन। कम कारोबार हुने सेयरको प्रचार वा हाइप नगर्नुहोस्।"
+
+msgid "Add a ticker, tags, or change the post type"
+msgstr "टिकर, ट्याग थप्नुहोस् वा पोस्ट प्रकार परिवर्तन गर्नुहोस्"
 
 msgid "Publish post"
 msgstr "पोस्ट प्रकाशित गर्नुहोस्"
@@ -2196,9 +2221,6 @@ msgstr "वाचलिस्ट मेटाउनुहोस्"
 msgid "Add a company"
 msgstr "कम्पनी थप्नुहोस्"
 
-msgid "Company"
-msgstr "कम्पनी"
-
 msgid "Add"
 msgstr "थप्नुहोस्"
 
@@ -2225,6 +2247,9 @@ msgstr[1] "%(n)s कम्पनीहरू"
 
 msgid "No watchlists yet."
 msgstr "अहिलेसम्म कुनै वाचलिस्ट छैन।"
+
+#~ msgid "Asset tag"
+#~ msgstr "सम्पत्ति ट्याग"
 
 #~ msgid "Community opinion only. No live prices, ratings or recommendations."
 #~ msgstr "सामुदायिक राय मात्र। कुनै लाइभ मूल्य, रेटिङ वा सिफारिस छैन।"
