@@ -19,9 +19,11 @@
     force-opens if validation left an error on anything inside it, so the error is never hidden
     behind a collapsed summary.
   {% endcomment %}
-  <details class="form-more panel"{% if form.type.errors or form.asset.errors or form.asset_tag.errors or form.tags.errors %} open{% endif %}>
-    <summary>{% trans "Add a ticker, tags, or change the post type" %}</summary>
-    {% include 'partials/form_fields.html' with only_fields='type asset asset_tag tags' %}
+  <details class="form-more"{% if form.type.errors or form.asset.errors or form.asset_tag.errors or form.tags.errors %} open{% endif %}>
+    <summary><span>{% trans "Add a ticker, tags, or change the post type" %}</span>{% include 'partials/icon.html' with name='chevron' cls='form-more-chev' %}</summary>
+    <div class="form-more-body">
+      {% include 'partials/form_fields.html' with only_fields='type asset asset_tag tags' %}
+    </div>
   </details>
   {% include 'partials/form_fields.html' with only_fields='position_type entry_price target_price stop_loss time_horizon thesis_risk disclosure ama_starts_at ama_ends_at' thesis_fields='position_type entry_price target_price stop_loss time_horizon thesis_risk disclosure' ama_fields='ama_starts_at ama_ends_at' %}
   <p class="compose-submit-row form-submit-row"><button class="btn" type="submit">{% if editing %}{% trans "Save changes" %}{% else %}{% trans "Publish post" %}{% endif %}</button></p>

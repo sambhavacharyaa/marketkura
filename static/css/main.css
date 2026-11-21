@@ -286,11 +286,26 @@ input[type=file]:hover::file-selector-button, input[type=file]:hover::-webkit-fi
 .form-field[data-show-for] { padding-left: 12px; border-left: 3px solid var(--brand-line); }
 .form-field[data-show-for] label { margin-top: 12px; }
 .form-submit-row { margin-top: var(--s4); padding-top: var(--s4); border-top: 1px solid var(--line); }
-/* Ticker/tags/post-type tucked behind a disclosure on the post form — a lighter sub-section
-   (subtler bg, no competing shadow/fade-in) rather than another full card nested in .form-panel. */
-.form-more { box-shadow: none; animation: none; margin: var(--s4) 0; background: var(--bg); }
-.form-more summary { font-weight: 600; color: var(--brand-dark); }
-.form-more[open] summary { margin-bottom: var(--s2); }
+/* Ticker/tags/post-type tucked behind a disclosure on the post form — styled as a dropdown
+   toggle (chevron rotates, fields fade/slide in on open) rather than another bordered card
+   nested in .form-panel; .form-more-body reuses the same entrance as .menu-panel below. */
+.form-more { margin: var(--s4) 0; }
+.form-more summary {
+  display: flex; align-items: center; justify-content: space-between; gap: var(--s2);
+  min-height: 44px; padding: 0 var(--s3);
+  background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius-sm);
+  font-weight: 600; color: var(--brand-dark); cursor: pointer;
+  transition: background-color var(--dur-fast) var(--ease), border-color var(--dur-fast) var(--ease);
+}
+.form-more summary:hover { background: var(--bg); border-color: var(--brand-line); }
+.form-more[open] summary { border-bottom-left-radius: 0; border-bottom-right-radius: 0; }
+.form-more-chev { width: 16px; height: 16px; color: var(--muted); transition: transform var(--dur) var(--ease); }
+.form-more[open] .form-more-chev { transform: rotate(180deg); }
+.form-more-body {
+  padding: var(--s3); border: 1px solid var(--line); border-top: none;
+  border-bottom-left-radius: var(--radius-sm); border-bottom-right-radius: var(--radius-sm);
+  animation: menu-in .2s var(--ease) both;
+}
 .btn, button.btn {
   --btn-fg: #fff;
   position: relative; overflow: hidden; display: inline-flex; align-items: center; justify-content: center; gap: 6px;
