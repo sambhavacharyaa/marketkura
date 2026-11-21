@@ -25,7 +25,22 @@
       {% include 'partials/form_fields.html' with only_fields='type asset asset_tag tags' %}
     </div>
   </details>
-  {% include 'partials/form_fields.html' with only_fields='position_type entry_price target_price stop_loss time_horizon thesis_risk disclosure ama_starts_at ama_ends_at' thesis_fields='position_type entry_price target_price stop_loss time_horizon thesis_risk disclosure' ama_fields='ama_starts_at ama_ends_at' %}
+  {% comment %}
+    Thesis details only matter once "Thesis" is chosen as the post type, and there are seven of
+    them — showing all seven inline the moment Thesis is picked made the form balloon in length.
+    A dropdown (same look as the ticker/tags one above) keeps them collapsed until the poster
+    wants them; data-show-for reuses the exact post-type toggle in app.js that already drives the
+    AMA fields below, so the whole block disappears for non-Thesis posts. It opens by default
+    when editing an existing thesis post, or if validation left an error inside it, so neither
+    existing data nor an error is ever hidden behind a collapsed summary.
+  {% endcomment %}
+  <details class="form-more" data-show-for="thesis"{% if editing and post.type == 'thesis' %} open{% elif form.position_type.errors or form.entry_price.errors or form.target_price.errors or form.stop_loss.errors or form.time_horizon.errors or form.thesis_risk.errors or form.disclosure.errors %} open{% endif %}>
+    <summary><span>{% trans "Thesis details" %}</span>{% include 'partials/icon.html' with name='chevron' cls='form-more-chev' %}</summary>
+    <div class="form-more-body">
+      {% include 'partials/form_fields.html' with only_fields='position_type entry_price target_price stop_loss time_horizon thesis_risk disclosure' %}
+    </div>
+  </details>
+  {% include 'partials/form_fields.html' with only_fields='ama_starts_at ama_ends_at' ama_fields='ama_starts_at ama_ends_at' %}
   <p class="compose-submit-row form-submit-row"><button class="btn" type="submit">{% if editing %}{% trans "Save changes" %}{% else %}{% trans "Publish post" %}{% endif %}</button></p>
 </form></section>
 {% endblock %}

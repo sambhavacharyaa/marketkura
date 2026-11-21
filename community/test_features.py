@@ -391,12 +391,17 @@ class PostFormFieldGroupingTests(BaseCase):
         type_field = page[page.index('data-field="type"'):page.index('>', page.index('data-field="type"'))]
         self.assertNotIn('data-show-for', type_field)
 
-    def test_thesis_only_fields_still_get_data_show_for_thesis(self):
+    def test_thesis_only_fields_are_inside_the_thesis_dropdown(self):
+        # The 7 thesis-only fields live inside a <details data-show-for="thesis"> dropdown (same
+        # post-type toggle in app.js, applied to the whole wrapper instead of each field) rather
+        # than each field carrying its own data-show-for="thesis" attribute.
         self.login(self.alice)
         page = self.client.get(reverse('create_post')).content.decode()
+        start = page.index('data-show-for="thesis"')
+        end = page.index('</details>', start)
+        dropdown = page[start:end]
         for field_name in ('position_type', 'entry_price', 'target_price', 'stop_loss', 'time_horizon', 'thesis_risk', 'disclosure'):
-            field = page[page.index(f'data-field="{field_name}"'):page.index('>', page.index(f'data-field="{field_name}"'))]
-            self.assertIn('data-show-for="thesis"', field, f'{field_name} missing data-show-for="thesis"')
+            self.assertIn(f'data-field="{field_name}"', dropdown, f'{field_name} missing from the thesis details dropdown')
 
     def test_ama_only_fields_still_get_data_show_for_ama(self):
         # The AMA fields only exist on the form for verified members.
